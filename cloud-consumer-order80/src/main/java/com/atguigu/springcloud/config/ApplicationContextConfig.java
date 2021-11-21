@@ -1,5 +1,6 @@
 package com.atguigu.springcloud.config;
 
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -14,7 +15,7 @@ public class ApplicationContextConfig {
              (和xml配置中的bean标签的作用是一样的)
       */
     @Bean
-    //@LoadBalanced
+    @LoadBalanced
     public RestTemplate getRestTemplate() {
         return new RestTemplate();
     }
