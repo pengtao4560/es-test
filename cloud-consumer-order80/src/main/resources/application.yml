@@ -2,13 +2,13 @@ server:
   port: 80
 
 spring:
-    application:
-        name: cloud-order-service
-    zipkin:
-      base-url: http://localhost:9411
-    sleuth:
-      sampler:
-        probability: 1
+  application:
+    name: cloud-order-service
+#    zipkin:
+#      base-url: http://localhost:9411
+#    sleuth:
+#      sampler:
+#        probability: 1
 
 eureka:
   client:
@@ -21,5 +21,7 @@ eureka:
 #      defaultZone: http://localhost:7001/eureka
 #      # 集群
       defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka  # 集群版
-
+  instance:
+    instance-id: order80
+    prefer-ip-address: true
 

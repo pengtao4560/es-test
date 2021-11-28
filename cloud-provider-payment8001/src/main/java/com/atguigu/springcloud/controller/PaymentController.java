@@ -26,6 +26,9 @@ public class PaymentController {
     @Value("${server.port}")
     private String serverPort;
 
+    @Value("${spring.application.name}")
+    private String applicationName;
+
     @Resource
     private DiscoveryClient discoveryClient;
 
@@ -61,7 +64,7 @@ public class PaymentController {
             log.info("*****element: " + element);
         }
 
-        List<ServiceInstance> instances = discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE");
+        List<ServiceInstance> instances = discoveryClient.getInstances(applicationName);
         for (ServiceInstance instance : instances) {
             log.info(instance.getServiceId() + "\t" + instance.getHost() + "\t" + instance.getPort() + "\t" + instance.getUri());
         }
