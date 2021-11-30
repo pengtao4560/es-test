@@ -1,8 +1,12 @@
 package com.atguigu.springcloud.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.atguigu.springcloud.entities.CommonResult;
 import com.atguigu.springcloud.entities.Payment;
+import com.atguigu.springcloud.loadbalance.LoadBalance;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.net.URI;
+import java.util.List;
 
 /**
  * @auther zzyy
@@ -24,6 +30,12 @@ public class OrderController {
 
     @Resource
     private RestTemplate restTemplate;
+
+    @Resource
+    private DiscoveryClient discoveryClient;
+
+    @Resource
+    private LoadBalance loadBalance;
 
     //    @Resource
 //    private LoadBalancer loadBalancer;
@@ -51,20 +63,20 @@ public class OrderController {
         }
     }
 
-/*    @GetMapping(value = "/consumer/payment/lb")
+    @GetMapping(value = "/consumer/payment/lb")
     public String getPaymentLB() {
         List<ServiceInstance> instances = discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE");
 
-        if (instances == null || instances.size() <= 0) {
+        if (CollectionUtil.isEmpty(instances)) {
             return null;
         }
 
-        ServiceInstance serviceInstance = loadBalancer.instances(instances);
+        ServiceInstance serviceInstance = loadBalance.instances(instances);
         URI uri = serviceInstance.getUri();
 
         return restTemplate.getForObject(uri + "/payment/lb", String.class);
 
-    }*/
+    }
 
     // ====================> zipkin+sleuth
     @GetMapping("/consumer/payment/zipkin")

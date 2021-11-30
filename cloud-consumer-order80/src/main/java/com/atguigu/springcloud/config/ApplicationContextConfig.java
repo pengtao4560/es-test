@@ -15,7 +15,7 @@ public class ApplicationContextConfig {
              (和xml配置中的bean标签的作用是一样的)
       */
     @Bean
-    @LoadBalanced
+    //@LoadBalanced
     public RestTemplate getRestTemplate() {
         return new RestTemplate();
     }

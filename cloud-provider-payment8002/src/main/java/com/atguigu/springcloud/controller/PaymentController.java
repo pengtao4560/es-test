@@ -29,6 +29,8 @@ public class PaymentController {
     @Resource
     private DiscoveryClient discoveryClient;
 
+
+
     // localhost:8001//payment/create
     @PostMapping(value = "/payment/create")
     public CommonResult create(@RequestBody Payment payment) {
