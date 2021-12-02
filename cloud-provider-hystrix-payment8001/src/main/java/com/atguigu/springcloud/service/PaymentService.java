@@ -3,6 +3,7 @@ package com.atguigu.springcloud.service;
 import cn.hutool.core.util.IdUtil;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeUnit;
  * @create 2020-02-20 11:11
  */
 @Service
+@Slf4j
 public class PaymentService {
     /**
      * 正常访问，肯定OK
@@ -28,9 +30,13 @@ public class PaymentService {
 //    @HystrixCommand(fallbackMethod = "paymentInfo_TimeOutHandler", commandProperties = {
 //            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
 //    })
+    @HystrixCommand(fallbackMethod = "paymentInfo_TimeOutHandler", commandProperties = {
+            @HystrixProperty(name ="execution.isolation.thread.timeoutInMilliseconds", value = "3000")
+    })
     public String paymentInfo_TimeOut(Integer id) {
-        //int age = 10/0;
-        int timeNumber = 3;
+        log.info("进入paymentInfo_TimeOut方法 {}", id);
+        // int age = 10/0;
+        int timeNumber = 5;
         try {
             TimeUnit.SECONDS.sleep(timeNumber);
         } catch (InterruptedException e) {
@@ -40,7 +46,8 @@ public class PaymentService {
     }
 
     public String paymentInfo_TimeOutHandler(Integer id) {
-        return "线程池:  " + Thread.currentThread().getName() + "  8001系统繁忙或者运行报错，请稍后再试,id:  " + id + "\t" + "o(╥﹏╥)o";
+        log.info("进入兜底方案{}", id);
+        return "线程池:  " + Thread.currentThread().getName() + "  8001系统繁忙或者运行报错，请稍后再试,id:  " + id;
     }
 
     //=====服务熔断
