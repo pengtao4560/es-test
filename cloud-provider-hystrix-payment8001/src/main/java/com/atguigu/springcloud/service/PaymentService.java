@@ -31,12 +31,12 @@ public class PaymentService {
 //            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
 //    })
     @HystrixCommand(fallbackMethod = "paymentInfo_TimeOutHandler", commandProperties = {
-            @HystrixProperty(name ="execution.isolation.thread.timeoutInMilliseconds", value = "3000")
+            @HystrixProperty(name ="execution.isolation.thread.timeoutInMilliseconds", value = "5000")
     })
     public String paymentInfo_TimeOut(Integer id) {
         log.info("进入paymentInfo_TimeOut方法 {}", id);
         // int age = 10/0;
-        int timeNumber = 5;
+        int timeNumber = 3;
         try {
             TimeUnit.SECONDS.sleep(timeNumber);
         } catch (InterruptedException e) {
@@ -55,7 +55,7 @@ public class PaymentService {
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),// 是否开启断路器
             @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),// 请求次数
             @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"), // 时间窗口期
-            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "60"),// 失败率达到多少后跳闸
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "20"),// 失败率达到多少后跳闸
     })
     public String paymentCircuitBreaker(@PathVariable("id") Integer id) {
         if (id < 0) {
