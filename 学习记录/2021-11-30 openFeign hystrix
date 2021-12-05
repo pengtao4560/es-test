@@ -115,3 +115,34 @@ p58 服务熔断
 主逻辑恢复，如果这次请求依然有问题，断路器继续进入打开状态，休眠时间窗重新计时。
 
 百度 hytrix所有的配置
+
+
+P63 Hystrix图形化Dashboard搭建:
+启动类上加注解 @EnableHystrixDashboard
+
+P64 Hystrix图形化Dashboard监控实战
+
+监控项目是9001
+被监控的是 cloud-provider-hystrix-payment8001
+1.启动类添加注解 @EnableCircuitBreaker
+springcloud升级后留了一个坑，必须在启动类(todo尝试移动到配置类)上添加如下：
+
+    /**
+     * 此配置是为了服务监控而配置，与服务容错本身无关，springcloud升级后的坑
+     * ServletRegistrationBean因为springboot的默认路径不是"/hystrix.stream"，
+     * 只要在自己的项目里配置上下面的servlet就可以了
+     */
+    @Bean
+    public ServletRegistrationBean getServlet() {
+        HystrixMetricsStreamServlet streamServlet = new HystrixMetricsStreamServlet();
+        ServletRegistrationBean registrationBean = new ServletRegistrationBean(streamServlet);
+        registrationBean.setLoadOnStartup(1);
+        registrationBean.addUrlMappings("/hystrix.stream");
+        registrationBean.setName("HystrixMetricsStreamServlet");
+        return registrationBean;
+    }
+
+否则会报错： Unable to connect to Command Metric Stream.
+图形化界面 url: http://localhost:9001/hystrix
+文本框输入：
+http://localhost:8001/hystrix.stream
