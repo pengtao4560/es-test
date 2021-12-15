@@ -1,4 +1,4 @@
-package com.atguigu.springcloud.cloudgatewaygateway9527;
+package com.atguigu.springcloud;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
