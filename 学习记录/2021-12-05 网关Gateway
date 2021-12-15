@@ -1,0 +1,71 @@
+Netflix公司的 zuul 路由网关  已基本停用无人维护  zuul2 开发难产
+有兴趣可看zuul
+spring自研了一套
+gateway 代替 zuul ，相对更有技术含量
+
+2021年12月5日17:18:21
+
+面试题：谈谈你对微服务网关的理解
+
+代码逐渐变少。 更多的是 配置，构建体系。
+快速迭代
+
+This project provides a library for building an API Gateway on top of Spring WebFlux.
+Spring Cloud Gateway aims to provide a simple,yet effective way to route to APIs
+ and provide cross cutting concerns to them
+ such as: security, monitoring/metrics, and resiliency.
+这个项目提供了一个在Spring WebFlux上构建API网关的库。
+Spring Cloud Gateway的目标是提供一种简单而有效的方式来路由到 API(我们的程序)，
+并为它们提供横切关注点，
+例如:安全性、监控/指标和弹性。
+
+
+SpringCloud Gateway 是 Spring Cloud 的一个全新项目，基于 Spring 5.0+Spring Boot 2.0 和 Project Reactor 等技术开发的网关，
+它旨在为微服务架构提供一种简单有效的统一的 API 路由管理方式。
+
+SpringCloud Gateway 作为 Spring Cloud 生态系统中的网关，目标是替代 Zuul，
+在Spring Cloud 2.0以上版本中，没有对新版本的Zuul 2.0以上最新高性能版本进行集成，
+仍然还是使用的Zuul 1.x非Reactor模式的老版本。而为了提升网关的性能，
+SpringCloud Gateway是基于WebFlux框架实现的，而WebFlux框架底层则使用了高性能的Reactor模式通信框架Netty。
+
+Spring Cloud Gateway的目标提供统一的路由方式且基于 Filter 链的方式提供了网关基本的功能，例如：安全，监控/指标，和限流。
+
+能干嘛
+	反向代理
+	鉴权
+	流量控制
+	熔断
+	日志监控
+	......
+
+在网关之前的负载均衡是  nginx
+网关可以理解位微服务的入口
+外部请求(手持终端/html5/open接口)  -> 负载均衡 nginx - 网关 gateway(zuul)  -> 微服务 a,b,c,d
+
+
+Spring Cloud Gateway 建立 在 Spring Framework 5、 Project Reactor 和 Spring Boot 2 之上， 使用非阻塞 API。
+
+Spring Cloud Gateway 还 支持 WebSocket， 并且与Spring紧密集成拥有更好的开发体验
+
+
+gateway三大核心概念
+	Route(路由)
+		路由是构建网关的基本模块，它由ID，目标URI，一系列的断言和过滤器组成，如果断言为true则匹配该路由
+	Predicate(断言)
+		参考的是Java8的java.util.function.Predicate
+        开发人员可以匹配HTTP请求中的所有内容(例如请求头或请求参数)，如果请求与断言相匹配则进行路由
+	Filter(过滤)
+		指的是Spring框架中GatewayFilter的实例，使用过滤器，可以在请求被路由前或者之后对请求进行修改。
+
+	总体：
+	web请求，通过一些匹配条件，定位到真正的服务节点。并在这个转发过程的前后，进行一些精细化控制。
+    predicate就是我们的匹配条件；
+    而filter，就可以理解为一个无所不能的拦截器。有了这两个元素，再加上目标uri，就可以实现一个具体的路由了
+
+客户端向 Spring Cloud Gateway 发出请求。然后在 Gateway Handler Mapping 中找到与请求相匹配的路由，将其发送到 Gateway Web Handler。
+Handler 再通过指定的过滤器链来将请求发送到我们实际的服务执行业务逻辑，然后返回。
+过滤器之间用虚线分开是因为过滤器可能会在发送代理请求之前（“pre”）或之后（“post”）执行业务逻辑。
+Filter在“pre”类型的过滤器可以做参数校验、权限校验、流量监控、日志输出、协议转换等，
+在“post”类型的过滤器中可以做响应内容、响应头的修改，日志的输出，流量监控等有着非常重要的作用。
+
+gateway的核心逻辑是  路由转发 + 执行过滤器链
