@@ -79,7 +79,12 @@ public class PaymentController {
 
     @PostMapping(value = "/payment/testpost")
     public String testPost(@RequestParam(value = "username", defaultValue = "username") String username){
-        return "username" + username;
+        return "username: " + username;
+    }
+
+    @GetMapping(value = "/payment/testget")
+    public String testGet(@RequestParam(value = "username", defaultValue = "username") String username){
+        return "username: " + username;
     }
 
     @GetMapping(value = "/payment/feign/timeout")

@@ -92,6 +92,11 @@ public class PaymentController {
         return "username" + username;
     }
 
+    @GetMapping(value = "/payment/testget")
+    public String testGet(@RequestParam(value = "username", defaultValue = "username") String username){
+        return "username: " + username;
+    }
+
     @GetMapping("/payment/zipkin")
     public String paymentZipkin() {
         return "hi ,i'am paymentzipkin server fall back，welcome to atguigu，O(∩_∩)O哈哈~";

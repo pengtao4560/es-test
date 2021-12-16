@@ -83,3 +83,16 @@ curl http://localhost:9527/payment/lb -H "X-Request-Id:1234"
 发送post请求
 curl http://localhost:9527/payment/testpost -H "X-Request-Id:1234" -d "username=pengtao"
 
+curl http://localhost:9527/payment/testget?username=pengtao"
+
+说白了，Predicate就是为了实现一组匹配规则，
+让请求过来找到对应的Route进行处理。
+
+gateway的过滤器：
+路由过滤器可用于修改进入的HTTP请求和返回的HTTP响应，路由过滤器只能指定路由进行使用。
+
+Spring Cloud Gateway 内置了多种路由过滤器，他们都由GatewayFilter的工厂类来产生
+
+自定义过滤器：
+        实现两个接口 implements GlobalFilter,Ordered
+        能干嘛： 全局日志
