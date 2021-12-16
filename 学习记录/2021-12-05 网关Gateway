@@ -69,3 +69,17 @@ Filter在“pre”类型的过滤器可以做参数校验、权限校验、流�
 在“post”类型的过滤器中可以做响应内容、响应头的修改，日志的输出，流量监控等有着非常重要的作用。
 
 gateway的核心逻辑是  路由转发 + 执行过滤器链
+
+默认情况下Gateway会根据注册中心注册的服务列表，
+以注册中心上微服务名为路径创建动态路由进行转发，从而实现动态路由的功能
+
+https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#gateway-request-predicates-factories
+
+curl http://localhost:9527/payment/lb
+curl http://localhost:9527/payment/lb --cookie "username=pengtao"
+curl http://localhost:9527/payment/lb -H "X-Request-Id:1234"
+发送get请求
+curl http://localhost:9527/payment/lb -H "X-Request-Id:1234"
+发送post请求
+curl http://localhost:9527/payment/testpost -H "X-Request-Id:1234" -d "username=pengtao"
+

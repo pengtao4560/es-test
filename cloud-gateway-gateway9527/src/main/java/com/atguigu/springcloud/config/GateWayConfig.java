@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class GateWayConfig {
-    /***/
+    /** http://localhost:9527/guonei 即可以直接跳转到百度新闻*/
     @Bean
     public RouteLocator myRoutes(RouteLocatorBuilder routeLocatorBuilder) {
         String uri = "https://news.baidu.com/guonei";

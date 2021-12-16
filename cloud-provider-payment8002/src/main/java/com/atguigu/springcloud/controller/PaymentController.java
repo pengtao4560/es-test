@@ -50,7 +50,7 @@ public class PaymentController {
         Payment payment = paymentService.getPaymentById(id);
 
         if (payment != null) {
-            return new CommonResult(200, "查询成功,serverPort:  " + serverPort, payment);
+            return new CommonResult(200, "查询成功,serverPort:  " + "端口" + serverPort, payment);
         } else {
             return new CommonResult(444, "没有对应记录,查询ID: " + id, null);
         }
@@ -73,7 +73,7 @@ public class PaymentController {
 
     @GetMapping(value = "/payment/lb")
     public String getPaymentLB() {
-        return serverPort;
+        return "端口：" + serverPort;
     }
 
     @GetMapping(value = "/payment/feign/timeout")
@@ -85,6 +85,11 @@ public class PaymentController {
             e.printStackTrace();
         }
         return serverPort;
+    }
+
+    @PostMapping(value = "/payment/testpost")
+    public String testPost(@RequestParam(value = "username", defaultValue = "username") String username){
+        return "username" + username;
     }
 
     @GetMapping("/payment/zipkin")

@@ -74,7 +74,12 @@ public class PaymentController {
 
     @GetMapping(value = "/payment/lb")
     public String getPaymentLB() {
-        return serverPort;
+        return "端口：" + serverPort;
+    }
+
+    @PostMapping(value = "/payment/testpost")
+    public String testPost(@RequestParam(value = "username", defaultValue = "username") String username){
+        return "username" + username;
     }
 
     @GetMapping(value = "/payment/feign/timeout")
