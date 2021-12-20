@@ -19,6 +19,6 @@ eureka:
 
   server:
     #开启或关闭自我保护机制，保证不可用服务是否需要被及时踢除
-    enable-self-preservation: false
+    enable-self-preservation: true
     #开启自我保护机制，保证不可用服务被及时踢除
     eviction-interval-timer-in-ms: 90
