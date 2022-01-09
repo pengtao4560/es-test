@@ -52,3 +52,26 @@ Spring Cloud Config 为分布式系统中的外部化配置提供服务器端和
  当应用程序运行时从开发到测试再到生产的部署管道，您可以管理配置在这些环境之间，
  确保应用程序拥有所需的一切当他们迁移。服务器存储后端默认的实现使用git所以它很容易支持配置环境的标签版本，
  此外，还可以使用各种工具来管理内容。添加替代实现并通过Spring配置插入它们是很容易的。
+
+
+curl -X POST "http://localhost:3355/actuator/refresh"
+
+1.POM引入actuator监控
+2.修改YML，暴露监控端口
+3.@RefreshScope业务类Controller修改
+此时修改github---> 3344 ---->3355
+	http://localhost:3355/configInfo
+	3355改变没有？？？
+		没有，/(ㄒoㄒ)/~~
+4.需要运维人员发送Post请求刷新3355
+	必须是POST请求
+	curl -X POST "http://localhost:3355/actuator/refresh"
+5.http://localhost:3355/configInfo
+-------以上----  手动版动态刷新
+
+假如有多个微服务客户端3355/3366/3377。。。。。。
+每个微服务都要执行一次post请求，手动刷新？
+可否广播，一次通知，处处生效？
+我们想大范围的自动刷新，求方法
+
+所以引入了下一章：消息总线

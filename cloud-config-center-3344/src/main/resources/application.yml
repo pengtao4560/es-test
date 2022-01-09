@@ -10,6 +10,7 @@ spring:
         git:
           #uri: https://github.com:pengtao4560/cloud202-springcloud-config.git
           uri: https://github.com/pengtao4560/cloud202-springcloud-config
+          #uri: https://pengtao4560-admin@bitbucket.org/pengtao4560/springcloud-config.git
           #git@github.com:zzyybs/springcloud-config.git #GitHub上面的git仓库名字
           search-paths:
             - cloud202-springcloud-config
@@ -17,12 +18,14 @@ spring:
           password: 1234Pt..
       ####读取分支
       label: master
+
 #rabbitmq相关配置
-#rabbitmq:
-#    host: localhost
-#    port: 5672
-#    username: guest
-#    password: guest
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
 
 #服务注册到eureka地址
 eureka:
