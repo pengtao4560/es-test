@@ -100,6 +100,8 @@ public class PaymentController {
 
     @GetMapping("/payment/zipkin")
     public String paymentZipkin() {
-        return "hi ,i'am paymentzipkin server fall back，welcome to atguigu，O(∩_∩)O哈哈~";
+        String result = "hi ,i'am paymentzipkin server fall back，welcome to atguigu，O(∩_∩)O哈哈~";
+        System.out.println(result);
+        return result;
     }
 }
