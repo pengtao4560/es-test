@@ -1,4 +1,4 @@
-package java.com.springcloud.atguigu.cloudalibabaproviderpayment9002;
+package com.springcloud.atguigu.cloudalibabaproviderpayment9002;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

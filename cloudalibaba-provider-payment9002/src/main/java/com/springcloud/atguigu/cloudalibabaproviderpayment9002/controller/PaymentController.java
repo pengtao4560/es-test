@@ -1,4 +1,4 @@
-package java.com.springcloud.atguigu.cloudalibabaproviderpayment9002.controller;
+package com.springcloud.atguigu.cloudalibabaproviderpayment9002.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
