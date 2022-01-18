@@ -7,3 +7,6 @@
 /cloud-eureka-server7001/target/
 /cloud-consumer-order80/target/
 /lib/
+!/.idea/misc.xml
+!/.idea/uiDesigner.xml
+!/.idea/vcs.xml
