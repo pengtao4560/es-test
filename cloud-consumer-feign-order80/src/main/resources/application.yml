@@ -19,7 +19,7 @@ feign:
       default:
         connectTimeout: 2000
         readTimeout: 2000
-      CLOUD-PAYMENT-SERVICE:
+      tdm-dossier-import:
         connectTimeout: 3400
         readTimeout: 3400
 
