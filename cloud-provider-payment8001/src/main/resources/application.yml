@@ -4,11 +4,11 @@ server:
 spring:
   application:
     name: cloud-payment-service
-  zipkin:
-    base-url: http://localhost:9411
-  sleuth:
-    sampler:
-      rate: 100
+#  zipkin:
+#    base-url: http://localhost:9411
+#  sleuth:
+#    sampler:
+#      rate: 100
     #采样率值介于 0 到 1 之间，1 则表示全部采集
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource            # 当前数据源操作类型
