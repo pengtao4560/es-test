@@ -1,6 +1,14 @@
 @RequestBody 注解常用来处理content-type不是默认的application/x-www-form-urlcoded编码的内容，
 比如说：application/json或者是application/xml等。一般情况下来说常用其来处理application/json类型。
+-----------参考文章： https://www.cnblogs.com/zhuhui-site/p/10088238.html
 
+@requestbody的含义是在当前对象获取整个http请求的body里面的所有数据，因此spring就不可能将这个数据强制包装成Course或者List类型，
+并且从@requestbody设计上来说，
+只获取一次就可以拿到请求body里面的所有数据，就没必要出现有多个@requestbody出现在controller的函数的形参列表当中
+当同时使用@RequestParam（）和@RequestBody时，@RequestParam（）指定的参数可以是普通元素、数组、集合、对象等等(即:当，
+@RequestBody 与@RequestParam()可以同时使用时，
+原SpringMVC接收参数的机制不变，只不过RequestBody 接收的是请求体里面的数据；而RequestParam接收的是key-value里面的参数
+-----------
 
 restTemplate
 RestTemplate提供了多种便捷访问远程Http服务的方法， 
