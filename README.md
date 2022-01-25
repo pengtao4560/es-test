@@ -24,3 +24,32 @@ mac/linux系统的hosts文件的位置如下：/etc/hosts
 例如
 127.0.0.1	github.com
 127.0.0.1	github.global.ssl.fastly.net
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
