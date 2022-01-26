@@ -81,3 +81,72 @@ less指令：less - opposite of more 用来分屏查看文件内容，比more指
 对于大型文件的显示具有较高效率
          空格/PgUp 翻页/下一页  enter 下一行 q退出more模式  上一页 PgDn   /字符串  向下搜寻字符串  n：向下查找 N：向上查找
                                                                       ?字符串 向上搜寻字符串  n：向下查找 N：向上查找
+echo指令
+echo输出内容到控制台
+    输出环境变量
+[root@pengtao ~]# echo $PATH
+/usr/lib64/qt-3.3/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+
+head指令
+    显示文件的开头部分内容，默认文件的前10行
+    head -n 5 文件路径文件名 制定显示文件的多少行
+    例如
+
+[root@pengtao /]# head -n 5 /etc/profile
+# /etc/profile
+
+# System wide environment and startup programs, for login setup
+# Functions and aliases go in /etc/bashrc
+
+[root@pengtao /]# 
+
+tail指令
+ tail用于输出文件尾部的内容，默认后10行
+ tail -n 5 文件  查看文件后5行的文件内容，5可以是任何行数
+ tail -f 文件    实时追踪该文档的所有更新
+    查看文件最后5行并且实时追踪该文档的更新
+
+[root@pengtao /]# tail -5f /etc/profile
+fi
+done
+
+unset i
+unset -f pathmunge
+
+ln指令
+软链接也叫符号链接，类似于windows的快捷方式，主要存放了链接其他文件的路径
+例如：
+
+ln -s [源文件或目录][软链接名]
+
+history指令
+显示所有执行过的指令 history
+显示最近执行过的10个指令 histtory 10
+执行历史编号为5的指令 history查看编号    !编号
+
+时间日期类：
+date "+%Y-%m-%d %H:%M:%S"
+显示日期时间
+[root@pengtao /]# date "+%Y-%m-%d %H:%M:%S"
+2022-01-25 22:49:25
+[root@pengtao /]# 
+
+设置系统时间
+date -s "2022-01-25 22:50:45"
+
+cal指令   calendarr日历指令
+
+cal
+cal 2022
+ 
+find指令
+
+find [搜索范围] [选项]
+案例： 按文件名-name 根据名称hello.txt 查找/home目录下的 hello.txt
+find /home -name hello.txt
+按文件拥有着 根据文件名 查找
+find /opt -user nobody
+
+查找整个linux系统下 按大小 查找
+find / -size +20M
+find /home -size -20M
