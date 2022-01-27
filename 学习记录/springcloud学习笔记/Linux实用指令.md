@@ -41,7 +41,8 @@ cd指令  Change the shell working directory. 切换目录
 
 mkdir指令： 创建目录                 mkdir - make directories
 一次创建多级目录，带上 -p参数         mkdir -p /home/animal/tiger
-
+                  -p意思为： no error if existing, make parent directories as needed
+                            如果存在（错误）的话，不报错，根据需要创建父目录
 rmdir删除目录   - remove empty directories
 如果需要删除非空目录，需要使用  rm -rf 指定目录
 
@@ -81,6 +82,7 @@ less指令：less - opposite of more 用来分屏查看文件内容，比more指
 对于大型文件的显示具有较高效率
          空格/PgUp 翻页/下一页  enter 下一行 q退出more模式  上一页 PgDn   /字符串  向下搜寻字符串  n：向下查找 N：向上查找
                                                                       ?字符串 向上搜寻字符串  n：向下查找 N：向上查找
+<<<<<<< HEAD
 echo指令
 echo输出内容到控制台
     输出环境变量
@@ -291,3 +293,24 @@ crond 任务调度
 croutab 进行任务调度
 crontab [选项]
  -e 
+=======
+
+date指令：显示当前日期
+date            
+date "+%Y-%m-%d%H:%M:%S"
+
+        [root@localhost /]# date
+        Tue Jan 25 11:07:12 PST 2022
+        [root@localhost /]# date "+%Y-%m-%d%H:%M:%S"
+        2022-01-2511:07:15
+
+date -s "2022-01-25 11:28:55"
+
+cal指令： 显示日历
+    cal
+    cal 2022
+
+
+df指令  报告文件系统磁盘空间使用情况 report file system disk space usage
+df -h
+>>>>>>> 685fd8a03d1dd3fcdaaa2d756bc29c933d83987c

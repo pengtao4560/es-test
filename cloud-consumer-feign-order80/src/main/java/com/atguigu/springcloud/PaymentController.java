@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 /**
  * @author pt
  * @createdate 2021/11/30 0030
@@ -40,5 +44,11 @@ public class PaymentController {
         return payment9001FeignService.getPayment(1);
     }
 
+    public static void main(String[] args) {
+        LocalDateTime localDateTime = LocalDate.now().atTime(LocalTime.MAX);
+        LocalDateTime localDateTime1 = LocalDate.now().atTime(23, 59, 59);
+        System.out.println(localDateTime);
+        System.out.println(localDateTime1);
+    }
 
 }
