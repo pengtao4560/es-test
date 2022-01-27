@@ -9,3 +9,11 @@ git com.atguigu.springcloud.config --global http.sslCAInfo "G:\1softwareInstall1
 git com.atguigu.springcloud.config --global http.sslVerify "false"
 
 git com.atguigu.springcloud.config --global http.sslVerify "false"
+
+centos6 不支持yum 一键复制解决：
+[参考博客](https://www.xmpan.com/944.html)
+sed -i "s|enabled=1|enabled=0|g" /etc/yum/pluginconf.d/fastestmirror.conf
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+curl -o /etc/yum.repos.d/CentOS-Base.repo https://www.xmpan.com/Centos-6-Vault-Aliyun.repo
+yum clean all
+yum makecache

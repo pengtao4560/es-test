@@ -82,7 +82,6 @@ less指令：less - opposite of more 用来分屏查看文件内容，比more指
 对于大型文件的显示具有较高效率
          空格/PgUp 翻页/下一页  enter 下一行 q退出more模式  上一页 PgDn   /字符串  向下搜寻字符串  n：向下查找 N：向上查找
                                                                       ?字符串 向上搜寻字符串  n：向下查找 N：向上查找
-<<<<<<< HEAD
 echo指令
 echo输出内容到控制台
     输出环境变量
@@ -132,6 +131,21 @@ date "+%Y-%m-%d %H:%M:%S"
 [root@pengtao /]# date "+%Y-%m-%d %H:%M:%S"
 2022-01-25 22:49:25
 [root@pengtao /]# 
+
+date指令：显示当前日期
+date            
+date "+%Y-%m-%d%H:%M:%S"
+
+        [root@localhost /]# date
+        Tue Jan 25 11:07:12 PST 2022
+        [root@localhost /]# date "+%Y-%m-%d%H:%M:%S"
+        2022-01-2511:07:15
+
+date -s "2022-01-25 11:28:55"
+
+cal指令： 显示日历
+cal
+cal 2022
 
 设置系统时间
 date -s "2022-01-25 22:50:45"
@@ -291,26 +305,158 @@ chgrp: 无效的组："wudang"
 
 crond 任务调度
 croutab 进行任务调度
-crontab [选项]
- -e 
-=======
+基本语法：
 
-date指令：显示当前日期
-date            
-date "+%Y-%m-%d%H:%M:%S"
+    crontab [选项]
+     -e 编辑crontab定时任务
+     -l 查看crontab任务
+     -r 删除当前用户所有的ctrontab任务
 
-        [root@localhost /]# date
-        Tue Jan 25 11:07:12 PST 2022
-        [root@localhost /]# date "+%Y-%m-%d%H:%M:%S"
-        2022-01-2511:07:15
+快速入门案例：
+设置任务调度文件: /etc/crontab
+设置个人任务调度
+执行crontab -e 命令。 
+然后输入任务到调度文件，
+例如:
+*/1 * * * * ls -l /etc >> /tmp/to.txt
 
-date -s "2022-01-25 11:28:55"
+每小时的每分钟执行 ls -l /etc/ > /tmp/to.txt 命令
+5个占位符的说明：
 
-cal指令： 显示日历
-    cal
-    cal 2022
+
+
+【1.如果只是简单的任务，可以不用写脚本，直接在crontab中加入任务即可
+ 2. 对于比较复杂的任务，需要写脚本（shell 编程）】
+ 3. 
+以下百度即可：
+ 
+    第1列 分钟1～59
+    第2列 小时1～23（0表示子夜）
+    第3列 日1～31
+    第4列 月1～12
+    第5列 星期0～6（0表示星期天）
+    第6列 要运行的命令
+
+    * 表示任何时间，比如第一个*代表一个小时中每分钟都执行一次
+
+    , 代表不连续的时间，如"0 8,12,16 * * *"代表每天8点0分、12点0分、16点0分执行一次命令
+
+    - 代表连续的时间范围，如"0 5 * * 1-6"代表每周一至周六的凌晨5点0分执行命令
+
+
+    */n 代表每隔多久执行一次。如上述示例中代表每隔一分钟执行一次命令
+
+案例参考 96页 [](https://github.com/pengtao4560/cloud2020/blob/6d75223cd271e782113c0d5b9e6f107bba79e0ab/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/pdf)
+
+1、编写shell脚本，如
+vim /home/mytask.sh
+
+date >> /tmp/mydate
+
+2、给mytask.sh一个可执行的权限
+
+chmod 744 /home/mytask.sh
+
+3、crontab -e
+
+    crond相关指令：
+        crontab -e 编辑任务
+        crontab -r 终止任务调度
+        crontab -l 列出当前有哪些任务调度
+        service crond restart 重启任务调度
+
+*/1 * * * * /home/mytask.sh
+// TODO 
+
+Linux磁盘分区、挂载
+分区基本知识：了解 mbr分区  
+windows下磁盘分区：
+Linux磁盘分区 
+
+            mount挂载
+            umount卸载
+老师不离开指令lsblk： 查看系统的分区和挂载的情况
+
+    [root@pengtao home]# lsblk -f
+    NAME   FSTYPE  LABEL            UUID                                 MOUNTPOINT
+    sr0    iso9660 CentOS_6.8_Final                                      /media/CentOS_6.8_Final
+    sda                                                                  
+    ├─sda1 ext4                     16783e93-0db1-4f38-8861-0eeb058c3fab /boot
+    ├─sda2 ext4                     81715f87-a9dd-4ba7-9af7-5a7058ea8f76 /
+    └─sda3 swap                     150bc620-7328-4952-9543-5a0ba183bc13 [SWAP]
+    [root@pengtao home]#
+    分区情况 分区类型                唯一标识分区的40位不重复的字符串         挂载点
+
 
 
 df指令  报告文件系统磁盘空间使用情况 report file system disk space usage
-df -h
->>>>>>> 685fd8a03d1dd3fcdaaa2d756bc29c933d83987c
+df -lh
+
+du指令： 查询指定目录的磁盘占用情况 estimate file space usage
+du -h /目录
+
+ -s 指定目录占用大小汇总
+ -h 带计量单位
+ -a all 包含文件
+ --max-depth=1 子目录深度
+ -c 列出明细的同事，增加汇总量
+
+案例：
+du -ach --max-depth=1 /opt
+
+    [root@pengtao ~]# du -ach --max-depth=1 /opt
+    163M	/opt/vmware-tools-distrib
+    4.0K	/opt/rh
+    54M	/opt/VMwareTools-10.3.10-13959562.tar.gz
+    1008K	/opt/tmp
+    217M	/opt
+    217M	总用量
+    [root@pengtao ~]# 
+
+指令
+
+    1)统计/home文件夹下文件的个数       wc统计个数
+    ls -l /home |grep "^-" | wc -l
+    
+    2)统计/home文件夹下目录的个数
+    ls -l /home |grep "^d" | wc -l
+    
+    3)统计/home文件夹下文件的个数， 包括子文件夹里的
+    ls -lR /home |grep "^-" | wc -l
+    
+    4)统计文件夹下目录的个数，包括子文件夹里的
+    ls -lR /home |grep "^d" | wc -l
+    
+    5)以树状显示目录结构  
+    tree
+    yum install tree
+    tree
+1.虚拟机能否连接外网
+2. DNS配置是否有问题！检验DNS配置是否正常可以这样做：nslookup www.baidu.com
+3. centos6 不支持yum解决：
+[参考博客](https://www.xmpan.com/944.html)
+centos6 不支持yum 一键复制解决：
+sed -i "s|enabled=1|enabled=0|g" /etc/yum/pluginconf.d/fastestmirror.conf
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+curl -o /etc/yum.repos.d/CentOS-Base.repo https://www.xmpan.com/Centos-6-Vault-Aliyun.repo
+yum clean all
+yum makecache
+
+
+Linux网络配置：
+目前我们的网络配置采用的是NAT模式
+一。自动ip
+linux-系统-首选项-网络连接-编辑-自动连接-应用
+缺点：每次自动获取的IP地址可能不一样。如果是个网站，每次IP地址不一样是不行的，不适用于做服务器。
+服务器的IP是需要固定的
+二 指定固定的ip
+
+vi /etc/sysconfig/network-scripts/ifcfg-eth0
+追加：
+        IPADDR=192.168.159.131
+        GATEWAY=192.168.159.2
+        DNS1=192.168.159.2
+        PREFIX=24
+找到BOOTPROTO修改为：
+        BOOTPROTO=static
+确认      ONBOOT=yes
