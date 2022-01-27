@@ -142,11 +142,152 @@ cal 2022
 find指令
 
 find [搜索范围] [选项]
-案例： 按文件名-name 根据名称hello.txt 查找/home目录下的 hello.txt
+案例： 
+1.按文件名-name 根据名称hello.txt 查找/home目录下的 文件hello.txt
 find /home -name hello.txt
-按文件拥有着 根据文件名 查找
+2.按文件拥有者 根据文件名 查找
 find /opt -user nobody
 
-查找整个linux系统下 按大小 查找
-find / -size +20M
-find /home -size -20M
+3.查找整个linux系统下 按大小 查找  + 大于 -小于 等于直接写 20M
+find /usr -size +20M
+find /home -size -20k
+find / -size 20M
+4.查询 / 目录下所有txt文件
+find / name *.txt
+1M = 1024k
+
+locate指令：  快速定位文件路径
+locate指令基于数据库进行查询，第一次运行该指令前，必须使用 updatedb指令创建locate数据库
+[root@pengtao mysql]# clear
+[root@pengtao mysql]# updatedb
+[root@pengtao mysql]# locate hello.txt
+/home/hello.txt
+[root@pengtao mysql]# 
+
+
+
+grep指令和管道符号 |
+grep过滤查找， 管道符 “|” 镖师将前一个命令的处理结果输出传递给后面的命令进行处理
+ -n 显示匹配行及行号
+ -i 忽略字母大小写
+
+案例：
+[root@pengtao mysql]# cat /home/hello.txt
+public class OrderFeignMain80 {
+
+    public static void main(String[] args) {
+        System.out.println("hello world");
+        SpringApplication.run(OrderFeignMain80.class, args);
+    }
+}
+[root@pengtao mysql]# cat /home/hello.txt | grep world
+System.out.println("hello world");
+[root@pengtao mysql]# cat /home/hello.txt | grep -n world
+4:        System.out.println("hello world");
+[root@pengtao mysql]#
+
+压缩和解压缩指令
+gzip/gunzip
+gzip 压缩文件（*.gz文件 压缩后原文件不保留）   
+gunzip 解压缩文件
+
+[root@pengtao home]# ls
+animal  a.txt  c  c.txt  hello.txt  
+[root@pengtao home]# gzip hello.txt c.txt
+[root@pengtao home]# ls
+animal  a.txt  c  c.txt.gz  hello.txt.gz 
+[root@pengtao home]# gunzip hello.txt.gz
+[root@pengtao home]# ls
+animal  a.txt  c  c.txt.gz  hello.txt 
+[root@pengtao home]#
+
+zip/unzip
+zip 压缩文件/ unzip解压缩文件
+ zip [选项]xxx.zip 将要压缩的内容
+ unzip [选项] 
+
+将home目录下所有文件压缩成home.zip
+zip -r home.zip /home/
+
+zip -r home.zip /home/
+
+[root@pengtao home]# unzip -d /opt/tmp/ home.zip
+[root@pengtao home]# ll /opt/tmp/ /opt/tmp/home
+/opt/tmp/:
+总用量 4
+drwxr-xr-x. 7 root root 4096 1月  26 20:19 home
+
+/opt/tmp/home:
+总用量 36
+drwxr-xr-x.  3 root root 4096 1月  25 04:24 animal
+-rw-r--r--.  1 root root  874 1月  25 06:28 a.txt
+-rw-r--r--.  1 root root   12 1月  25 06:31 c
+-rw-r--r--.  1 root root  436 1月  25 06:34 c.txt.gz
+-rw-r--r--.  1 root root  190 1月  26 20:07 hello.txt
+drwx------. 25 root root 4096 1月  25 03:06 pengtao
+drwx------.  4 root root 4096 1月  23 23:35 pt
+drwx------.  4 root root 4096 1月  23 23:44 yangxiao
+drwx------.  4 root root 4096 1月  23 23:43 zhangwuji
+
+
+tar指令 tar指令是打包指令，最后打包后的文件是 .tar.gz的文件
+tar [选项] XXX.tar.gz 打包的内容
+    -c 产生.tar打包文件
+    -x 产生详细信息       （--extract, --get extract files from an archive 从存档文件中提取文件，即产生详细信息）
+    -z 打包同时压缩
+    -x 解压.tar文件
+
+tar -zcvf a.tar.gz hello.txt a.txt
+tar -zcvf all.tar.gz /home/            打包整个home下所有文件
+解压到当前目录:    
+tar -zxvf a.tar.gz
+解压到指定目录  -C 
+tar -zvf a.tar.gz -C /opt/tmp/
+[root@pengtao home]# tar -zcvf a.tar.gz hello.txt a.txt
+hello.txt
+a.txt
+[root@pengtao home]# ls
+animal  a.tar.gz  a.txt  c  c.txt.gz  hello.txt  home.zip  pengtao  pt  yangxiao  zhangwuji
+[root@pengtao home]#
+
+权限管理(文件和目录的权限)
+
+本段需要参考 [](linux目录权限相关说明.md) 
+
+chmod指令
+r:read  w:write  x:execute    
+u:root   g:group  o:other a:all
+[root@pengtao home]# chmod u=rwx,g=rw,o=r hello.txt
+[root@pengtao home]# ls -lh hello.txt
+-rwxrw-r--. 1 root root 190 1月  26 20:07 hello.txt
+
+chown修改文件所有者
+chown newowner file
+
+使用root目录进行操作：
+将 /usr/local/mysql 目录 所有的文件和目录的 所有者 都改成 mysql
+chown -R mysql /usr/local/mysql
+-R 如果是目录，则使其下所有子文件或目录递归生效
+
+chgrp修改文件所在组
+chown group file
+chgrp -R /home/pengtao pengtao
+
+
+[root@pengtao pt]# chown -R  pengtao /home/pt
+[root@pengtao pt]# ll -s /home/pt
+总用量 0
+0 -rw-r--r--. 1 pengtao root 0 1月  26 21:31 hello.txt
+[root@pengtao pt]# chgrp -R wudang /home/pt
+chgrp: 无效的组："wudang"
+[root@pengtao pt]# chgrp -R mojiao /home/pt
+[root@pengtao pt]# ll -s /home/pt
+总用量 0
+0 -rw-r--r--. 1 pengtao mojiao 0 1月  26 21:31 hello.txt
+[root@pengtao pt]#
+
+
+crond 任务调度
+croutab 进行任务调度
+crontab [选项]
+ -e 
