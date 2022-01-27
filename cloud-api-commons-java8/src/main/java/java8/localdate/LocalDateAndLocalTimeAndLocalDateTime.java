@@ -1,4 +1,4 @@
-package java8.stream.localdate;
+package java8.localdate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
