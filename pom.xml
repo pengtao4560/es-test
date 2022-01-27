@@ -33,6 +33,8 @@
         <module>cloud-consumer-feign-hystrix-order80</module>
         <module>cloudalibaba-provider-payment9002</module>
         <module>cloudalibaba-consumer-nacos-order83</module>
+        <module>cloud-api-commons-java13</module>
+        <module>cloud-api-commons-java8</module>
 
     </modules>
 
