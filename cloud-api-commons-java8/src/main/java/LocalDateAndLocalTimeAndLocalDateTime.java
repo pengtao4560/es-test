@@ -7,7 +7,9 @@ import java.time.temporal.TemporalAmount;
 
 /**
    java8新特性 LocalDate LocalTime LocalDateTime Demo
-   详细api调用移步 test
+   详细api调用移步
+    {@link LocalDateTest}
+    setting->inspection->javadoc:The declaration has a problem in the Javadoc reference error调成warning即可
  * @author: peng tao
  * @create: 2022-01-27 14:38
  */

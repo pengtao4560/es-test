@@ -47,3 +47,45 @@ LocalDateTime 使用 ISO-8601日历系统的日期和时间
     isBefore, isAfter                                   比较两个 LocalDate
 
     isLeapYear                                          判断是否是闰年
+
+
+Duration 和 Period
+Duration:用于计算两个“时间”间隔
+Period:用于计算两个“日期”间隔
+
+    类                               To 遗留类                               From 遗留类
+    java.time.Instant
+    java.util.Date                  Date.from(instant)                      date.toInstant()
+        
+    java.time.Instant
+    java.sql.Timestamp              Timestamp.from(instant)                 timestamp.toInstant()
+    
+    java.time.ZonedDateTime
+    java.util.GregorianCalendar
+                                    GregorianCalendar.from(zonedDateTime)   cal.toZonedDateTime()
+    java.time.LocalDate
+    java.sql.Time                   Date.valueOf(localDate)                 date.toLocalDate()
+    java.time.LocalTime
+    java.sql.Time                   Date.valueOf(localDate)                 date.toLocalTime()
+    java.time.LocalDateTime
+    java.sql.Timestamp              Timestamp.valueOf(localDateTime)        timestamp.toLocalDateTime()
+    java.time.ZoneId
+    java.util.TimeZone              Timezone.getTimeZone(id)                timeZone.toZoneId()
+    java.time.format.DateTimeFormatter
+    java.text.DateFormat            formatter.toFormat()                    无
+
+// TODO 测试类进行测试以上转换
+
+Optional 类
+Optional<T> 类(java.util.Optional) 是一个容器类，代表一个值存在或不存在，
+原来用 null 表示一个值不存在，现在 Optional 可以更好的表达这个概念。并且
+可以避免空指针异常。
+常用方法：
+Optional.of(T t) : 创建一个 Optional 实例
+Optional.empty() : 创建一个空的 Optional 实例
+Optional.ofNullable(T t):若 t 不为 null,创建 Optional 实例,否则创建空实例
+isPresent() : 判断是否包含值
+orElse(T t) : 如果调用对象包含值，返回该值，否则返回t
+orElseGet(Supplier s) :如果调用对象包含值，返回该值，否则返回 s 获取的值
+map(Function f): 如果有值对其处理，并返回处理后的Optional，否则返回 Optional.empty()
+flatMap(Function mapper):与 map 类似，要求返回值必须是Optional
