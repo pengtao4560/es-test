@@ -1,7 +1,8 @@
 
 [java8新特性](Java8%20新特性.pdf)
 
-LocalDate、LocalTime、LocalDateTime 类的实例是不可变的对象，
+### LocalDate、LocalTime、LocalDateTime 类
+LocalDate、LocalTime、LocalDateTime 类的实例是不可变的对象
 分别表示使用 ISO-8601日历系统的日期、时间、日期和时间。
 它们提供了简单的日期或时间，并不包含当前的时间信息。也不包含与时区相关的信息。
 注：ISO-8601日历系统是国际标准化组织制定的现代公民的日期和时间的表示法
@@ -49,7 +50,7 @@ LocalDateTime 使用 ISO-8601日历系统的日期和时间
     isLeapYear                                          判断是否是闰年
 
 
-Duration 和 Period
+###Duration 和 Period
 Duration:用于计算两个“时间”间隔
 Period:用于计算两个“日期”间隔
 
