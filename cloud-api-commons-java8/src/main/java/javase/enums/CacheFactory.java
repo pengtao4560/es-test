@@ -1,6 +1,7 @@
 package javase.enums;
 
-import com.cy.java.cache.Cache;
+
+import javase.cache.Cache;
 
 public class CacheFactory<K,V> {//MyBatis Configuration,new Exector();
 	  public Cache<K,V> newCache(CacheType cacheType) {

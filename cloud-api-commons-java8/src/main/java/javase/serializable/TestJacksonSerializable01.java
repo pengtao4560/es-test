@@ -1,6 +1,7 @@
 package javase.serializable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 
 /**
  *  商品对象
@@ -54,11 +55,11 @@ public class TestJacksonSerializable01 {
 		//2.将对象转换为json格式字符串
 		return om.writeValueAsString(goods);
 	}
-	static Goods doObjectFromJson01(String jsonStr)
-			throws Exception{
+	@SneakyThrows
+	static Goods doObjectFromJson01(String jsonStr) throws Exception {
 		 //1.构建json转换器对象
 		 ObjectMapper om=new ObjectMapper();
-		 return om.readValue(jsonStr,Goods.class);
+		 return om.readValue(jsonStr, Goods.class);
 	}
 	//fastjson,Gson
 }
