@@ -9,15 +9,15 @@
 基本语法
 init[012356]
 vim /etc/inittab
-
-# Default runlevel. The runlevels used are:
-#   0 - halt (Do NOT set initdefault to this)
-#   1 - Single user mode
-#   2 - Multiuser, without NFS (The same as 3, if you do not have networking)
-#   3 - Full multiuser mode
-#   4 - unused
-#   5 - X11
-#   6 - reboot (Do NOT set initdefault to this)
+    
+    # Default runlevel. The runlevels used are:
+    #   0 - halt (Do NOT set initdefault to this)
+    #   1 - Single user mode
+    #   2 - Multiuser, without NFS (The same as 3, if you do not have networking)
+    #   3 - Full multiuser mode
+    #   4 - unused
+    #   5 - X11
+    #   6 - reboot (Do NOT set initdefault to this)
 linux如何修改root密码(前提，不能用 远程连接，相当于你接触这台虚拟机所在的电脑， 所以安全性 不会降低)
 开机  > 在引导时输入 回车键 - > 看到一个界面输入 -> 看到一个新的界面，选择第二行(editor Kernel编辑内核) 再输入e -> 
 - 在这行输入1 然后再输入回车键 -> 再次输入b, 然后将进入单用户模式。 
@@ -460,3 +460,97 @@ vi /etc/sysconfig/network-scripts/ifcfg-eth0
 找到BOOTPROTO修改为：
         BOOTPROTO=static
 确认      ONBOOT=yes
+
+
+###Linux 进程管理
+
+ps 查看进程使用的指令[report a snapshot of the current processes]，一般来说使用的参数是  ps -aux
+ -a all显示当前终端的所有进程信息
+ -u userList 以用户的格式显示进程信息
+ -x 显示后台进程运行的参数 Register format
+ -e  在命令之后显示环境。 （Show the environment after the command.）
+ -f 【ASCII-art过程层次结构(森林)】ASCII-art process hierarchy (forest)
+
+
+To see every process on the system using standard syntax:【使用标准语法查看系统中的每个进程:  】
+ps -e
+ps -ef
+ps -eF
+ps -ely
+
+To see every process on the system using BSD syntax: 【使用BSD语法查看系统中的每个进程:  】
+ps ax
+ps axu
+
+ps -aux|grep sshd
+ps -ef|grep java
+
+学习记录/pdf/linux进程ps含义.png
+
+    [root@pengtao ~]# ps -ax|grep sshd:pengtao
+    Warning: bad syntax, perhaps a bogus '-'? See /usr/share/doc/procps-3.2.8/FAQ
+    4151 pts/3    S+     0:00 grep sshd:pengtao
+    [root@pengtao ~]# kill -9 4151
+    -bash: kill: (4151) - 没有那个进程
+根据 进程号结束进程
+kill -9 pid
+根据名字结束进程
+killall progressName
+
+#【/bin/bash 说明是一个终端】
+ps -ef|grep bash
+
+pstreee -u 显示进程树
+
+#服务(service)管理
+一般一个服务都会监听一个端口
+默认：
+sshd 22 
+mysql 3306
+
+###CentOS 6服务指令
+centos6 上的服务管理工具为chkconfig，Linux系统所有的预设服务都可以通过查看/etc/init.d/目录得到。但里边只有屈指可数的几个文件，因为CentOS 7已经不再延续CentOS6版本的服务管理方案了。但是我们依然可以继续使用chkconfig这个命令。系统的服务都可以通过这样的命令实现：
+
+    service 服务名 start|stop|restart|status
+    
+    service iptables start
+
+###CentOS 7服务指令
+centos7不使用SysV而改为systemd了，这是因为systemd支持多个服务并发启动，而SysV只能一个一个地启动，这样最终导致的结果是systemd方式启动会快很多。
+
+列出系统所有的服务
+
+systemctl list-units -all --type=service
+1
+这些服务对应的启动脚本在/usr/lib/systemd/system/
+
+常用命令
+
+    systemctl enable crond.service #让某个服务开机启动（.service可以省略）
+    systemctl disable crond.service #不让开机启动
+    systemctl status crond.service #查看服务状态
+    systemctl start crond.service #启动某个服务
+    systemctl stop crond.service #停止某个服务
+    systemctl restart crond.service #重启某个服务
+    systemctl is-enabled crond #查看某个服务是否开机启动
+
+通过telnet指令来检查linux的某个端口是否在监听，并且可以访问
+telnet ip 端口
+windows cmd窗口
+telnet 192.168.159.131 22
+
+【telnet不是内部或外部命令 解决：】开始"→"控制器面板"→"程序和功能"→ 左侧"启动或关闭windows功能"→ 在"Windows功能"界面勾选Telnet client →点击"确定"等待安装。
+
+### 如果希望设置某个服务自启动或关闭永久生效，要使用chkconfig指令：
+
+使用setup指令，选择系统服务 * 是自启动
+或
+ls -l /etc/init.d/
+可以查看服务
+
+查看或修改运行级别
+vi /etc/inittab
+
+备忘：
+linux 50节课学到 20分钟了
+49已学完
