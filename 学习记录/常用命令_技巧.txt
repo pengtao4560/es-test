@@ -1,0 +1,49 @@
+
+
+host文件路径：
+C:\Windows\System32\drivers\etc
+
+win+ r 输入  taskmgr 打开任务管理器
+
+查看已经安装的CentOS版本信息
+
+    1.cat /etc/issue 查看版本
+
+
+
+数据库管理员临时密码
+kv(uk>Pgp45c
+
+set password for root@localhost = password('root');
+
+--查看mysql状态 service mysql status
+
+--停止mysql service mysql stop
+
+--启动mysql service mysql start
+
+ 
+
+IDEA快捷键的使用：
+ * 快速搜索类中的错误(next highlighted error) shitf+e  shif+q  ctrl + shift + q
+ * 执行(run) alt+r						提示补全 (Class Name Completion) alt+/
+ * 向下开始新的一行(start new line) shift+enter			万能解错/生成返回值变量 alt + enter
+ * 退回到前一个编辑的页面 (back) alt + 左/右
+ * 进入到下一个编辑的页面 alt + right  (针对于上条) (forward)
+ * 查看继承关系(type hierarchy) F4				格式化代码(reformat code) ctrl+shift+F/ctrl +i
+ *  提示方法参数类型 alt+a 或者 ctrl+alt+/  (Parameter Info)		选中数行，整体往后移动 tab
+ *  选中数行，整体往前移动 shift + tab				查看类的结构：类似于 eclipse 的 outline ctrl+o
+ *  重构：修改变量名与方法名(rename) alt+shift+r
+ * 大写转小写/小写转大写(toggle case) ctrl+shift+y		收起所有的方法(collapse all) alt + shift + c
+ * 打开所有方法(expand all) alt+shift+xW			打开代码所在硬盘文件夹ctrl+r/ctrl+shift+x     (show in explorer)
+ * 生成 try-catch 等(surround with) alt+shift+z
+ * 局部变量抽取为成员变量(introduce field) alt+shift+f		查找文件 double Shift
+ * 查看类的继承结构图(Show UML Diagram)  ctrl + shift + u		查看方法的多层重写结构  ctrl+alt+h (method hierarchy)
+ * 添加到收藏(add to favorites) ctrl+alt+f			 打开最近修改的文件(Recently Files) ctrl+E
+ * 关闭当前打开的代码栏(close) ctrl + w				关闭打开的所有代码栏(close all) ctrl + shift + w
+ * 选择要粘贴的内容(Show in Explorer) ctrl+shift+v		查找方法在哪里被调用(Call Hierarchy) ctrl+shift+h /shift + h
+ * 
+
+
+linux下下载文件报错curl: (35) SSL connect error问题处理
+无法在服务器使用curl命令访问https域名,原因是nss版本有点旧了，yum -y update nss更新一下，重新curl即可！
