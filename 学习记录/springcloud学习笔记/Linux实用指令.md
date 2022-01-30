@@ -9,15 +9,15 @@
 基本语法
 init[012356]
 vim /etc/inittab
-
-# Default runlevel. The runlevels used are:
-#   0 - halt (Do NOT set initdefault to this)
-#   1 - Single user mode
-#   2 - Multiuser, without NFS (The same as 3, if you do not have networking)
-#   3 - Full multiuser mode
-#   4 - unused
-#   5 - X11
-#   6 - reboot (Do NOT set initdefault to this)
+    
+    # Default runlevel. The runlevels used are:
+    #   0 - halt (Do NOT set initdefault to this)
+    #   1 - Single user mode
+    #   2 - Multiuser, without NFS (The same as 3, if you do not have networking)
+    #   3 - Full multiuser mode
+    #   4 - unused
+    #   5 - X11
+    #   6 - reboot (Do NOT set initdefault to this)
 linux如何修改root密码(前提，不能用 远程连接，相当于你接触这台虚拟机所在的电脑， 所以安全性 不会降低)
 开机  > 在引导时输入 回车键 - > 看到一个界面输入 -> 看到一个新的界面，选择第二行(editor Kernel编辑内核) 再输入e -> 
 - 在这行输入1 然后再输入回车键 -> 再次输入b, 然后将进入单用户模式。 
@@ -82,6 +82,55 @@ less指令：less - opposite of more 用来分屏查看文件内容，比more指
 对于大型文件的显示具有较高效率
          空格/PgUp 翻页/下一页  enter 下一行 q退出more模式  上一页 PgDn   /字符串  向下搜寻字符串  n：向下查找 N：向上查找
                                                                       ?字符串 向上搜寻字符串  n：向下查找 N：向上查找
+echo指令
+echo输出内容到控制台
+    输出环境变量
+[root@pengtao ~]# echo $PATH
+/usr/lib64/qt-3.3/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+
+head指令
+    显示文件的开头部分内容，默认文件的前10行
+    head -n 5 文件路径文件名 制定显示文件的多少行
+    例如
+
+[root@pengtao /]# head -n 5 /etc/profile
+# /etc/profile
+
+# System wide environment and startup programs, for login setup
+# Functions and aliases go in /etc/bashrc
+
+[root@pengtao /]# 
+
+tail指令
+ tail用于输出文件尾部的内容，默认后10行
+ tail -n 5 文件  查看文件后5行的文件内容，5可以是任何行数
+ tail -f 文件    实时追踪该文档的所有更新
+    查看文件最后5行并且实时追踪该文档的更新
+
+[root@pengtao /]# tail -5f /etc/profile
+fi
+done
+
+unset i
+unset -f pathmunge
+
+ln指令
+软链接也叫符号链接，类似于windows的快捷方式，主要存放了链接其他文件的路径
+例如：
+
+ln -s [源文件或目录][软链接名]
+
+history指令
+显示所有执行过的指令 history
+显示最近执行过的10个指令 histtory 10
+执行历史编号为5的指令 history查看编号    !编号
+
+时间日期类：
+date "+%Y-%m-%d %H:%M:%S"
+显示日期时间
+[root@pengtao /]# date "+%Y-%m-%d %H:%M:%S"
+2022-01-25 22:49:25
+[root@pengtao /]# 
 
 date指令：显示当前日期
 date            
@@ -95,9 +144,413 @@ date "+%Y-%m-%d%H:%M:%S"
 date -s "2022-01-25 11:28:55"
 
 cal指令： 显示日历
-    cal
-    cal 2022
+cal
+cal 2022
+
+设置系统时间
+date -s "2022-01-25 22:50:45"
+
+cal指令   calendarr日历指令
+
+cal
+cal 2022
+ 
+find指令
+
+find [搜索范围] [选项]
+案例： 
+1.按文件名-name 根据名称hello.txt 查找/home目录下的 文件hello.txt
+find /home -name hello.txt
+2.按文件拥有者 根据文件名 查找
+find /opt -user nobody
+
+3.查找整个linux系统下 按大小 查找  + 大于 -小于 等于直接写 20M
+find /usr -size +20M
+find /home -size -20k
+find / -size 20M
+4.查询 / 目录下所有txt文件
+find / name *.txt
+1M = 1024k
+
+locate指令：  快速定位文件路径
+locate指令基于数据库进行查询，第一次运行该指令前，必须使用 updatedb指令创建locate数据库
+[root@pengtao mysql]# clear
+[root@pengtao mysql]# updatedb
+[root@pengtao mysql]# locate hello.txt
+/home/hello.txt
+[root@pengtao mysql]# 
+
+
+
+grep指令和管道符号 |
+grep过滤查找， 管道符 “|” 镖师将前一个命令的处理结果输出传递给后面的命令进行处理
+ -n 显示匹配行及行号
+ -i 忽略字母大小写
+
+案例：
+[root@pengtao mysql]# cat /home/hello.txt
+public class OrderFeignMain80 {
+
+    public static void main(String[] args) {
+        System.out.println("hello world");
+        SpringApplication.run(OrderFeignMain80.class, args);
+    }
+}
+[root@pengtao mysql]# cat /home/hello.txt | grep world
+System.out.println("hello world");
+[root@pengtao mysql]# cat /home/hello.txt | grep -n world
+4:        System.out.println("hello world");
+[root@pengtao mysql]#
+
+压缩和解压缩指令
+gzip/gunzip
+gzip 压缩文件（*.gz文件 压缩后原文件不保留）   
+gunzip 解压缩文件
+
+[root@pengtao home]# ls
+animal  a.txt  c  c.txt  hello.txt  
+[root@pengtao home]# gzip hello.txt c.txt
+[root@pengtao home]# ls
+animal  a.txt  c  c.txt.gz  hello.txt.gz 
+[root@pengtao home]# gunzip hello.txt.gz
+[root@pengtao home]# ls
+animal  a.txt  c  c.txt.gz  hello.txt 
+[root@pengtao home]#
+
+zip/unzip
+zip 压缩文件/ unzip解压缩文件
+ zip [选项]xxx.zip 将要压缩的内容
+ unzip [选项] 
+
+将home目录下所有文件压缩成home.zip
+zip -r home.zip /home/
+
+zip -r home.zip /home/
+
+[root@pengtao home]# unzip -d /opt/tmp/ home.zip
+[root@pengtao home]# ll /opt/tmp/ /opt/tmp/home
+/opt/tmp/:
+总用量 4
+drwxr-xr-x. 7 root root 4096 1月  26 20:19 home
+
+/opt/tmp/home:
+总用量 36
+drwxr-xr-x.  3 root root 4096 1月  25 04:24 animal
+-rw-r--r--.  1 root root  874 1月  25 06:28 a.txt
+-rw-r--r--.  1 root root   12 1月  25 06:31 c
+-rw-r--r--.  1 root root  436 1月  25 06:34 c.txt.gz
+-rw-r--r--.  1 root root  190 1月  26 20:07 hello.txt
+drwx------. 25 root root 4096 1月  25 03:06 pengtao
+drwx------.  4 root root 4096 1月  23 23:35 pt
+drwx------.  4 root root 4096 1月  23 23:44 yangxiao
+drwx------.  4 root root 4096 1月  23 23:43 zhangwuji
+
+
+tar指令 tar指令是打包指令，最后打包后的文件是 .tar.gz的文件
+tar [选项] XXX.tar.gz 打包的内容
+    -c 产生.tar打包文件
+    -x 产生详细信息       （--extract, --get extract files from an archive 从存档文件中提取文件，即产生详细信息）
+    -z 打包同时压缩
+    -x 解压.tar文件
+
+tar -zcvf a.tar.gz hello.txt a.txt
+tar -zcvf all.tar.gz /home/            打包整个home下所有文件
+解压到当前目录:    
+tar -zxvf a.tar.gz
+解压到指定目录  -C 
+tar -zvf a.tar.gz -C /opt/tmp/
+[root@pengtao home]# tar -zcvf a.tar.gz hello.txt a.txt
+hello.txt
+a.txt
+[root@pengtao home]# ls
+animal  a.tar.gz  a.txt  c  c.txt.gz  hello.txt  home.zip  pengtao  pt  yangxiao  zhangwuji
+[root@pengtao home]#
+
+权限管理(文件和目录的权限)
+
+本段需要参考 [](linux目录权限相关说明.md) 
+
+chmod指令
+r:read  w:write  x:execute    
+u:root   g:group  o:other a:all
+[root@pengtao home]# chmod u=rwx,g=rw,o=r hello.txt
+[root@pengtao home]# ls -lh hello.txt
+-rwxrw-r--. 1 root root 190 1月  26 20:07 hello.txt
+
+chown修改文件所有者
+chown newowner file
+
+使用root目录进行操作：
+将 /usr/local/mysql 目录 所有的文件和目录的 所有者 都改成 mysql
+chown -R mysql /usr/local/mysql
+-R 如果是目录，则使其下所有子文件或目录递归生效
+
+chgrp修改文件所在组
+chown group file
+chgrp -R /home/pengtao pengtao
+
+
+[root@pengtao pt]# chown -R  pengtao /home/pt
+[root@pengtao pt]# ll -s /home/pt
+总用量 0
+0 -rw-r--r--. 1 pengtao root 0 1月  26 21:31 hello.txt
+[root@pengtao pt]# chgrp -R wudang /home/pt
+chgrp: 无效的组："wudang"
+[root@pengtao pt]# chgrp -R mojiao /home/pt
+[root@pengtao pt]# ll -s /home/pt
+总用量 0
+0 -rw-r--r--. 1 pengtao mojiao 0 1月  26 21:31 hello.txt
+[root@pengtao pt]#
+
+
+crond 任务调度
+croutab 进行任务调度
+基本语法：
+
+    crontab [选项]
+     -e 编辑crontab定时任务
+     -l 查看crontab任务
+     -r 删除当前用户所有的ctrontab任务
+
+快速入门案例：
+设置任务调度文件: /etc/crontab
+设置个人任务调度
+执行crontab -e 命令。 
+然后输入任务到调度文件，
+例如:
+*/1 * * * * ls -l /etc >> /tmp/to.txt
+
+每小时的每分钟执行 ls -l /etc/ > /tmp/to.txt 命令
+5个占位符的说明：
+
+
+
+【1.如果只是简单的任务，可以不用写脚本，直接在crontab中加入任务即可
+ 2. 对于比较复杂的任务，需要写脚本（shell 编程）】
+ 3. 
+以下百度即可：
+ 
+    第1列 分钟1～59
+    第2列 小时1～23（0表示子夜）
+    第3列 日1～31
+    第4列 月1～12
+    第5列 星期0～6（0表示星期天）
+    第6列 要运行的命令
+
+    * 表示任何时间，比如第一个*代表一个小时中每分钟都执行一次
+
+    , 代表不连续的时间，如"0 8,12,16 * * *"代表每天8点0分、12点0分、16点0分执行一次命令
+
+    - 代表连续的时间范围，如"0 5 * * 1-6"代表每周一至周六的凌晨5点0分执行命令
+
+
+    */n 代表每隔多久执行一次。如上述示例中代表每隔一分钟执行一次命令
+
+案例参考 96页 [](https://github.com/pengtao4560/cloud2020/blob/6d75223cd271e782113c0d5b9e6f107bba79e0ab/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/pdf)
+
+1、编写shell脚本，如
+vim /home/mytask.sh
+
+date >> /tmp/mydate
+
+2、给mytask.sh一个可执行的权限
+
+chmod 744 /home/mytask.sh
+
+3、crontab -e
+
+    crond相关指令：
+        crontab -e 编辑任务
+        crontab -r 终止任务调度
+        crontab -l 列出当前有哪些任务调度
+        service crond restart 重启任务调度
+
+*/1 * * * * /home/mytask.sh
+// TODO 
+
+Linux磁盘分区、挂载
+分区基本知识：了解 mbr分区  
+windows下磁盘分区：
+Linux磁盘分区 
+
+            mount挂载
+            umount卸载
+老师不离开指令lsblk： 查看系统的分区和挂载的情况
+
+    [root@pengtao home]# lsblk -f
+    NAME   FSTYPE  LABEL            UUID                                 MOUNTPOINT
+    sr0    iso9660 CentOS_6.8_Final                                      /media/CentOS_6.8_Final
+    sda                                                                  
+    ├─sda1 ext4                     16783e93-0db1-4f38-8861-0eeb058c3fab /boot
+    ├─sda2 ext4                     81715f87-a9dd-4ba7-9af7-5a7058ea8f76 /
+    └─sda3 swap                     150bc620-7328-4952-9543-5a0ba183bc13 [SWAP]
+    [root@pengtao home]#
+    分区情况 分区类型                唯一标识分区的40位不重复的字符串         挂载点
+
 
 
 df指令  报告文件系统磁盘空间使用情况 report file system disk space usage
-df -h
+df -lh
+
+du指令： 查询指定目录的磁盘占用情况 estimate file space usage
+du -h /目录
+
+ -s 指定目录占用大小汇总
+ -h 带计量单位
+ -a all 包含文件
+ --max-depth=1 子目录深度
+ -c 列出明细的同事，增加汇总量
+
+案例：
+du -ach --max-depth=1 /opt
+
+    [root@pengtao ~]# du -ach --max-depth=1 /opt
+    163M	/opt/vmware-tools-distrib
+    4.0K	/opt/rh
+    54M	/opt/VMwareTools-10.3.10-13959562.tar.gz
+    1008K	/opt/tmp
+    217M	/opt
+    217M	总用量
+    [root@pengtao ~]# 
+
+指令
+
+    1)统计/home文件夹下文件的个数       wc统计个数
+    ls -l /home |grep "^-" | wc -l
+    
+    2)统计/home文件夹下目录的个数
+    ls -l /home |grep "^d" | wc -l
+    
+    3)统计/home文件夹下文件的个数， 包括子文件夹里的
+    ls -lR /home |grep "^-" | wc -l
+    
+    4)统计文件夹下目录的个数，包括子文件夹里的
+    ls -lR /home |grep "^d" | wc -l
+    
+    5)以树状显示目录结构  
+    tree
+    yum install tree
+    tree
+1.虚拟机能否连接外网
+2. DNS配置是否有问题！检验DNS配置是否正常可以这样做：nslookup www.baidu.com
+3. centos6 不支持yum解决：
+[参考博客](https://www.xmpan.com/944.html)
+centos6 不支持yum 一键复制解决：
+sed -i "s|enabled=1|enabled=0|g" /etc/yum/pluginconf.d/fastestmirror.conf
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+curl -o /etc/yum.repos.d/CentOS-Base.repo https://www.xmpan.com/Centos-6-Vault-Aliyun.repo
+yum clean all
+yum makecache
+
+
+Linux网络配置：
+目前我们的网络配置采用的是NAT模式
+一。自动ip
+linux-系统-首选项-网络连接-编辑-自动连接-应用
+缺点：每次自动获取的IP地址可能不一样。如果是个网站，每次IP地址不一样是不行的，不适用于做服务器。
+服务器的IP是需要固定的
+二 指定固定的ip
+
+vi /etc/sysconfig/network-scripts/ifcfg-eth0
+追加：
+        IPADDR=192.168.159.131
+        GATEWAY=192.168.159.2
+        DNS1=192.168.159.2
+        PREFIX=24
+找到BOOTPROTO修改为：
+        BOOTPROTO=static
+确认      ONBOOT=yes
+
+
+###Linux 进程管理
+
+ps 查看进程使用的指令[report a snapshot of the current processes]，一般来说使用的参数是  ps -aux
+ -a all显示当前终端的所有进程信息
+ -u userList 以用户的格式显示进程信息
+ -x 显示后台进程运行的参数 Register format
+ -e  在命令之后显示环境。 （Show the environment after the command.）
+ -f 【ASCII-art过程层次结构(森林)】ASCII-art process hierarchy (forest)
+
+
+To see every process on the system using standard syntax:【使用标准语法查看系统中的每个进程:  】
+ps -e
+ps -ef
+ps -eF
+ps -ely
+
+To see every process on the system using BSD syntax: 【使用BSD语法查看系统中的每个进程:  】
+ps ax
+ps axu
+
+ps -aux|grep sshd
+ps -ef|grep java
+
+学习记录/pdf/linux进程ps含义.png
+
+    [root@pengtao ~]# ps -ax|grep sshd:pengtao
+    Warning: bad syntax, perhaps a bogus '-'? See /usr/share/doc/procps-3.2.8/FAQ
+    4151 pts/3    S+     0:00 grep sshd:pengtao
+    [root@pengtao ~]# kill -9 4151
+    -bash: kill: (4151) - 没有那个进程
+根据 进程号结束进程
+kill -9 pid
+根据名字结束进程
+killall progressName
+
+#【/bin/bash 说明是一个终端】
+ps -ef|grep bash
+
+pstreee -u 显示进程树
+
+#服务(service)管理
+一般一个服务都会监听一个端口
+默认：
+sshd 22 
+mysql 3306
+
+###CentOS 6服务指令
+centos6 上的服务管理工具为chkconfig，Linux系统所有的预设服务都可以通过查看/etc/init.d/目录得到。但里边只有屈指可数的几个文件，因为CentOS 7已经不再延续CentOS6版本的服务管理方案了。但是我们依然可以继续使用chkconfig这个命令。系统的服务都可以通过这样的命令实现：
+
+    service 服务名 start|stop|restart|status
+    
+    service iptables start
+
+###CentOS 7服务指令
+centos7不使用SysV而改为systemd了，这是因为systemd支持多个服务并发启动，而SysV只能一个一个地启动，这样最终导致的结果是systemd方式启动会快很多。
+
+列出系统所有的服务
+
+systemctl list-units -all --type=service
+1
+这些服务对应的启动脚本在/usr/lib/systemd/system/
+
+常用命令
+
+    systemctl enable crond.service #让某个服务开机启动（.service可以省略）
+    systemctl disable crond.service #不让开机启动
+    systemctl status crond.service #查看服务状态
+    systemctl start crond.service #启动某个服务
+    systemctl stop crond.service #停止某个服务
+    systemctl restart crond.service #重启某个服务
+    systemctl is-enabled crond #查看某个服务是否开机启动
+
+通过telnet指令来检查linux的某个端口是否在监听，并且可以访问
+telnet ip 端口
+windows cmd窗口
+telnet 192.168.159.131 22
+
+【telnet不是内部或外部命令 解决：】开始"→"控制器面板"→"程序和功能"→ 左侧"启动或关闭windows功能"→ 在"Windows功能"界面勾选Telnet client →点击"确定"等待安装。
+
+### 如果希望设置某个服务自启动或关闭永久生效，要使用chkconfig指令：
+
+使用setup指令，选择系统服务 * 是自启动
+或
+ls -l /etc/init.d/
+可以查看服务
+
+查看或修改运行级别
+vi /etc/inittab
+
+备忘：
+linux 50节课学到 20分钟了
+49已学完
