@@ -23,7 +23,7 @@ public class StreamAPITest {
     /**
      * 构建用户列表
      */
-    public static final List<User> USER_LIST = StreamAPITest.getUserList();
+    public static final List<Employee> USER_LIST = StreamAPITest.getEmployeeList();
 
 
     /**
@@ -34,8 +34,8 @@ public class StreamAPITest {
     public void multGroupingByTest() {
 
         //根据部门和性别对用户列表进行分组
-        Map<String, Map<String, List<User>>> userMap = USER_LIST.stream()
-                .collect(Collectors.groupingBy(User::getDept, Collectors.groupingBy(User::getGender)));
+        Map<String, Map<String, List<Employee>>> userMap = USER_LIST.stream()
+                .collect(Collectors.groupingBy(Employee::getDept, Collectors.groupingBy(Employee::getGender)));
 
         //遍历分组后的结果
         userMap.forEach((key1, map) -> {
@@ -55,7 +55,7 @@ public class StreamAPITest {
     public void groupingByTest() {
 
         //根据部门对用户列表进行分组
-        Map<String, List<User>> userMap = USER_LIST.stream().collect(Collectors.groupingBy(User::getDept));
+        Map<String, List<Employee>> userMap = USER_LIST.stream().collect(Collectors.groupingBy(Employee::getDept));
 
         //遍历分组后的结果
         userMap.forEach((key, value) -> {
@@ -74,7 +74,7 @@ public class StreamAPITest {
         //根据年龄排序（升序）
         //List user2List = userList.stream().sorted((u1, u2) -> u1.getAge() - u2.getAge()).collect(Collectors.toList());
         //推荐：
-        List userList2 = USER_LIST.stream().sorted(Comparator.comparingInt(User::getAge)).collect(Collectors.toList());
+        List userList2 = USER_LIST.stream().sorted(Comparator.comparingInt(Employee::getAge)).collect(Collectors.toList());
         //降序：userList = userList.stream().sorted(Comparator.comparingInt(User::getAge).reversed()).collect(Collectors.toList());
 
         //遍历用户列表
@@ -88,16 +88,16 @@ public class StreamAPITest {
     public void bigDecimalTest() {
 
         //最高薪资
-        BigDecimal maxSalary = USER_LIST.stream().map(User::getSalary).max((x1, x2) -> x1.compareTo(x2)).get();
+        BigDecimal maxSalary = USER_LIST.stream().map(Employee::getSalary).max((x1, x2) -> x1.compareTo(x2)).get();
 
         //最低薪资
-        BigDecimal minSalary = USER_LIST.stream().map(User::getSalary).min((x1, x2) -> x1.compareTo(x2)).get();
+        BigDecimal minSalary = USER_LIST.stream().map(Employee::getSalary).min((x1, x2) -> x1.compareTo(x2)).get();
 
         //薪资总和
-        BigDecimal sumSalary = USER_LIST.stream().map(User::getSalary).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumSalary = USER_LIST.stream().map(Employee::getSalary).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         //平均薪资
-        BigDecimal avgSalary = USER_LIST.stream().map(User::getSalary).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(USER_LIST.size()), 2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal avgSalary = USER_LIST.stream().map(Employee::getSalary).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(USER_LIST.size()), 2, BigDecimal.ROUND_HALF_UP);
 
         //打印统计结果
         System.out.println("最高薪资：" + maxSalary + "元");
@@ -114,7 +114,7 @@ public class StreamAPITest {
     public void summarizingIntTest() {
 
         //获取IntSummaryStatistics对象
-        IntSummaryStatistics ageStatistics = USER_LIST.stream().collect(Collectors.summarizingInt(User::getAge));
+        IntSummaryStatistics ageStatistics = USER_LIST.stream().collect(Collectors.summarizingInt(Employee::getAge));
 
         //统计：最大值、最小值、总和、平均值、总数
         System.out.println("最大年龄：" + ageStatistics.getMax());
@@ -142,10 +142,10 @@ public class StreamAPITest {
 
         /*summingInt()、summingLong()、summingDouble()用于计算总和，需要一个函数参数*/
         //计算年龄总和
-        int sumAge = USER_LIST.stream().collect(Collectors.summingInt(User::getAge));
+        int sumAge = USER_LIST.stream().collect(Collectors.summingInt(Employee::getAge));
         /** averagingInt()、averagingLong()、averagingDouble()用于计算平均值。*/
         //计算平均年龄
-        double aveAge = USER_LIST.stream().collect(Collectors.averagingDouble(User::getAge));
+        double aveAge = USER_LIST.stream().collect(Collectors.averagingDouble(Employee::getAge));
 
         //打印结果
         System.out.println("研发部的人数：" + departCount + "人");
@@ -175,10 +175,10 @@ public class StreamAPITest {
     @Test
     public void mapToIntTest() {
         //用户列表中年龄的最大值、最小值、总和、平均值
-        int maxVal = USER_LIST.stream().mapToInt(User::getAge).max().getAsInt();
-        int minVal = USER_LIST.stream().mapToInt(User::getAge).min().getAsInt();
-        int sumVal = USER_LIST.stream().mapToInt(User::getAge).sum();
-        double aveVal = USER_LIST.stream().mapToInt(User::getAge).average().getAsDouble();
+        int maxVal = USER_LIST.stream().mapToInt(Employee::getAge).max().getAsInt();
+        int minVal = USER_LIST.stream().mapToInt(Employee::getAge).min().getAsInt();
+        int sumVal = USER_LIST.stream().mapToInt(Employee::getAge).sum();
+        double aveVal = USER_LIST.stream().mapToInt(Employee::getAge).average().getAsDouble();
 
         //打印结果
         System.out.println("最大年龄：" + maxVal);
@@ -202,10 +202,10 @@ public class StreamAPITest {
     public void reduceTest() {
 
         //用户列表中年龄的最大值、最小值、总和
-        Optional<Integer> reduce = USER_LIST.stream().map(User::getAge).reduce(Integer::max);
+        Optional<Integer> reduce = USER_LIST.stream().map(Employee::getAge).reduce(Integer::max);
         int maxVal = reduce.get();
-        int minVal = USER_LIST.stream().map(User::getAge).reduce(Integer::min).get();
-        int sumVal = USER_LIST.stream().map(User::getAge).reduce(0, Integer::sum);
+        int minVal = USER_LIST.stream().map(Employee::getAge).reduce(Integer::min).get();
+        int sumVal = USER_LIST.stream().map(Employee::getAge).reduce(0, Integer::sum);
 
         //打印结果
         System.out.println("最大年龄：" + maxVal);
@@ -253,7 +253,7 @@ public class StreamAPITest {
     public void limitAndSkipTest() {
 
         //获取用户列表，要求跳过第1条数据后的前3条数据
-        List<User> skipList = USER_LIST.stream()
+        List<Employee> skipList = USER_LIST.stream()
                 .skip(1)
                 .limit(3)
                 .collect(Collectors.toList());
@@ -269,7 +269,7 @@ public class StreamAPITest {
     public void distinctTest() {
 
         //获取部门列表，并去除重复数据
-        List<String> departmentList = USER_LIST.stream().map(User::getDept).distinct().collect(Collectors.toList());
+        List<String> departmentList = USER_LIST.stream().map(Employee::getDept).distinct().collect(Collectors.toList());
 
         //遍历部门列表
         departmentList.forEach(System.out::println);
@@ -306,14 +306,14 @@ public class StreamAPITest {
         //获取用户列表
 
         //获取用户名称列表
-        List<String> nameList = USER_LIST.stream().map(User::getUserName).collect(Collectors.toList());
+        List<String> nameList = USER_LIST.stream().map(Employee::getUserName).collect(Collectors.toList());
         //或者：List<String> nameList = USER_LIST.stream().map(user -> user.getName()).collect(Collectors.toList());
 
         //遍历名称列表
         nameList.forEach(System.out::println);
 
         //数组类型
-        String[] nameArray = USER_LIST.stream().map(User::getUserName).collect(Collectors.toList()).toArray(new String[USER_LIST.size()]);
+        String[] nameArray = USER_LIST.stream().map(Employee::getUserName).collect(Collectors.toList()).toArray(new String[USER_LIST.size()]);
         System.out.println(Arrays.toString(nameArray));
     }
 
@@ -330,8 +330,8 @@ public class StreamAPITest {
     public void findAnytTest() {
 
         //获取用户名称为 "小王" 的用户信息，如果没有找到则返回null
-        User u = USER_LIST.stream().filter(user -> "小王".equals(user.getUserName())).findAny().orElse(null);
-        User u2 = USER_LIST.stream().filter(user -> "小王".equals(user.getUserName())).findFirst().orElse(null);
+        Employee u = USER_LIST.stream().filter(user -> "小王".equals(user.getUserName())).findAny().orElse(null);
+        Employee u2 = USER_LIST.stream().filter(user -> "小王".equals(user.getUserName())).findFirst().orElse(null);
 
 
         //打印用户信息
@@ -346,7 +346,7 @@ public class StreamAPITest {
     public void filterTest() {
 
         //获取部门为“研发部”的用户列表
-        List<User> userList = StreamAPITest.USER_LIST.stream().filter(user -> "研发部".equals(user.getDept()))
+        List<Employee> userList = StreamAPITest.USER_LIST.stream().filter(user -> "研发部".equals(user.getDept()))
                 .collect(Collectors.toList());
 
         //遍历用户列表
@@ -366,15 +366,15 @@ public class StreamAPITest {
     /**
      * 获取用户列表
      */
-    public static List<User> getUserList() {
-        List<User> userList = new ArrayList<User>();
-        userList.add(new User(1, "小王", "男", 32, "研发部", BigDecimal.valueOf(11600)));
-        userList.add(new User(2, "小王", "男", 33, "财务部", BigDecimal.valueOf(11600)));
-        userList.add(new User(3, "小张", "男", 30, "财务部", BigDecimal.valueOf(11800)));
-        userList.add(new User(4, "小李", "女", 20, "人事部", BigDecimal.valueOf(11700)));
-        userList.add(new User(5, "小吴", "男", 38, "研发部", BigDecimal.valueOf(11500)));
-        userList.add(new User(6, "小崔", "女", 25, "财务部", BigDecimal.valueOf(11200)));
-        userList.add(new User(7, "小崔", "女", 25, "财务部", BigDecimal.valueOf(11200)));
+    public static List<Employee> getEmployeeList() {
+        List<Employee> userList = new ArrayList<Employee>();
+        userList.add(new Employee(1, "小王", "男", 32, "研发部", BigDecimal.valueOf(11600), Status.BUSY));
+        userList.add(new Employee(2, "小王", "男", 33, "财务部", BigDecimal.valueOf(11600), Status.FREE));
+        userList.add(new Employee(3, "小张", "男", 30, "财务部", BigDecimal.valueOf(11800), Status.BUSY));
+        userList.add(new Employee(4, "小李", "女", 20, "人事部", BigDecimal.valueOf(11700), Status.VOCATION));
+        userList.add(new Employee(5, "小吴", "男", 38, "研发部", BigDecimal.valueOf(11500), Status.BUSY));
+        userList.add(new Employee(6, "小崔", "女", 25, "财务部", BigDecimal.valueOf(11200), Status.VOCATION));
+        userList.add(new Employee(7, "小崔", "女", 25, "财务部", BigDecimal.valueOf(11200), Status.FREE));
         return userList;
     }
 }

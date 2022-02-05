@@ -547,10 +547,121 @@ telnet 192.168.159.131 22
 或
 ls -l /etc/init.d/
 可以查看服务
-
+查看或者修改默认级别：vi /etc/inittab
+Linux系统有7种运行级别(runlevel)：常用的是级别3和5
+• 运行级别0：系统停机状态，系统默认运行级别不能设为0,否则不能正常启动
+• 运行级别1：单用户工作状态，root权限，用于系统维护，禁止远程登陆
+• 运行级别2：多用户状态(没有NFS),不支持网络
+• 运行级别3：完全的多用户状态(有NFS),登陆后进入控制台命令行模式
+• 运行级别4：系统未使用，保留
+• 运行级别5： XII控制台，登陆后进入图形GUI模式
+• 运行级别6：系统正常关闭并重启，默认运行级别不能设为6,否则不能正常启动
 查看或修改运行级别
 vi /etc/inittab
 
 备忘：
 linux 50节课学到 20分钟了
 49已学完
+
+chkconfig --list 指令
+chkconfig --list | grep 服务名
+或
+chkconfig 服务名 --list
+
+[root@localhost ~]# chkconfig --list|grep sshd
+sshd           	0:off	1:off	2:on	3:on	4:on	5:on	6:off
+[root@localhost ~]# chkconfig sshd --list
+sshd           	0:off	1:off	2:on	3:on	4:on	5:on	6:off
+[root@localhost ~]#
+
+chkconfig iptables --list
+设置某个服务在某个级别下是否自启动
+chkconfig --level 服务级别[0-6] 服务名 off/on
+
+chkconfig --level 5 sshd off
+
+[root@localhost ~]# chkconfig --level 5 sshd off
+[root@localhost ~]# chkconfig --list|grep sshd
+sshd           	0:off	1:off	2:on	3:on	4:on	5:off	6:off
+[root@localhost ~]#
+1） linux 重新设置服务后自启动或关闭，需要重启机器reboot才能生效.
+
+### 进程监控指令
+动态进程监控指令top
+网络服务监控指令netstat
+top - display Linux tasks 【显示 linux 任务：实时显示进程 】
+
+netstat-netstat - Print network connections, routing tables, interface statistics, 
+        masquerade connections, and mul-ticast memberships
+netstat -打印网络连接，路由表，接口统计信息，  
+伪装连接和多播成员关系  
+
+netstat -anp | more
+
+### RPM 和 YUM
+介绍：
+
+    RPM软件包管理器
+    RPM  是Red-Hat Package Manager（红帽软件包管理器）的缩写，这一文件格式名称虽然打上了RedHat的标志，
+    但是其原始设计理念是开放式的，包括OpenLinux、S.u.S.E.以及Turbo Linux等Linux的分发版本都有采用，
+    可以算是公认的行业标准了。
+    英文原义：RPM Package Manager（原Red Hat Package Manager，是一个递归缩写）
+    注解：一种用于互联网下载包的打包及安装工具，它包含在某些Linux分发版中。它生成具有.RPM扩展名的文件。与Dpkg类似。
+
+查看已安装的 rpm 列表
+rpm -qa
+rm -qa|more
+rpm -qa  xx  查询 xx 的 rpm是否安装
+rpm -qi  xx  查询安装的 rpm包软件信息
+rpm -ql xx 查询软件包名软件包中的文件(软件包的安装位置)
+rpm -qf 文件  查询某个文件属于哪个rpm包
+rpm -e rpm包名
+[root@localhost ~]# rpm -qa|grep firefox
+firefox-17.0.10-1.el6.centos.x86_64
+[root@localhost ~]# rpm -qf /etc/passwd
+setup-2.8.14-20.el6_4.1.noarch
+[root@localhost ~]#
+
+### rpm包的管理
+ 安装rpm包：
+    基本语法：
+    rpm -ivh RPM包全路径名称
+    参数说名字：
+    i install 安装
+    v verbose 提示
+    h hash 进度条
+实例：
+
+# yun Shell前端软件包管理器
+Yum（全称为 Yellow dog Updater, Modified）是一个在Fedora和RedHat以及CentOS中的Shell前端软件包管理器。基于RPM包管理，能够从指定的服务器自动下载RPM包并且安装，可以自动处理依赖性关系，并且一次安装所有依赖的软件包，无须繁琐地一次次下载、安装。 [1] 
+
+
+1.yum查询功能
+
+    yum [options] [command] [package …]
+
+            -y：默认yum需要是交互模式，-y表示自动提供yes响应
+
+            search：搜索某个软件名或关键字
+
+            list：列出所有yum所管理的软件包和名称
+
+            info：同上，也类似rpm -qai
+
+            provides：查找该命令是由软件安装生成的，类似rpm -df的功能
+
+            repolist：列出所有可用的repo 
+yum list|grep firefox 查询 yum镜像服务器上firefox的版本
+yum install firefox具体的linux版本
+
+TODO  linux 安装 tomcat idea mysql
+
+mysql查看版本号：
+mysql -V
+[root@localhost mysql]# mysql -V
+mysql  Ver 14.14 Distrib 5.7.24, for linux-glibc2.12 (x86_64) using  EditLine wrapper
+mysql基本命令：
+mysql -uroot -p
+show databases;
+use nacos;
+show tables;
