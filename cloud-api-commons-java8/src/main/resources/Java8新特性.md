@@ -64,7 +64,8 @@ TODO Consumer
         R apply(T t);
     断言型接口: Predicate<T>
         boolean: test(T t);
-[...](其他扩展函数式接口.png)
+[...](其他扩展函数式接口.png) 或[百度函数式接口](https://www.baidu.com/s?ie=utf-8&wd=%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3)
+或[菜鸟教程Java 8 函数式接口](https://www.runoob.com/java/java8-functional-interfaces.html)
 
 ```jshelllanguage
     class test {/** {@link java8.lambda.TestLambda5}*/
@@ -73,7 +74,7 @@ TODO Consumer
 
 ###方法引用与构造器引用
 ##方法引用：
-若 Lambda体重的内容有方法已经实现了，
+若 Lambda体中的内容有方法已经实现了，
 我们可以使用“方法引用”（方法引用可以理解为是Lambda表达式的另外一种表达形式）
 主要有三种语法格式：
     
@@ -83,34 +84,35 @@ TODO Consumer
         
 注意：
 
-1. Lambda 体中调用方法的参数列表与返回值类型，要与函数式接口中 抽象方法的函数列表和返回值类型保持一致！
-2. 若Lambda 参数列表中的第一个参数时实例方法的调用者，而第二个参数时实例方法的参数时，可以使用
-ClassName::Method 的形式
+    1. Lambda 体中调用方法的参数列表与返回值类型，要与函数式接口中 抽象方法的函数列表和返回值类型保持一致！
+    2. 若Lambda 参数列表中的第一个参数时实例方法的调用者，而第二个参数时实例方法的参数时，可以使用
+     ClassName::Method 的形式
+
 ### 构造器引用
 注意：
 
     需要调用的构造器的参数列表要与函数式接口中抽象方法的参数列表保持一致
 
-   方法引用和构造器引用参考类方法：
+### 三、数组引用
+方法引用、构造器引用、数组引用参考类方法：
 ```jshelllanguage
     class test {/** {@link java8.lambda.TestMethodRef}*/}
 ```
-### 三、数组引用
 
 ### Stream API
     概念：
-    Stream 是 Java8 中处理集合的关键抽象概念，它可以指定你希望对
-    集合进行的操作，可以执行非常复杂的查找、过滤和映射数据等操作。
-    使用Stream API 对集合数据进行操作，就类似于使用 SQL 执行的数
-    据库查询。也可以使用 Stream API 来并行执行操作。简而言之，
-    Stream API 提供了一种高效且易于使用的处理数据的方式。
+    Stream 是 Java8 中处理集合的关键抽象概念，它可以指定你希望对集合进行的操作，
+    可以执行非常复杂的查找、过滤和映射数据等操作。
+    使用Stream API 对集合数据进行操作，就类似于使用 SQL 执行的数据库查询。
+    也可以使用 Stream API 来并行执行操作。简而言之，Stream API 提供了一种高效且易于使用的处理数据的方式。
 
 流(Stream) 到底是什么呢？ 是数据渠道，用于操作数据源（集合、数组等）所生成的元素序列。
 “集合讲的是数据，流讲的是计算！”
 注意：
 
     ①Stream 自己不会存储元素。
-    ②Stream 不会改变源对象。相反，他们会返回一个持有结果的新Stream。 ③Stream 操作是延迟执行的。这意味着他们会等到需要结果的时候才执行。
+    ②Stream 不会改变源对象。相反，他们会返回一个持有结果的新Stream。 
+    ③Stream 操作是延迟执行的。这意味着他们会等到需要结果的时候才执行。
 
                               一系列流水线的中间操作                                                
     数据源(集合、数组等) ------------------------------- 产生一个新流
@@ -133,9 +135,8 @@ Stream 的操作三个步骤
 [Stream API 学习博客](https://blog.csdn.net/pan_junbiao/article/details/105913518)
 
 ### Stream的终止操作---收集
-Collector 接口中方法的实现决定了如何对流执行收集操作(如收
-集到 List、Set、Map)。但是 Collectors 实用类提供了很多静态
-方法，可以方便地创建常见收集器实例，具体方法与实例如下表：
+Collector 接口中方法的实现决定了如何对流执行收集操作(如收 集到 List、Set、Map)。
+但是 Collectors 实用类提供了很多静态 方法，可以方便地创建常见收集器实例，
 
 
 
@@ -225,9 +226,24 @@ Duration:用于计算两个“时间”间隔 Period:用于计算两个“日期
     java.text.DateFormat            formatter.toFormat()                    无
 
 // TODO 测试类进行测试以上转换
+```jshelllanguage
+    class test {/**{@link java8.localdate.LocalDateAndLocalTimeAndLocalDateTime}*/}
+    class test {/**{@link java8.localdate.LocalDateTest}*/}
+```
 
-Optional 类 Optional<T> 类(java.util.Optional) 是一个容器类，代表一个值存在或不存在， 原来用 null 表示一个值不存在，现在 Optional 可以更好的表达这个概念。并且 可以避免空指针异常。
-常用方法： Optional.of(T t) : 创建一个 Optional 实例 Optional.empty() : 创建一个空的 Optional 实例 Optional.ofNullable(T t):若 t 不为 null,创建
-Optional 实例,否则创建空实例 isPresent() : 判断是否包含值 orElse(T t) : 如果调用对象包含值，返回该值，否则返回t orElseGet(Supplier s) :如果调用对象包含值，返回该值，否则返回
-s 获取的值 map(Function f): 如果有值对其处理，并返回处理后的Optional，否则返回 Optional.empty()
-flatMap(Function mapper):与 map 类似，要求返回值必须是Optional_
+### Optional 类
+Optional 类 Optional<T> 类(java.util.Optional) 是一个容器类，代表一个值存在或不存在， 
+原来用 null 表示一个值不存在，现在 Optional 可以更好的表达这个概念。并且 可以避免空指针异常。
+常用方法： Optional.of(T t) : 创建一个 Optional 实例 
+
+    Optional.empty() : 创建一个空的 Optional 实例 
+    Optional.ofNullable(T t):若 t 不为 null,创建 Optional 实例,否则创建空实例
+    isPresent() : 判断是否包含值 orElse(T t) : 如果调用对象包含值，返回该值，否则返回 t 
+    orElseGet(Supplier s) :如果调用对象包含值，返回该值，否则返回 s 获取的值 
+    map(Function f): 如果有值对其处理，并返回处理后的Optional，否则返回 Optional.empty()
+    flatMap(Function mapper):与 map 类似，要求返回值必须是Optional
+
+```jshelllanguage
+    class test {/** {@link java8.optional.TestOptional}*/}
+```
+### 重复注解与类型注解

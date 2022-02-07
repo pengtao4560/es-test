@@ -11,7 +11,7 @@ import java.time.temporal.TemporalAmount;
    java8新特性 LocalDate LocalTime LocalDateTime Demo
    详细api调用移步
     {@link LocalDateTest}
-    setting->inspection->javadoc:The declaration has a problem in the Javadoc reference error调成warning即可
+    IDEA File->setting->inspection->javadoc:The declaration has a problem in the Javadoc reference error调成warning即可
  * @author: peng tao
  * @create: 2022-01-27 14:38
  */
@@ -54,10 +54,12 @@ public class LocalDateAndLocalTimeAndLocalDateTime {
         LocalDate nowAfter11Month = localDate.plusMonths(12);
         LocalDate nowAfter3Week = localDate.plusWeeks(3);
         LocalDate nowAfter35Day = localDate.plusDays(35);
+
         System.out.println(nowAfter10Year);
         System.out.println(nowAfter11Month);
         System.out.println(nowAfter3Week);
         System.out.println(nowAfter35Day);
+
         TemporalAmount temporalAmount = Period.of(1,2,3);
         System.out.println(LocalDateTime.now().plus(temporalAmount));
     }

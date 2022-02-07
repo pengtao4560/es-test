@@ -67,6 +67,7 @@ public class TestLambda5 {
         String resultStr1 = getStrByInteger(11, (t) -> t + "人一队一起踢足球");
         String resultStr2 = getStrByInteger(5, (t) -> t + "人一队上场打篮球");
         System.out.println(resultStr1);
+        System.out.println(resultStr2);
     }
     public String getStrByInteger(Integer integer, Function<Integer, String> function) {
         return function.apply(integer);

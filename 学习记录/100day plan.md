@@ -1,7 +1,7 @@
 2022年1月26日16:34:10
 
 linux  P31
-atguigu     linux P34-学到shell编程前
+atguigu     linux P34-学到shell编程前  已基本完成
 nginx学完
 springcloud 学完
 springsecurity

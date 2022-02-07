@@ -16,7 +16,8 @@ import java.util.stream.Collectors;
 /**
  * StreamAPI 学习： 用户信息业务逻辑类
  * 版权声明：本文为CSDN博主「pan_junbiao」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
- * 原文链接：{@see https://blog.csdn.net/pan_junbiao/article/details/105913518}
+ * 原文链接：
+ * See  <a>https://blog.csdn.net/pan_junbiao/article/details/105913518</a>
  */
 public class StreamAPITest {
 
@@ -169,8 +170,6 @@ public class StreamAPITest {
      */
     /**
      * 使用 mapToInt() 方法
-     *
-     * @author pan_junbiao
      */
     @Test
     public void mapToIntTest() {
@@ -195,8 +194,6 @@ public class StreamAPITest {
 
     /**
      * 使用 reduce() 方法
-     *
-     * @author pan_junbiao
      */
     @Test
     public void reduceTest() {

@@ -107,25 +107,25 @@ tail指令
  tail -f 文件    实时追踪该文档的所有更新
     查看文件最后5行并且实时追踪该文档的更新
 
-[root@pengtao /]# tail -5f /etc/profile
-fi
-done
+    [root@pengtao /]# tail -5f /etc/profile
+    fi
+    done
+    
+    unset i
+    unset -f pathmunge
 
-unset i
-unset -f pathmunge
-
-ln指令
+#ln指令
 软链接也叫符号链接，类似于windows的快捷方式，主要存放了链接其他文件的路径
 例如：
 
 ln -s [源文件或目录][软链接名]
 
-history指令
+#history指令
 显示所有执行过的指令 history
 显示最近执行过的10个指令 histtory 10
 执行历史编号为5的指令 history查看编号    !编号
 
-时间日期类：
+#时间日期类：
 date "+%Y-%m-%d %H:%M:%S"
 显示日期时间
 [root@pengtao /]# date "+%Y-%m-%d %H:%M:%S"
@@ -143,7 +143,7 @@ date "+%Y-%m-%d%H:%M:%S"
 
 date -s "2022-01-25 11:28:55"
 
-cal指令： 显示日历
+###cal指令： 显示日历
 cal
 cal 2022
 
@@ -174,11 +174,12 @@ find / name *.txt
 
 locate指令：  快速定位文件路径
 locate指令基于数据库进行查询，第一次运行该指令前，必须使用 updatedb指令创建locate数据库
-[root@pengtao mysql]# clear
-[root@pengtao mysql]# updatedb
-[root@pengtao mysql]# locate hello.txt
-/home/hello.txt
-[root@pengtao mysql]# 
+
+    [root@pengtao mysql]# clear
+    [root@pengtao mysql]# updatedb
+    [root@pengtao mysql]# locate hello.txt
+    /home/hello.txt
+    [root@pengtao mysql]# 
 
 
 
@@ -290,17 +291,17 @@ chown group file
 chgrp -R /home/pengtao pengtao
 
 
-[root@pengtao pt]# chown -R  pengtao /home/pt
-[root@pengtao pt]# ll -s /home/pt
-总用量 0
-0 -rw-r--r--. 1 pengtao root 0 1月  26 21:31 hello.txt
-[root@pengtao pt]# chgrp -R wudang /home/pt
-chgrp: 无效的组："wudang"
-[root@pengtao pt]# chgrp -R mojiao /home/pt
-[root@pengtao pt]# ll -s /home/pt
-总用量 0
-0 -rw-r--r--. 1 pengtao mojiao 0 1月  26 21:31 hello.txt
-[root@pengtao pt]#
+    [root@pengtao pt]# chown -R  pengtao /home/pt
+    [root@pengtao pt]# ll -s /home/pt
+    总用量 0
+    0 -rw-r--r--. 1 pengtao root 0 1月  26 21:31 hello.txt
+    [root@pengtao pt]# chgrp -R wudang /home/pt
+    chgrp: 无效的组："wudang"
+    [root@pengtao pt]# chgrp -R mojiao /home/pt
+    [root@pengtao pt]# ll -s /home/pt
+    总用量 0
+    0 -rw-r--r--. 1 pengtao mojiao 0 1月  26 21:31 hello.txt
+    [root@pengtao pt]#
 
 
 crond 任务调度
@@ -610,7 +611,7 @@ netstat -anp | more
 
 查看已安装的 rpm 列表
 rpm -qa
-rm -qa|more
+rpm -qa|more
 rpm -qa  xx  查询 xx 的 rpm是否安装
 rpm -qi  xx  查询安装的 rpm包软件信息
 rpm -ql xx 查询软件包名软件包中的文件(软件包的安装位置)
