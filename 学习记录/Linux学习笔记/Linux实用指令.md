@@ -516,6 +516,8 @@ centos6 上的服务管理工具为chkconfig，Linux系统所有的预设服务�
     
     service iptables start
 
+[centos6防火墙操作](https://www.cnblogs.com/liuyiyuan/p/13681535.html)
+
 ###CentOS 7服务指令
 centos7不使用SysV而改为systemd了，这是因为systemd支持多个服务并发启动，而SysV只能一个一个地启动，这样最终导致的结果是systemd方式启动会快很多。
 

@@ -28,8 +28,41 @@
 
 #如何安装nginx
 [官网](https://nginx.org/) 获取 stable稳定的
+ 前提：
 
-weget https://nginx.org/download/nginx-1.20.2.tar.gz
+    在linux下安装nginx，首先需要安装 gcc-c++编译器。然后安装nginx依赖的pcre和zlib包。最后安装nginx即可。
+    
+    1.先安装gcc-c++编译器
+    
+    yum install gcc-c++
+    yum install -y openssl openssl-devel
+    2.再安装pcre包
+    
+    yum install -y pcre pcre-devel
+    3.再安装zlib包
+    
+    yum install -y zlib zlib-devel
+
+1.在/usr/local/下创建文件nginx文件
+
+mkdir /usr/local/nginx
+2.下载：官网复制路径 wget 路径
+
+wget https://nginx.org/download/nginx-1.20.2.tar.gz
+3.解压
+
+4. 进入解压后的目录使用nginx默认配置，执行
+5. 
+./configure
+5.编译安装：
+
+make && make install
+6.查找安装路径
+
+whereis nginx
+7.进入sbin目录，可以看到有一个可执行文件nginx，直接./nginx执行就OK了。
+
+./nginx
 或百度或参考[尚硅谷nginx](nginx课件v1.0.pdf)
 ### nginx查看版本
 whereis nginx
@@ -101,6 +134,16 @@ cd /usr/local/nginx/sbin
          （也可以是 IP 别名）之外的字符串（例如 前面的 /uri-string）进行匹配，对特定的请求进行处理。地址定向、数据缓
          存和应答控制等功能，还有许多第三方模块的配置也在这里进行。
 ### nginx 配置实例-反向代理
+准备工作 linux安装tomcat
+
+wget --no-check-certificate https://tomcat.apache.org/download-10.cgi#10.0.16
+[tomcat安装](https://www.linuxprobe.com/linux-install-tomcat9.html)
+进入tomcat下的bin目录
+cd /usr/local/apache-tomcat-10.0.16/bin
+./catalina.sh start
+[root@izuf6famz0x92jd98na1kiz bin]# ./catalina.sh start
+对外开放访问的端口：
+
 ### nginx 配置实例-负载均衡
 ### nginx 原理与优化参数配置
 ### nginx 搭建高可用集群
