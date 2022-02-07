@@ -131,9 +131,10 @@ Stream 的操作三个步骤
 学习参考尚硅谷java8 以及：
 [Stream API 学习博客](https://blog.csdn.net/pan_junbiao/article/details/105913518)
 
-
-
-
+### Stream的终止操作---收集
+Collector 接口中方法的实现决定了如何对流执行收集操作(如收
+集到 List、Set、Map)。但是 Collectors 实用类提供了很多静态
+方法，可以方便地创建常见收集器实例，具体方法与实例如下表：
 
 
 
