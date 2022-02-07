@@ -668,3 +668,18 @@ mysql -uroot -p
 show databases;
 use nacos;
 show tables;
+
+[oracle官网下载jdk](https://www.oracle.com/java/technologies/downloads/)
+解压：
+
+配置jdk：
+vim /etc/profile
+末尾追加：
+
+    export JAVA_HOME=/usr/local/jdk-17.0.2
+    export CLASSPATH=$JAVA_HOME/lib
+    export PATH=$JAVA_HOME/bin:$PATH
+java
+javac
+java -version
+验证linux jdk是否安装成功
