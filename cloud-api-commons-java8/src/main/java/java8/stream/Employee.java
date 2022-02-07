@@ -27,6 +27,10 @@ public class Employee {
         this.age = age;
     }
 
+    public Employee(String userName) {
+        this.userName = userName;
+    }
+
     public Employee(int age, String userName) {
         this.userName = userName;
         this.age = age;

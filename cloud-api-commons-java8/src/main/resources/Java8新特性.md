@@ -1,4 +1,4 @@
-[java8新特性](Java8%20新特性.pdf)
+_[java8新特性](Java8%20新特性.pdf)
 
 TODO Consumer
 
@@ -6,8 +6,9 @@ TODO Consumer
 
 ```jshelllanguage
     import java8.lambda.TestLambda;
-import java8.lambda.TestLambda2;class test {/**{@link TestLambda} */
-}
+    import java8.lambda.TestLambda2;
+    class test {/**{@link TestLambda} */
+    }
     class test {/**{@link TestLambda2} */
     }
 ```
@@ -44,7 +45,7 @@ import java8.lambda.TestLambda2;class test {/**{@link TestLambda} */
      横批：能省则省
     
      二、Lambda 表达式需要“函数式接口”的支持
-     函数式接口：接口中只有一个抽象方法的接口(应该改成了)，称为函数式接口。 可以使用注解 @FunctionalInterface 修饰
+     函数式接口：接口中有且仅有一个抽象方法(但是可以有多个非抽象方法的接口)称为函数式接口。 可以使用注解 @FunctionalInterface 修饰
                  可以检查是否是函数式接口
 练习参考：
 ```jshelllanguage
@@ -229,4 +230,4 @@ Optional 类 Optional<T> 类(java.util.Optional) 是一个容器类，代表一�
 常用方法： Optional.of(T t) : 创建一个 Optional 实例 Optional.empty() : 创建一个空的 Optional 实例 Optional.ofNullable(T t):若 t 不为 null,创建
 Optional 实例,否则创建空实例 isPresent() : 判断是否包含值 orElse(T t) : 如果调用对象包含值，返回该值，否则返回t orElseGet(Supplier s) :如果调用对象包含值，返回该值，否则返回
 s 获取的值 map(Function f): 如果有值对其处理，并返回处理后的Optional，否则返回 Optional.empty()
-flatMap(Function mapper):与 map 类似，要求返回值必须是Optional
+flatMap(Function mapper):与 map 类似，要求返回值必须是Optional_

@@ -1,4 +1,6 @@
-import org.junit.jupiter.api.Test;
+package java8.localdate;
+
+import org.junit.Test;
 
 import java.time.Duration;
 import java.time.LocalDate;
