@@ -348,7 +348,35 @@ l，负载均衡效果，平均分发到8080和8081端口中
     image  www
     [root@pengtao data]#
 
+[](http://192.168.159.131/image/nginx-动静分离.png)
+
+[](http://192.168.159.131/www/a.html)
+ 
+
+
 ### nginx 原理与优化参数配置
 ### nginx 搭建高可用集群
 ### nginx集群：Keepalived+Nginx 高可用集群（主从模式）
+yum install keepalived -y
+pm -qa|grep keepalived
+
+[root@192 local]# rpm -qa|grep keepalived
+keepalived-1.3.5-19.el7.x86_64
+
+
+    keepalived-1.3.5-19.el7.x86_64
+    [root@192 local]# whereis keepalived
+    keepalived: /usr/sbin/keepalived /etc/keepalived /usr/libexec/keepalived /usr/share/man/man8/keepalived.8.gz
+    [root@192 local]# cd /etc/keepalived/
+    [root@192 keepalived]# ls
+    keepalived.conf
+1. nginx高可用：
+2. 配置高可用的准备工作
+1 ）需要两台服务器 192.168.17.129 和 192.168.17.131
+2 ）在两台服务器安装 nginx
+3 ）在两台服务器安装 keepalived
+3. 在两台服务器安装 keepalived
+1 ） 使用 yum 命令进行安装
+2 ）安装之后，在 etc 里面生成目录 keepalived ，有文件 keepalived.con f
+4 、完成高可用配置（主从配置）
 ### nginx集群：Keepalived+Nginx 高可用集群（双主模式）
