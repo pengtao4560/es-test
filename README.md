@@ -1,4 +1,7 @@
-彭涛学习 哔哩哔哩尚硅谷 springcloud课程
+彭涛学习 哔哩哔哩尚硅谷 springcloud课程、java8新特性、nginx、linux
+
+未来：redis、mongo、消息队列、mysql进阶、
+
 
 github访问慢解决办法：
 
@@ -6,7 +9,8 @@ github访问慢解决办法：
 
 windows系统的hosts文件的位置如下：
 C:\Windows\System32\drivers\etc\hosts
-mac/linux系统的hosts文件的位置如下：/etc/hosts
+mac/linux系统的hosts文件的位置如下：drivers/etc/hosts
+win+r输入： drivers/etc/hosts
 2. 打开本地hosts文件：
     增加http://github.global.ssl.fastly.net和http://github.com的映射
 

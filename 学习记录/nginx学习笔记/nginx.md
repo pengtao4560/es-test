@@ -143,6 +143,8 @@ cd /usr/local/apache-tomcat-10.0.16/bin
 ./catalina.sh start
 [root@izuf6famz0x92jd98na1kiz bin]# ./catalina.sh start
 对外开放访问的端口：
+yy复制 p粘贴
+proxy_pass http://127.0.0.1:8080;
 
 ### nginx 配置实例-负载均衡
 ### nginx 原理与优化参数配置

@@ -163,3 +163,13 @@ objectArray[0] = "I don't fit in"; // Throws ArrayStoreException
     Object[] objects = stringLists; // (3)
     objects[0] = intList; // (4)
     String s = stringLists[0].get(0); // (5)
+### 29 优先考虑泛型类 FAVOR GENERIC TYPES
+
+```jshelllanguage
+    class test {/** 
+    {@link javase.effectivejava.c29.MyStack}
+    {@link javase.effectivejava.c29.MyNewStack}
+    {@link javase.effectivejava.c29.UserMyNewStack}
+    */}
+```
+### 30 优先使用泛型方法 FAVOR GENERIC METHODS
