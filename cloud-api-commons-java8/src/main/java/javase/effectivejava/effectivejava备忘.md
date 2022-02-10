@@ -159,6 +159,18 @@ objectArray[0] = "I don't fit in"; // Throws ArrayStoreException
     Object[] objects = stringLists; // (3)
     objects[0] = intList; // (4)
     String s = stringLists[0].get(0); // (5)
+
+```jshelllanguage
+    class test {/**
+ {@link javase.effectivejava.c28.ChooserOld}
+ {@link javase.effectivejava.c28.ChooserNew}
+ {@link javase.effectivejava.c28.Chooser}
+ */} 
+ ```   
+    
+    总之，数组和泛型具有非常不同的类型规则。数组是协变和具体化的; 泛型是不变的，类型擦除的。因此，数
+    组提供运行时类型的安全性，但不提供编译时类型的安全性，反之亦然。一般来说，数组和泛型不能很好地混合工
+    作。如果你发现把它们混合在一起，得到编译时错误或者警告，你的第一个冲动应该是用列表来替换数组。
 ### 29 优先考虑泛型类 FAVOR GENERIC TYPES
 
 ```jshelllanguage
@@ -201,11 +213,24 @@ objectArray[0] = "I don't fit in"; // Throws ArrayStoreException
  */
 }
 ```
-通过这个改动，Stack 类和客户端代码都可以干净地编译。这个结论很清楚。为了获得最大的灵活
-性，对代表生产者或消费者的输入参数使用通配符类型。如果一个输入参数既是一个生产者又是一个消费者，
-那么通配符类型对你没有好处：你需要一个精确的类型匹配，这就是没有任何通配符的情况。
-这里有一个助记符来帮助你记住使用哪种通配符类型：
-PECS 代表：producer-extends，consumer-super。
+    通过这个改动，Stack 类和客户端代码都可以干净地编译。这个结论很清楚。为了获得最大的灵活
+    性，对代表生产者或消费者的输入参数使用通配符类型。如果一个输入参数既是一个生产者又是一个消费者，
+    那么通配符类型对你没有好处：你需要一个精确的类型匹配，这就是没有任何通配符的情况。
+    这里有一个助记符来帮助你记住使用哪种通配符类型：
+    PECS 代表：producer-extends，consumer-super。
+    
+    换句话说，如果一个参数化类型代表一个 T 生产者，使用 <? extends T>；
+    如果它代表 T 消费者，则 使用 <? super T>。
 
-换句话说，如果一个参数化类型代表一个 T 生产者，使用 <? extends T>；
-如果它代表 T 消费者，则 使用 <? super T>。
+如果想编写一个将被广泛使用的类库，正确使用通配符类型被认为是强制性的。规则 PECS
+还要记住， 所有Comparable 和 Comparator 都是消费者
+
+### 32 合理地结合泛型和可变参数 COMBINE GENERICS AND VARARGS JUDICIOUSLY
+
+[百度 堆污染](https://www.cnblogs.com/flydean/p/13689672.html)
+在Java编程语言中， 当一个 可变泛型参数 指向一个 无泛型参数 时，堆污染(Heap Pollution)就有可能发生。
+什么是堆污染呢？堆污染是指当参数化类型变量引用的对象不是该参数化类型的对象时而发生的。
+
+如果在指定类型的集合中，引用了不同的类型，那么这种情况就叫做堆污染。
+
+    TODO 32章需要再看一遍

@@ -37,12 +37,14 @@ public class TestGenericMethod {
     }
 
     /**
-     * 修复
+     * 修复及优化 第31章节优化为:
      *
      * @see TestGenericMethod#unionOld
      * 的警告
      */
-    public static <E> Set<E> union(Set<E> set1, Set<E> set2) {
+    // public static <E> Set<E> union(Set<E> set1, Set<E> set2) {
+
+    public static <E> Set<E> union(Set<? extends E> set1, Set<? extends E> set2) {
         Set<E> result = new HashSet<>(set1);
         result.addAll(set2);
         return result;

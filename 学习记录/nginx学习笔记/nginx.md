@@ -380,8 +380,6 @@ rpm -qa|grep keepalived
 [root@192 local]# rpm -qa|grep keepalived
 keepalived-1.3.5-19.el7.x86_64
 
-
-
     keepalived-1.3.5-19.el7.x86_64
     [root@192 local]# whereis keepalived
     keepalived: /usr/sbin/keepalived /etc/keepalived /usr/libexec/keepalived /usr/share/man/man8/keepalived.8.gz
@@ -395,6 +393,6 @@ keepalived-1.3.5-19.el7.x86_64
 3 ）在两台服务器安装 keepalived
 3. 在两台服务器安装 keepalived
 1 ） 使用 yum 命令进行安装
-2 ）安装之后，在 etc 里面生成目录 keepalived ，有文件 keepalived.con f
+2 ）安装之后，在 etc 里面生成目录 keepalived ，有文件 keepalived.conf
 4 、完成高可用配置（主从配置）
 ### nginx集群：Keepalived+Nginx 高可用集群（双主模式）
