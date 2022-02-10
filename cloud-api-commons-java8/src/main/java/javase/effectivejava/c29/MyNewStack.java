@@ -1,6 +1,7 @@
 package javase.effectivejava.c29;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.EmptyStackException;
 
 /**
@@ -41,5 +42,33 @@ public class MyNewStack<E> {
         if (elements.length == size)
             elements = Arrays.copyOf(elements, 2 * size + 1);
     }
+    /** 需求： 想要添加一个方法来获取一系列元素并将它们全部推送到栈上。 第一种尝试*/
+    public void pushAllFailed(Iterable<E> src) {
+        for (E e : src) {
+            push(e);
+        }
+    }
 
+    public void pushAll(Iterable<? extends E> src) {
+        for (E e : src) {
+            push(e);
+        }
+    }
+
+    /**
+     * 需求：现在假设你想写一个 popAll 方法，与 pushAll 方法相对应。
+     * popAll 方法从栈中弹出每个元素并将元素添加到给定的集合中。
+     * 以下是第一次尝试编写 popAll 方法的过程：
+     */
+    public void popAllOld(Collection<E> dst) {
+        while (!isEmpty()) {
+            dst.add(pop());
+        }
+    }
+
+    public void popAll(Collection<? super E> dst) {
+        while (!isEmpty()) {
+            dst.add(pop());
+        }
+    }
 }

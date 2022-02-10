@@ -214,41 +214,50 @@ pe -ef|grep tomcat
     [root@pengtao webapps]# touch a.html
     [root@pengtao webapps]# vim a.html
     <a>8081!!</a>
+台式机虚拟机ip
 访问[](http://192.168.159.131:8080/edu/a.html)
 访问[](http://192.168.159.131:8081/edu/a.html)
 访问[](http://192.168.159.131:8081/vod/a.html)
+笔记本虚拟机ip:
+访问[](http://192.168.124.20:8080/edu/a.html)
+访问[](http://192.168.124.20:8081/edu/a.html)
+访问[](http://192.168.124.20:8081/vod/a.html)
 
 (3)nginx配置文件修改，进行反向代理配置
 增加
 
-    server {
-        listen       9001;
-        server_name  192.168.159.131;
+server {
+listen       9001;
+server_name  192.168.159.131;
 
-        location ~ /edu/ {
-            proxy_pass http://127.0.0.1:8080;
-        }
-        location ~ /vod/ {
-            proxy_pass http://127.0.0.1:8081;
-        }
-    }
+location ~ /edu/ {
+proxy_pass http://127.0.0.1:8080;
+}
+location ~ /vod/ {
+proxy_pass http://127.0.0.1:8081;
+}
+}
 
 # location指令：
-    location 指令说明
-    该指令用于匹配 URL。 语法如下：
-        1、= ：用于不含正则表达式的 uri 前，要求请求字符串与 uri 严格匹配，如果匹配成功，
-    就停止继续向下搜索并立即处理该请求。 
-    2、~：用于表示 uri 包含正则表达式，并且区分大小写。 
-    3、~*：用于表示 uri 包含正则表达式，并且不区分大小写。 
-    4、^~：用于不含正则表达式的 uri 前，要求 Nginx 服务器找到标识 uri 和请求字符串匹配度最高的 location 后，
-    立即使用此 location 处理请求，而不再使用 location 块中的正则 uri 和请求字符串做匹配。 
-    注意：如果 uri 包含正则表达式，则必须要有 ~ 或者 ~* 标识。
+location 指令说明
+该指令用于匹配 URL。 语法如下：
+1、= ：用于不含正则表达式的 uri 前，要求请求字符串与 uri 严格匹配，如果匹配成功，
+就停止继续向下搜索并立即处理该请求。
+2、~：用于表示 uri 包含正则表达式，并且区分大小写。
+3、~*：用于表示 uri 包含正则表达式，并且不区分大小写。
+4、^~：用于不含正则表达式的 uri 前，要求 Nginx 服务器找到标识 uri 和请求字符串匹配度最高的 location 后，
+立即使用此 location 处理请求，而不再使用 location 块中的正则 uri 和请求字符串做匹配。
+注意：如果 uri 包含正则表达式，则必须要有 ~ 或者 ~* 标识。
 
 (4) 开放9001端口
 (5)测试
+台式机虚拟机ip
 访问[](http://192.168.159.131:9001/edu/a.html)
 访问[](http://192.168.159.131:9001/vod/a.html)
 
+笔记本虚拟机ip:
+访问[](http://192.168.124.20:9001/edu/a.html)
+访问[](http://192.168.124.20:9001/vod/a.html)
 ### 问题：nginx第10节课 tomcat8081不创建vod文件夹能访问到么
 
 ### nginx 配置实例-负载均衡
@@ -257,7 +266,7 @@ l，负载均衡效果，平均分发到8080和8081端口中
 [](http://192.168.159.131/edu/a.html)
 
 准备工作：
-1.准备两台tomcat副武器 8080和8081
+1.准备两台tomcat服务器 8080和8081
 2.在两台tomcat里面webapps目录中，创建edu文件夹，创建页面a.html，用于测试
 
     [root@pengtao edu]# pwd
@@ -298,7 +307,8 @@ l，负载均衡效果，平均分发到8080和8081端口中
     [root@pengtao conf]# vim nginx.conf
     [root@pengtao conf]# ./../sbin/nginx -s reload
     [root@pengtao conf]#
-5.测试，访问 [](http://192.168.159.131/edu/a.html) 并多次刷新
+5.台式机测试，访问 [](http://192.168.159.131/edu/a.html) 并多次刷新
+  笔记本测试，访问 [](http://192.168.124.20/edu/a.html) 并多次刷新
 
 ###nginx策略：
     第一种 轮询（默认）
@@ -347,6 +357,11 @@ l，负载均衡效果，平均分发到8080和8081端口中
     [root@pengtao data]# ls
     image  www
     [root@pengtao data]#
+[笔记本测试](http://192.168.124.20/image/月份缩写英文.jpg)
+[笔记本测试](http://192.168.124.20/www/a.html)
+
+[台式机测试](http://192.168.159.131/image/月份缩写英文.jpg)
+[台式机测试](http://192.168.159.131/www/a.html)
 
 ### nginx 原理与优化参数配置
 ### nginx 搭建高可用集群
