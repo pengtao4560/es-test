@@ -30,6 +30,8 @@
 [官网](https://nginx.org/) 获取 stable稳定的
  前提：
 
+    新的虚拟机 可以 yum update一下
+    yum update
     在linux下安装nginx，首先需要安装 gcc-c++编译器。然后安装nginx依赖的pcre和zlib包。最后安装nginx即可。
     
     1.先安装gcc-c++编译器
@@ -373,10 +375,11 @@ l，负载均衡效果，平均分发到8080和8081端口中
 ### nginx 搭建高可用集群
 ### nginx集群：Keepalived+Nginx 高可用集群（主从模式）
 yum install keepalived -y
-pm -qa|grep keepalived
+rpm -qa|grep keepalived
 
 [root@192 local]# rpm -qa|grep keepalived
 keepalived-1.3.5-19.el7.x86_64
+
 
 
     keepalived-1.3.5-19.el7.x86_64
