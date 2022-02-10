@@ -536,6 +536,18 @@ systemctl list-units -all --type=service
     systemctl stop crond.service #停止某个服务
     systemctl restart crond.service #重启某个服务
     systemctl is-enabled crond #查看某个服务是否开机启动
+###centos 7 防火墙操作：
+#查看防火墙规则
+firewall-cmd --list-all
+# 查询端口是否开放
+firewall-cmd --query-port=8080/tcp
+# 开放80端口
+firewall-cmd --permanent --add-port=80/tcp
+# 移除端口
+firewall-cmd --permanent --remove-port=8080/tcp
+
+#重启防火墙(修改配置后要重启防火墙)
+firewall-cmd --reload
 
 通过telnet指令来检查linux的某个端口是否在监听，并且可以访问
 telnet ip 端口
@@ -683,3 +695,17 @@ java
 javac
 java -version
 验证linux jdk是否安装成功
+
+
+###两台linux远程传输指令：
+scp 文件 用户名@ip:路径
+
+    scp nginx-1.20.2.tar.gz  root@192.168.159.132:/usr/local
+
+将本地文件拷贝到远程
+scp 文件名 –用户名@计算机IP或者计算机名称:远程路径
+
+从远程将文件拷回本地
+scp –用户名@计算机IP或者计算机名称:文件名 本地路径
+
+[测试第二台linux安装好nginx](http://192.168.159.132/)
