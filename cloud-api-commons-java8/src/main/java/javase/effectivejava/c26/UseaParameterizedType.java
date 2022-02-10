@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @description: 具体说明参数化类型和原始类型的局别demo
+ * @description: 具体说明参数化类型和原始类型的区别demo
  * @author: peng tao
  * @create: 2022-01-29 13:24
  */

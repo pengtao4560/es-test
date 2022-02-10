@@ -1,4 +1,4 @@
-
+### 10. TODO 里氏替换原则
 从22章节开始进行备注，以前章节 待补全
 
 ### 22.【接口仅用来定义类型】USE INTERFACES ONLY TO DEFINE TYPES
@@ -37,7 +37,7 @@ tagged classes are verbose, error-prone, and inefficient.
 
 ### 24 25  看不懂，TODO
 
-# 26 不要使用原始类型
+#### 26 不要使用原始类型
 泛型类和泛型接口：
 
 第五章 泛型 Generics
@@ -47,8 +47,7 @@ tagged classes are verbose, error-prone, and inefficient.
 晰的程序，但这些益处，不限于集合，是有代价的。本章告诉你如何最大限度地提高益处，并将并发症降至最低。
 ###不要使用原始类型
 A class or interface whose declaration has one or more type parameters is a genericclass or interface
-首先，有几个术语。一个类或接口，它的声明有一个或多个类型参数（type parameters ），被称之为泛型类或泛
-型接口 [JLS，8.1.2,9.1.2]。
+首先，有几个术语。一个类或接口，它的声明有一个或多个类型参数（type parameters），被称之为泛型类或泛型接口。
 For example, the List interface has a single type parameter, E, representing its element type. The full name of the interface is List<E> (read “list of E”), but people often call it List for short.
 Generic classes and interfaces are collectively known as generic types.
 例如，List 接口具有单个类型参数 E，表示其元素类型。
@@ -56,9 +55,8 @@ Generic classes and interfaces are collectively known as generic types.
 但是人们经常称它为 List。
 泛型类和接口统称为泛型类型（generic types）。
 
-    List<String>（读作「字 String 的列表。（String 是与形式类型参数 E 相对应的实际
-    类型参数）
-    符串列表」）是一个参数化类型，表示其元素类型为
+    List<String>（读作「字符串列表」）是一个参数化类型，表示其元素类型为 String 的列表
+    （String 是与形式类型参数 E 相对应的实际类型参数）。
     最后，每个泛型定义了一个原始类型（raw type），它是没有任何类型参数的泛型类型的名称
     例如，对应于 List<E> 的原始类型是 List。原始类型的行为就像所有的泛型类型信息都从类型声明中被清除
     一样。它们的存在主要是为了与没有泛型之前的代码相兼容。
@@ -107,14 +105,12 @@ of arbitrary objects, such as List<Object>.
 安全替代方式是使用无限制通配符类型（unbounded
 wildcard types）。如果要使用泛型类型，但不知道或关心实际类型参数是什么，则可以使用问号来代替。例如，
 泛型类型 Set<E> 的无限制通配符类型是 Set<?>（读取「某种类型的集合」）。它是最通用的参数化的 Set 类
-型，能够保持任何集合
-应该被优化为：
+型，能够保持任何集合应该被优化为：
     
     static int numElementsInCommon(Set<?> s1, Set<?> s2) { ... }
 
 有什么区别：
-    通配符类型是安全的，原始类型不是。 可以把任何元素放入具有原始类型的集合中，轻易破坏
-    集合的类型不变性。
+    通配符类型是安全的，原始类型不是。 可以把任何元素放入具有原始类型的集合中，轻易破坏 集合的类型不变性。
     但是 不能把任何元素放入 带通配符的Collection Collection<?> 中。
     带上通配符，集合的类型不变性不会被破坏。
 
@@ -163,6 +159,18 @@ objectArray[0] = "I don't fit in"; // Throws ArrayStoreException
     Object[] objects = stringLists; // (3)
     objects[0] = intList; // (4)
     String s = stringLists[0].get(0); // (5)
+
+```jshelllanguage
+    class test {/**
+ {@link javase.effectivejava.c28.ChooserOld}
+ {@link javase.effectivejava.c28.ChooserNew}
+ {@link javase.effectivejava.c28.Chooser}
+ */} 
+ ```   
+    
+    总之，数组和泛型具有非常不同的类型规则。数组是协变和具体化的; 泛型是不变的，类型擦除的。因此，数
+    组提供运行时类型的安全性，但不提供编译时类型的安全性，反之亦然。一般来说，数组和泛型不能很好地混合工
+    作。如果你发现把它们混合在一起，得到编译时错误或者警告，你的第一个冲动应该是用列表来替换数组。
 ### 29 优先考虑泛型类 FAVOR GENERIC TYPES
 
 ```jshelllanguage
@@ -173,3 +181,56 @@ objectArray[0] = "I don't fit in"; // Throws ArrayStoreException
     */}
 ```
 ### 30 优先使用泛型方法 FAVOR GENERIC METHODS
+
+    总之，像泛型类型一样，泛型方法比需要客户端对输入参数和返回值进行显式强制转换的方法更安全，更易
+    于使用。像类型一样，你应该确保你的方法可以不用强制转换，这通常意味着它们是泛型的。应该泛型化现有的方
+    法，其使用需要强制转换。这使得新用户的使用更容易，而不会破坏现有的客户端（详⻅第 26 条）。
+
+```jshelllanguage
+    class test {/** 
+    {@link javase.effectivejava.c30.TestGenericMethod}
+    */}
+```
+
+### 31 使用限定通配符来增加 API 的灵活性  use bounded wildcards to increase api flexibility
+[Java中的Iterable与Iterator详解 ](https://www.cnblogs.com/litexy/p/9744241.html)
+
+```jshelllanguage
+    class test {/**
+ {@link javase.effectivejava.c29.MyNewStack#pushAllFailed(Iterable)}
+ {@link javase.effectivejava.c29.MyNewStack#pushAll(Iterable)}
+ */
+}
+```
+    有了这个改变，Stack 类不仅可以干净地编译，而且客户端代码也不会用原始的 pushAll 声明编译。因为
+    Stack 和它的客户端干净地编译，你知道一切都是类型安全的。
+测试
+
+```jshelllanguage
+    import java.util.Collection;class test {/**
+ {@link javase.effectivejava.c29.MyNewStack#popAllOld(Collection)   } 
+ {@link javase.effectivejava.c29.MyNewStack#popAll(java.util.Collection)  }
+ */
+}
+```
+    通过这个改动，Stack 类和客户端代码都可以干净地编译。这个结论很清楚。为了获得最大的灵活
+    性，对代表生产者或消费者的输入参数使用通配符类型。如果一个输入参数既是一个生产者又是一个消费者，
+    那么通配符类型对你没有好处：你需要一个精确的类型匹配，这就是没有任何通配符的情况。
+    这里有一个助记符来帮助你记住使用哪种通配符类型：
+    PECS 代表：producer-extends，consumer-super。
+    
+    换句话说，如果一个参数化类型代表一个 T 生产者，使用 <? extends T>；
+    如果它代表 T 消费者，则 使用 <? super T>。
+
+如果想编写一个将被广泛使用的类库，正确使用通配符类型被认为是强制性的。规则 PECS
+还要记住， 所有Comparable 和 Comparator 都是消费者
+
+### 32 合理地结合泛型和可变参数 COMBINE GENERICS AND VARARGS JUDICIOUSLY
+
+[百度 堆污染](https://www.cnblogs.com/flydean/p/13689672.html)
+在Java编程语言中， 当一个 可变泛型参数 指向一个 无泛型参数 时，堆污染(Heap Pollution)就有可能发生。
+什么是堆污染呢？堆污染是指当参数化类型变量引用的对象不是该参数化类型的对象时而发生的。
+
+如果在指定类型的集合中，引用了不同的类型，那么这种情况就叫做堆污染。
+
+    TODO 32章需要再看一遍

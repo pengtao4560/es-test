@@ -1,8 +1,13 @@
 package javase.effectivejava.c30;
 
+import org.junit.Test;
+
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * @description: 30 优先使用泛型方法
@@ -17,6 +22,7 @@ public class TestGenericMethod {
         Set<String> aflCio = union(guys, stooges);
         System.out.println(aflCio); // [Moe, Tom, Harry, Larry, Curly, Dick]
     }
+
     /*
     编译器警告(鼠标放到行上)
     Raw use of parameterized class 'Set'
@@ -29,15 +35,69 @@ public class TestGenericMethod {
         result.addAll(s2);
         return result;
     }
-    /**修复
+
+    /**
+     * 修复及优化 第31章节优化为:
+     *
      * @see TestGenericMethod#unionOld
-     * 的警告*/
-    public static <E> Set<E> union(Set<E> set1, Set<E> set2) {
+     * 的警告
+     */
+    // public static <E> Set<E> union(Set<E> set1, Set<E> set2) {
+
+    public static <E> Set<E> union(Set<? extends E> set1, Set<? extends E> set2) {
         Set<E> result = new HashSet<>(set1);
         result.addAll(set2);
         return result;
     }
 
     /**@see Function#identity() */
+    /**
+     * @see UnaryOperator#identity()
+     */
+    // identity 标识
+    private static UnaryOperator<Object> IDENTITY_FN = (t) -> t;
+
+    /*编译器警告：
+    Unchecked cast: 'java.util.function.UnaryOperator<java.lang.Object>' to
+    'java.util.function.UnaryOperator<T>'
+    可以加上抑制警告注解
+    */
+    @SuppressWarnings("unchecked")
+    public static <T> UnaryOperator<T> identityFunction() {
+        return (UnaryOperator<T>) IDENTITY_FN;
+    }
+
+    @Test
+    public void test() {
+        String[] strArray = {"王五", "李四", "张三"};
+        UnaryOperator<String> sameString = identityFunction();
+
+        for (String s : strArray) {
+            String apply = sameString.apply(s);
+            System.out.println(apply);
+        }
+
+        Number[] numberArray = {1, 2.0, 3L};
+
+        UnaryOperator<Number> sameNumber = identityFunction();
+        for (Number number : numberArray) {
+            System.out.println(sameNumber.apply(number));
+        }
+    }
+    /**
+     *  <E extends Comparable<E>> E   限定类
+     *  可以理解为  任何可以与自己比较的类型E。
+     * */
+    // Returns max value in a collection - uses recursive type bound
+    public static <E extends Comparable<E>> E max(Collection<E> c) {
+        if (c.isEmpty())
+            throw new IllegalArgumentException("Empty collection");
+        E result = null;
+        for (E e : c) {
+            if (result == null || e.compareTo(result) > 0)
+                result = Objects.requireNonNull(e);
+        }
+        return result;
+    }
 
 }
