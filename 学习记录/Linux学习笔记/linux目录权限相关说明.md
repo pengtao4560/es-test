@@ -7,7 +7,7 @@ ls -l	chmod	chown
 ①、属主用户，拥有者（owner）文件的创建者
 ②、属组用户，和文件的owner同组的用户（group）；
 ③、其他用户，除了所有者、与所有者同组的用户以及除了超级管理员外系统内的其他用户；
-其中：用户组的概念详见：《linux 用户、用户组及相关命令》https://www.cnblogs.com/du-z/p/10840560.html
+其中：用户组的概念详见：《linux 用户、用户组及相关命令》[](https://www.cnblogs.com/du-z/p/10840560.html)
 
 2、权限介绍
 在linux系统中，对文件或目录来说访问者有三种权限：

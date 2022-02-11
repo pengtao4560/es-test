@@ -11,6 +11,10 @@
     正向代理：如果把局域网外的 Internet 想象成一个巨大的资源库，则局域网中的客户端要访
     问 Internet，则需要通过代理服务器来访问，这种代理服务就称为正向代理
 
+    【百度百科】意思是一个位于客户端和原始服务器(origin server)之间的服务器，
+    为了从原始服务器取得内容，客户端向代理发送一个请求并指定目标(原始服务器)，
+    然后代理向原始服务器转交请求并将获得的内容返回给客户端。客户端才能使用正向代理。
+
     反向代理: 其实客户端对代理是无感知的，因为客户端不需要任何配置就可以访问，我们只
     需要将请求发送到反向代理服务器，由反向代理服务器去选择目标服务器获取数据后，在返
     回给客户端，此时反向代理服务器和目标服务器对外就是一个服务器，暴露的是代理服务器
@@ -45,27 +49,30 @@
     
     yum install -y zlib zlib-devel
 
-1.在/usr/local/下创建文件nginx文件
+安装步骤
 
-mkdir /usr/local/nginx
-2.下载：官网复制路径 wget 路径
+    1.在/usr/local/下创建文件nginx文件(第一步好像不需要)
 
-wget https://nginx.org/download/nginx-1.20.2.tar.gz
-3.解压
+    mkdir /usr/local/nginx
+    2.下载：官网复制路径 wget 路径
 
-4. 进入解压后的目录使用nginx默认配置，执行
-5. 
-./configure
-5.编译安装：
+    wget https://nginx.org/download/nginx-1.20.2.tar.gz
+    3.解压 tar -xzvf ng ...
 
-make && make install
-6.查找安装路径
+    4.进入解压后的目录使用nginx默认配置，执行
+    ./configure
+    5.编译安装：
 
-whereis nginx
-7.进入sbin目录，可以看到有一个可执行文件nginx，直接./nginx执行就OK了。
+    make && make install
+    6.查找安装路径
 
-./nginx
+    whereis nginx
+    7.进入sbin目录，可以看到有一个可执行文件nginx，直接./nginx执行就OK了。
+
+    ./nginx
+
 或百度或参考[尚硅谷nginx](nginx课件v1.0.pdf)
+
 ### nginx查看版本
 whereis nginx
 
