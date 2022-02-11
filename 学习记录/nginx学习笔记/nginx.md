@@ -402,4 +402,60 @@ keepalived-1.3.5-19.el7.x86_64
 1 ） 使用 yum 命令进行安装
 2 ）安装之后，在 etc 里面生成目录 keepalived ，有文件 keepalived.conf
 4 、完成高可用配置（主从配置）
+[ keepalived主机配置文件参考：](keepalived.conf)
+[ keepalived备机配置文件参考：](keepalived-backup.conf)
+
+[keepalived的脚本文件](nginx_check.sh)
+
+
+5 测试效果一：[nginx 主备绑定虚拟ip](http://192.168.159.50)
+主服务器命令
+ip a
+
+    root@pengtao sbin]# ip a 
+    1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+    inet6 ::1/128 scope host
+    valid_lft forever preferred_lft forever
+    2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 00:0c:29:c5:87:38 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.159.131/24 brd 192.168.159.255 scope global eth0
+    inet 192.168.159.50/32 scope global eth0
+    inet6 fe80::20c:29ff:fec5:8738/64 scope link
+    valid_lft forever preferred_lft forever
+    [root@pengtao sbin]# 
+
+inet 192.168.159.50/32 scope global eth0 这句话表示主服务器已经绑定了一个虚拟ip
+
+测试效果二：
+停掉主服务器nginx，依旧可以访问  [nginx 主备绑定虚拟ip](http://192.168.159.50)
+
+vim /etc/hosts
+echo "127.0.0.0 LVS_DEVEL" >> /etc/hosts
 ### nginx集群：Keepalived+Nginx 高可用集群（双主模式）
+
+
+### nginx 原理
+# 一个master和多个worker的好处
+ 1.可以使用nginx -s reload 热部署
+ 2. 每个worker是独立的进程，如果有其中的一个worker出现问题，其他worker独立的继续进行争抢，
+   实现请求过程，不会造成服务中断
+# 设置多少个worker 合适
+ Nginx 和redis 类似 都采用 io多路复用机制，每个worker都是一个独立的进程，但配个进程里面只有一个主进
+ 
+ worker数量和服务器的cpu数相等是最为适宜的
+
+
+## 连接数 worker_connection
+问题1：发送请求，占用了几个连接数。
+答案：要么是2个，要么是4个 看实际场景
+
+问题2：nginx有一个master，有4个worker，每个worker支持的最大连接数据1024
+支持的最大并发数是多少？
+
+答案：4 * 1024 的结果 除以2 或者 除以 4
+公式为：
+
+普通的静态访问最大并发数是： worker_connections * work_processes /2
+而如果是nginx  作为HTTP反向代理（服务器）来说，最大并发数量是  worker_connections * work_processes / 4
