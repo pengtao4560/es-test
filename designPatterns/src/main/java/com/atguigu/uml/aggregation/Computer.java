@@ -1,13 +1,23 @@
 package com.atguigu.uml.aggregation;
-
+/** é¼ æ ‡å’Œæ˜¾ç¤ºå™¨å¯ä»¥å’Œç”µè„‘åˆ†ç¦»ï¼Œæ‰€ä»¥æ˜¯èšåˆå…³ç³» */
 public class Computer {
-	private Mouse mouse; //Êó±ê¿ÉÒÔºÍcomputer·ÖÀë
-	private Moniter moniter;//ÏÔÊ¾Æ÷¿ÉÒÔºÍComputer·ÖÀë
+	/** é¼ æ ‡ */
+	private Mouse mouse;
+	/** æ˜¾ç¤ºå™¨ */
+	private Moniter moniter;
 	public void setMouse(Mouse mouse) {
 		this.mouse = mouse;
 	}
 	public void setMoniter(Moniter moniter) {
 		this.moniter = moniter;
 	}
-	
+
+}
+
+class Moniter {
+
+}
+
+class Mouse {
+
 }
