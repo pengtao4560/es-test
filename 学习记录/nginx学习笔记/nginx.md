@@ -145,32 +145,33 @@ cd /usr/local/nginx/sbin
 ### nginx 配置实例-反向代理
 准备工作 linux安装tomcat
 
-wget --no-check-certificate https://tomcat.apache.org/download-10.cgi#10.0.16
+    wget --no-check-certificate https://tomcat.apache.org/download-10.cgi#10.0.16
 [tomcat安装](https://www.linuxprobe.com/linux-install-tomcat9.html)
-进入tomcat下的bin目录
-cd /usr/local/apache-tomcat-10.0.16/bin
-./catalina.sh start
-[root@izuf6famz0x92jd98na1kiz bin]# ./catalina.sh start
-对外开放访问的端口：
-yy复制 p粘贴
-proxy_pass http://127.0.0.1:8080;
-###centos6开放端口
-vim /etc/sysconfig/iptables
-yy复制 
-nyy复制光标所在行当前行及向下n行 
-dd删行 
-p粘贴
 
-重启
-service iptables restart
+    进入tomcat下的bin目录
+    cd /usr/local/apache-tomcat-10.0.16/bin
+    ./catalina.sh start
+    [root@izuf6famz0x92jd98na1kiz bin]# ./catalina.sh start
+    对外开放访问的端口：
+    yy复制 p粘贴
+    proxy_pass http://127.0.0.1:8080;
+###centos6开放端口
+    vim /etc/sysconfig/iptables
+    yy复制 
+    nyy复制光标所在行当前行及向下n行 
+    dd删行 
+    p粘贴
+    
+    重启
+    service iptables restart
 
 ###centos7开放端口
-firewall cmd add port=80 80 /tcp permanent
-firewall cmd reload
-查看已经开放的端口号
-firewall cmd list all
-
-win+r： /drivers/etc/hosts
+    firewall cmd add port=80 80 /tcp permanent
+    firewall cmd reload
+    查看已经开放的端口号
+    firewall cmd list all
+    
+    win+r： /drivers/etc/hosts
 追加：
 #尚硅谷nginx学习-反向代理实例一
 192.168.159.131:8080 www.123.com
@@ -202,9 +203,10 @@ linux nginx.conf修改：
 (1)准备两个tomcat
 server.xml配置文件 tomcat8080不用改，直接启动
 tomcat8081改动如下：
-？8080        8080 -> 8081
-？8009        8009 -> 8019
-？8005        8005 -> 8015
+
+    ？8080        8080 -> 8081
+    ？8009        8009 -> 8019
+    ？8005        8005 -> 8015
 启动
 pe -ef|grep tomcat
 防火墙加上开放端口8081
@@ -235,28 +237,29 @@ pe -ef|grep tomcat
 (3)nginx配置文件修改，进行反向代理配置
 增加
 
-server {
-listen       9001;
-server_name  192.168.159.131;
-
-location ~ /edu/ {
-proxy_pass http://127.0.0.1:8080;
-}
-location ~ /vod/ {
-proxy_pass http://127.0.0.1:8081;
-}
-}
+    server {
+    listen       9001;
+    server_name  192.168.159.131;
+    
+    location ~ /edu/ {
+    proxy_pass http://127.0.0.1:8080;
+    }
+    location ~ /vod/ {
+    proxy_pass http://127.0.0.1:8081;
+    }
+    }
 
 # location指令：
 location 指令说明
 该指令用于匹配 URL。 语法如下：
-1、= ：用于不含正则表达式的 uri 前，要求请求字符串与 uri 严格匹配，如果匹配成功，
-就停止继续向下搜索并立即处理该请求。
-2、~：用于表示 uri 包含正则表达式，并且区分大小写。
-3、~*：用于表示 uri 包含正则表达式，并且不区分大小写。
-4、^~：用于不含正则表达式的 uri 前，要求 Nginx 服务器找到标识 uri 和请求字符串匹配度最高的 location 后，
-立即使用此 location 处理请求，而不再使用 location 块中的正则 uri 和请求字符串做匹配。
-注意：如果 uri 包含正则表达式，则必须要有 ~ 或者 ~* 标识。
+
+    1、= ：用于不含正则表达式的 uri 前，要求请求字符串与 uri 严格匹配，如果匹配成功，
+    就停止继续向下搜索并立即处理该请求。
+    2、~：用于表示 uri 包含正则表达式，并且区分大小写。
+    3、~*：用于表示 uri 包含正则表达式，并且不区分大小写。
+    4、^~：用于不含正则表达式的 uri 前，要求 Nginx 服务器找到标识 uri 和请求字符串匹配度最高的 location 后，
+    立即使用此 location 处理请求，而不再使用 location 块中的正则 uri 和请求字符串做匹配。
+    注意：如果 uri 包含正则表达式，则必须要有 ~ 或者 ~* 标识。
 
 (4) 开放9001端口
 (5)测试
@@ -393,17 +396,22 @@ keepalived-1.3.5-19.el7.x86_64
     [root@192 local]# cd /etc/keepalived/
     [root@192 keepalived]# ls
     keepalived.conf
-1. nginx高可用：
-2. 配置高可用的准备工作
-1 ）需要两台服务器 192.168.17.129 和 192.168.17.131
-2 ）在两台服务器安装 nginx
-3 ）在两台服务器安装 keepalived
-3. 在两台服务器安装 keepalived
-1 ） 使用 yum 命令进行安装
-2 ）安装之后，在 etc 里面生成目录 keepalived ，有文件 keepalived.conf
-4 、完成高可用配置（主从配置）
-[ keepalived主机配置文件参考：](keepalived.conf)
-[ keepalived备机配置文件参考：](keepalived-backup.conf)
+
+#### nginx高可用：
+   1. 什么是 nginx 高可用
+      高可用通常来描述一个系统经过专门的设计，从而减少停工时间，而保持其服务的高度可用性。
+   2. ![](nginx高可用.png)
+   3. 配置高可用的准备工作
+       1 ）需要两台服务器 192.168.17.129 和 192.168.17.131
+       2 ）在两台服务器安装 nginx
+       3 ）在两台服务器安装 keepalived
+   4. 在两台服务器安装 keepalived
+      1 ） 使用 yum 命令进行安装
+      2 ）安装之后，在 etc 里面生成目录 keepalived ，有文件 keepalived.conf
+   5. 完成高可用配置（主从配置）
+
+   [ keepalived主机配置文件参考：](keepalived.conf)
+   [ keepalived备机配置文件参考：](keepalived-backup.conf)
 
 [keepalived的脚本文件](nginx_check.sh)
 
@@ -437,17 +445,17 @@ echo "127.0.0.0 LVS_DEVEL" >> /etc/hosts
 
 
 ### nginx 原理
-# 一个master和多个worker的好处
+##### 一个master和多个worker的好处
  1.可以使用nginx -s reload 热部署
  2. 每个worker是独立的进程，如果有其中的一个worker出现问题，其他worker独立的继续进行争抢，
    实现请求过程，不会造成服务中断
-# 设置多少个worker 合适
+#### 设置多少个worker 合适
  Nginx 和redis 类似 都采用 io多路复用机制，每个worker都是一个独立的进程，但配个进程里面只有一个主进
  
  worker数量和服务器的cpu数相等是最为适宜的
 
 
-## 连接数 worker_connection
+##### 连接数 worker_connection
 问题1：发送请求，占用了几个连接数。
 答案：要么是2个，要么是4个 看实际场景
 
