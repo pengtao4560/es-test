@@ -43,14 +43,27 @@ public abstract class OrderPizza {
             BufferedReader strin = new BufferedReader(new InputStreamReader(System.in));
             System.out.println("请在控制台输出 input pizza 种类: 1. greek 2.cheese 3.pepper");
             String str = strin.readLine();
-            return switch(Integer.parseInt(str)) {
-                case 1 -> PizzaEnum.GREEK;
-                case 2 -> PizzaEnum.CHEESE;
-                case 3 -> PizzaEnum.PEPPER;
-                default -> throw new IllegalStateException("Unexpected value: " + Integer.parseInt(str));
-            };
+            return getPizzaEnum(str);
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    private PizzaEnum getPizzaEnum(String str) {
+    /*    return switch (Integer.parseInt(str)) {
+            case 1 -> PizzaEnum.GREEK;
+            case 2 -> PizzaEnum.CHEESE;
+            case 3 -> PizzaEnum.PEPPER;
+            default -> throw new IllegalStateException("Unexpected value: " + Integer.parseInt(str));
+        };*/
+        if ("1".equalsIgnoreCase(str)) {
+            return PizzaEnum.GREEK;
+        } else if ("2".equalsIgnoreCase(str)) {
+            return PizzaEnum.CHEESE;
+        } else if ("3".equalsIgnoreCase(str)) {
+            return PizzaEnum.PEPPER;
+        } else {
             return null;
         }
     }
