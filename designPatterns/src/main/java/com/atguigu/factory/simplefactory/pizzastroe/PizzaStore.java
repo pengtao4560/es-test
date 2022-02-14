@@ -10,7 +10,10 @@ import com.atguigu.factory.simplefactory.pizzastroe.order.OrderPizza;
  */
 public class PizzaStore {
     public static void main(String[] args) {
-        OrderPizza orderPizza = new OrderPizza();
+       // OrderPizza orderPizza = new OrderPizza();
+
+        SimpleFactory simpleFactory = new SimpleFactory();
+        OrderPizza orderPizza = new OrderPizza(simpleFactory);
 
     }
 }
