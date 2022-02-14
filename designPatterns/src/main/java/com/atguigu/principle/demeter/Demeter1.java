@@ -39,9 +39,9 @@ class CollegeManager {
     public List<CollegeEmployee> getAllEmployee() {
         List<CollegeEmployee> list = new ArrayList<CollegeEmployee>();
         for (int i = 0; i < 10; i++) { //这里我们增加了10个员工到 list
-            CollegeEmployee emp = new CollegeEmployee();
-            emp.setId("学院员工id= " + i);
-            list.add(emp);
+            CollegeEmployee collegeEmployee = new CollegeEmployee();
+            collegeEmployee.setId("学院员工id= " + i);
+            list.add(collegeEmployee);
         }
         return list;
     }
@@ -56,9 +56,9 @@ class SchoolManager {
         List<Employee> list = new ArrayList<Employee>();
 
         for (int i = 0; i < 5; i++) { //这里我们增加了5个员工到 list
-            Employee emp = new Employee();
-            emp.setId("学校总部员工id= " + i);
-            list.add(emp);
+            Employee employee = new Employee();
+            employee.setId("学校总部员工id= " + i);
+            list.add(employee);
         }
         return list;
     }
@@ -76,14 +76,14 @@ class SchoolManager {
         //获取到学院员工
         List<CollegeEmployee> collegeEmployeeList = collegeManager.getAllEmployee();
         System.out.println("------------学院员工------------");
-        for (CollegeEmployee e : collegeEmployeeList) {
-            System.out.println(e.getId());
+        for (CollegeEmployee collegeEmployee : collegeEmployeeList) {
+            System.out.println(collegeEmployee.getId());
         }
         //获取到学校总部员工
         List<Employee> employeeList = this.getAllEmployee();
         System.out.println("------------学校总部员工------------");
-        for (Employee e : employeeList) {
-            System.out.println(e.getId());
+        for (Employee employee : employeeList) {
+            System.out.println(employee.getId());
         }
     }
 }
