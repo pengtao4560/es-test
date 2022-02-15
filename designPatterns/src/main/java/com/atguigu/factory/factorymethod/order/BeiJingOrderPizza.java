@@ -11,7 +11,7 @@ import com.atguigu.bean.pizza.Pizza;
  * @author pengtao
  * @createdate 2022/02/14 0014
  */
-public class BeiJingOrderPizza extends OrderPizza{
+public class BeiJingOrderPizza extends OrderPizza {
     @Override
     Pizza createPizza(PizzaTypeEnum pizzaEnum) {
         Pizza pizza = null;
