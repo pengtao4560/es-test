@@ -5,7 +5,7 @@ package com.atguigu.dpenum;
  * @author pt
  * @date 2022/02/14 0014 - 22:17
  */
-public enum PizzaEnum {
+public enum PizzaTypeEnum {
     /**奶酪类型披萨*/
     CHEESE,
     /**胡椒类型披萨*/
