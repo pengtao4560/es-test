@@ -1,9 +1,9 @@
 package com.atguigu.factory.simplefactory.pizzastroe;
 
-import com.atguigu.factory.simplefactory.pizzastroe.pizza.CheesePizza;
-import com.atguigu.factory.simplefactory.pizzastroe.pizza.GreekPizza;
-import com.atguigu.factory.simplefactory.pizzastroe.pizza.PepperPizza;
-import com.atguigu.factory.simplefactory.pizzastroe.pizza.Pizza;
+import com.atguigu.bean.pizza.CheesePizza;
+import com.atguigu.bean.pizza.GreekPizza;
+import com.atguigu.bean.pizza.PepperPizza;
+import com.atguigu.bean.pizza.Pizza;
 
 /**
  * 简单工厂模式-简单工厂类

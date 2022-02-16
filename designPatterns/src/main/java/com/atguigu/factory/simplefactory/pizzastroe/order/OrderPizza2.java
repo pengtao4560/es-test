@@ -1,7 +1,7 @@
 package com.atguigu.factory.simplefactory.pizzastroe.order;
 
 import com.atguigu.factory.simplefactory.pizzastroe.SimpleFactory;
-import com.atguigu.factory.simplefactory.pizzastroe.pizza.Pizza;
+import com.atguigu.bean.pizza.Pizza;
 
 import java.io.BufferedReader;
 import java.io.IOException;

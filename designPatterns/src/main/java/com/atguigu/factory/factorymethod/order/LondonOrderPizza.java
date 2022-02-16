@@ -1,9 +1,9 @@
 package com.atguigu.factory.factorymethod.order;
 
-import com.atguigu.dpenum.PizzaEnum;
+import com.atguigu.dpenum.PizzaTypeEnum;
 import com.atguigu.factory.factorymethod.pizza.LondonCheesePizza;
 import com.atguigu.factory.factorymethod.pizza.LondonPepperPizza;
-import com.atguigu.factory.simplefactory.pizzastroe.pizza.Pizza;
+import com.atguigu.bean.pizza.Pizza;
 
 /**
  * 北京订购披萨类
@@ -13,11 +13,11 @@ import com.atguigu.factory.simplefactory.pizzastroe.pizza.Pizza;
  */
 public class LondonOrderPizza extends OrderPizza {
     @Override
-    Pizza createPizza(PizzaEnum pizzaEnum) {
+    Pizza createPizza(PizzaTypeEnum pizzaEnum) {
         Pizza pizza = null;
-        if (PizzaEnum.PEPPER.equals(pizzaEnum)) {
+        if (PizzaTypeEnum.PEPPER.equals(pizzaEnum)) {
             pizza = new LondonPepperPizza();
-        } else if (PizzaEnum.CHEESE.equals(pizzaEnum)) {
+        } else if (PizzaTypeEnum.CHEESE.equals(pizzaEnum)) {
             pizza = new LondonCheesePizza();
         }
         return pizza;

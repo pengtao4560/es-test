@@ -1,8 +1,9 @@
 package com.atguigu.factory.factorymethod.pizza;
 
-import com.atguigu.factory.simplefactory.pizzastroe.pizza.Pizza;
+import com.atguigu.bean.pizza.Pizza;
 
 /**
+ * 北京奶酪披萨
  * @author pengtao
  * @createdate 2022/02/14 0014
  */

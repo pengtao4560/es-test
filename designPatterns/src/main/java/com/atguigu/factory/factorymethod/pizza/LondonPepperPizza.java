@@ -1,6 +1,6 @@
 package com.atguigu.factory.factorymethod.pizza;
 
-import com.atguigu.factory.simplefactory.pizzastroe.pizza.Pizza;
+import com.atguigu.bean.pizza.Pizza;
 
 /**
  * @author pengtao

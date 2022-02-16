@@ -1,7 +1,6 @@
 package com.atguigu.factory.factorymethod;
 
 import com.atguigu.factory.factorymethod.order.BeiJingOrderPizza;
-import org.junit.Test;
 
 /**
  * 工厂方法模式
@@ -11,8 +10,8 @@ import org.junit.Test;
  */
 public class pizzastore {
 
-    @Test
-    public void testUserOrderPizza() {
+    public static void main(String[] args) {
+
         // 创建北京口味的各种Pizza
         new BeiJingOrderPizza();
     }

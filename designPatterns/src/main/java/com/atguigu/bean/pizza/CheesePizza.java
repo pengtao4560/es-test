@@ -1,4 +1,4 @@
-package com.atguigu.factory.simplefactory.pizzastroe.pizza;
+package com.atguigu.bean.pizza;
 
 /**
  * 奶酪披萨
