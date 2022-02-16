@@ -21,7 +21,7 @@ public class SingleRsponsibility2 {
 /**
  *  公路交通工具类 遵循单一职责原则
  *  分析：但是这样做的改动很大，即要将类分解，同时修改客户端
- *  改进：直接修改Vehicle类，改动的代码会比较少 =》方案三
+ *  改进：直接修改Vehicle类，改动的代码会比较少 ===》方案三：
  * @see SingleRsponsibility3
  * */
 class RoadVehicle {

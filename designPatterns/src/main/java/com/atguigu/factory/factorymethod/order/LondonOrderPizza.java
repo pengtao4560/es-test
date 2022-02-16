@@ -1,8 +1,6 @@
 package com.atguigu.factory.factorymethod.order;
 
 import com.atguigu.dpenum.PizzaEnum;
-import com.atguigu.factory.factorymethod.pizza.BeijingCheesePizza;
-import com.atguigu.factory.factorymethod.pizza.BeijingPepperPizza;
 import com.atguigu.factory.factorymethod.pizza.LondonCheesePizza;
 import com.atguigu.factory.factorymethod.pizza.LondonPepperPizza;
 import com.atguigu.factory.simplefactory.pizzastroe.pizza.Pizza;
@@ -13,7 +11,7 @@ import com.atguigu.factory.simplefactory.pizzastroe.pizza.Pizza;
  * @author pengtao
  * @createdate 2022/02/14 0014
  */
-public class LondonOrderPizza extends OrderPizza{
+public class LondonOrderPizza extends OrderPizza {
     @Override
     Pizza createPizza(PizzaEnum pizzaEnum) {
         Pizza pizza = null;

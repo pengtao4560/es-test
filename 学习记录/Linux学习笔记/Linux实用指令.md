@@ -281,6 +281,21 @@ tar [选项] XXX.tar.gz 打包的内容
     animal  a.tar.gz  a.txt  c  c.txt.gz  hello.txt  home.zip  pengtao  pt  yangxiao  zhangwuji
     [root@pengtao home]#
 
+
+#### xz压缩、解压文件方法或命令
+    xz -z 要压缩的文件
+                如果要保留被压缩的文件加上参数 -k ，如果要设置压缩率加入参数 -0 到 -9调节压缩率。如果不设置，默认压缩等级是6.
+    xz解压文件方法或命令
+        xz -d 要解压的文件
+    
+            同样使用 -k 参数来保留被解压缩的文件。
+    
+    创建tar.xz文件：只要先 tar cvf xxx.tar xxx/ 这样创建xxx.tar文件先，然后使用 xz -z xxx.tar 来将 xxx.tar压缩成为 xxx.tar.xz
+    
+#### xz -d 解压tar.xz文件：
+    先 xz -d xxx.tar.xz      #将 xxx.tar.xz解压成 xxx.tar 
+    然后，再用 
+    tar xvf xxx.tar         #来解包。
 ###权限管理(文件和目录的权限)
 
  [本段需要参考](linux目录权限相关说明.md) 
@@ -652,6 +667,8 @@ netstat -打印网络连接，路由表，接口统计信息，伪装连接和�
     注解：一种用于互联网下载包的打包及安装工具，它包含在某些Linux分发版中。它生成具有.RPM扩展名的文件。与Dpkg类似。
 
 查看已安装的 rpm 列表
+
+rpm -qa|grep glibc
 
     rpm -qa
     rpm -qa|more
