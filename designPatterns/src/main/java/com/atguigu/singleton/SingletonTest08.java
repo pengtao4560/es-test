@@ -6,15 +6,15 @@ package com.atguigu.singleton;
  */
 public class SingletonTest08 {
     public static void main(String[] args) {
-        Singleton instance = Singleton.INISTANCE;
-        Singleton instance2 = Singleton.INISTANCE;
+        SingletonEnum instance = SingletonEnum.INISTANCE;
+        SingletonEnum instance2 = SingletonEnum.INISTANCE;
 
         System.out.println(instance.equals(instance2));
         System.out.println(instance.hashCode() == instance2.hashCode());
     }
 }
 /** 使用枚举实现单例模式 */
-enum Singleton {
+enum SingletonEnum {
     INISTANCE;
 
     public void sayOK() {

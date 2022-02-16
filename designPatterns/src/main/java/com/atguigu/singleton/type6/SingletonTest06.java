@@ -25,9 +25,9 @@ class Singleton {
     private Singleton() {
     }
 
-    /**提供一个静态的公有方法，加入双重检查代码，解决线程安全问题，同时解决懒加载问题
+    /**双重检查-提供一个静态的公有方法，加入双重检查代码，解决线程安全问题，同时解决懒加载问题
      * 同时保证了效率，推荐使用
-     * 即懒汉式
+     *
      * */
     public static synchronized Singleton getInstance() {
         if (INSTANCE == null) {

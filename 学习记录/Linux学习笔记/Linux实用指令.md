@@ -487,7 +487,7 @@ du -ach --max-depth=1 /opt
     找到BOOTPROTO修改为：
             BOOTPROTO=static
     确认      ONBOOT=yes
-
+    
 
 ###Linux 进程管理
 
