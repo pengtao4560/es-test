@@ -262,12 +262,16 @@ gunzip 解压缩文件
 
 
 #### tar指令 tar指令是打包指令，最后打包后的文件是 .tar.gz的文件
-tar [选项] XXX.tar.gz 打包的内容
-    -c 产生.tar打包文件
-    -x 产生详细信息       （--extract, --get extract files from an archive 从存档文件中提取文件，即产生详细信息）
-    -z 打包同时压缩
-    -x 解压.tar文件
-    
+#### 压缩 tar -zcvf
+#### 解压 tar -zxvf
+    tar [选项] XXX.tar.gz 打包的内容
+        -c 产生.tar打包文件    create a new archive
+        -v 产生详细信息       verbosely list files processed【详细的列出已处理的文件】
+        -z (支持gzip压缩/解压文件) 通过gzip指令处理备份文件     filter the archive through gzip 【通过gzip过滤存档文件】
+        -x 解压.tar文件    extract files from an archive【解压---从归档文件中解出文件】
+        -f (指定文件)使用存档文件 use archive file or device ARCHIVE【使用存档文件或设备ARCHIVE】
+案例：
+
     tar -zcvf a.tar.gz hello.txt a.txt
     tar -zcvf all.tar.gz /home/            打包整个home下所有文件
     解压到当前目录:    
@@ -282,7 +286,7 @@ tar [选项] XXX.tar.gz 打包的内容
     [root@pengtao home]#
 
 
-#### xz压缩、解压文件方法或命令
+#### xz -d 压缩文件、 xz -d 解压文件 指令
     xz -z 要压缩的文件
                 如果要保留被压缩的文件加上参数 -k ，如果要设置压缩率加入参数 -0 到 -9调节压缩率。如果不设置，默认压缩等级是6.
     xz解压文件方法或命令
@@ -425,8 +429,26 @@ du -h /目录
      -a all 包含文件
      --max-depth=1 子目录深度
      -c 列出明细的同时，增加汇总量
-
+##### du -sh /usr/local/nginx
+##### du -ch /usr/local/nginx
 案例：
+
+    [root@localhost tar-gz-bak]# du -sh /usr/local/nginx
+    3.9M	/usr/local/nginx
+    [root@localhost tar-gz-bak]# du -ch /usr/local/nginx
+    3.8M	/usr/local/nginx/sbin
+    72K	/usr/local/nginx/conf
+    12K	/usr/local/nginx/logs
+    8.0K	/usr/local/nginx/html
+    0	/usr/local/nginx/client_body_temp
+    0	/usr/local/nginx/proxy_temp
+    0	/usr/local/nginx/fastcgi_temp
+    0	/usr/local/nginx/uwsgi_temp
+    0	/usr/local/nginx/scgi_temp
+    3.9M	/usr/local/nginx
+    3.9M	总用量
+    [root@localhost tar-gz-bak]#
+
 du -ach --max-depth=1 /opt
 
     [root@pengtao ~]# du -ach --max-depth=1 /opt
@@ -489,7 +511,7 @@ du -ach --max-depth=1 /opt
     确认      ONBOOT=yes
     
 
-###Linux 进程管理
+###Linux 进程管理  ps -aux 或  ps -ef
 
     ps 查看进程使用的指令[report a snapshot of the current processes]，一般来说使用的参数是  ps -aux
      -a all显示当前终端的所有进程信息
@@ -512,8 +534,7 @@ du -ach --max-depth=1 /opt
     ps -aux|grep sshd
     ps -ef|grep java
 
-学习记录/pdf/linux进程ps含义.png
-
+![](linux进程ps含义.png)
     [root@pengtao ~]# ps -ax|grep sshd:pengtao
     Warning: bad syntax, perhaps a bogus '-'? See /usr/share/doc/procps-3.2.8/FAQ
     4151 pts/3    S+     0:00 grep sshd:pengtao
