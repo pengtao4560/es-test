@@ -1,4 +1,4 @@
-package com.atgugui.jdk;
+package com.jdk;
 
 import java.util.Calendar;
 
