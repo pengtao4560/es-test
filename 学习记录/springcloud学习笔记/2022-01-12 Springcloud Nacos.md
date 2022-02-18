@@ -1,35 +1,34 @@
 SpringCloud Alibaba
 Nacos服务注册和配置中心
 	Nacos简介
-		为什么叫Nacos
+#####为什么叫Nacos
 			前四个字母分别为Naming和Configuration的前两个字母，最后的s为Service。
-		是什么
-			一个更易于构建云原生应用的动态服务发现、配置管理和服务管理平台。
+##### nacos是什么: 一个更易于构建云原生应用的动态服务发现、配置管理和服务管理平台。
 			Nacos: Dynamic Naming and Configuration Service
 			Nacos就是注册中心 + 配置中心的组合
 				等价于
 					Nacos = Eureka+Config +Bus
-		能干嘛
+##### nacos能干嘛
 			替代Eureka做服务注册中心
 			替代Config做服务配置中心
-		去哪下
-			https://github.com/alibaba/Nacos
-			官网文档
-				https://nacos.io/zh-cn/index.html
-				https://spring-cloud-alibaba-group.github.io/github-pages/greenwich/spring-cloud-alibaba.html#_spring_cloud_alibaba_nacos_discovery
+##### nacos去哪下
+[](https://github.com/alibaba/Nacos)
+[官网文档](https://nacos.io/zh-cn/docs/what-is-nacos.html)
+[](https://spring-cloud-alibaba-group.github.io/github-pages/greenwich/spring-cloud-alibaba.html#_spring_cloud_alibaba_nacos_discovery
+)				
 		各种注册中心比较
 	安装并运行Nacos
 		本地Java8+Maven环境已经OK
-		先从官网下载Nacos
-			https://github.com/alibaba/nacos/releases
-		解压安装包，直接运行bin目录下的startup.cmd
-		单机版启动命令：startup.cmd -m standalone
-		命令运行成功后直接访问http://localhost:8848/nacos
+[先从官网下载Nacos](https://github.com/alibaba/nacos/releases)
+解压安装包，直接运行bin目录下的startup.cmd
+		单机版启动命令：
+		startup.cmd -m standalone
+		[命令运行成功后直接访问](http://localhost:8848/nacos)
 			默认账号密码都是nacos
 		结果页面
 	Nacos作为服务注册中心演示
-		官网文档
-			https://spring-cloud-alibaba-group.github.io/github-pages/greenwich/spring-cloud-alibaba.html#_spring_cloud_alibaba_nacos_config
+[官网文档](https://spring-cloud-alibaba-group.github.io/github-pages/greenwich/spring-cloud-alibaba.html#_spring_cloud_alibaba_nacos_config)
+			
 		基于Nacos的服务提供者
 			新建Module
 				cloudalibaba-provider-payment9001

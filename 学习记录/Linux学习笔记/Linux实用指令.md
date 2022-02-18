@@ -596,6 +596,10 @@ centos7不使用SysV而改为systemd了，这是因为systemd支持多个服务�
 ###centos 6 防火墙操作：
 [centos6防火墙操作](https://www.cnblogs.com/liuyiyuan/p/13681535.html)
 
+    vim /etc/sysconfig/iptables   # yy复制  p粘贴 u撤回  d删行  ESC  shift + 冒号
+    
+    service iptables restart
+
 ###centos 7 防火墙操作：
     #查看防火墙规则
     firewall-cmd --list-all

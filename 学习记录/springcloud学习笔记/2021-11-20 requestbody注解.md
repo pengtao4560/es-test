@@ -1,6 +1,6 @@
 @RequestBody 注解常用来处理content-type不是默认的application/x-www-form-urlcoded编码的内容，
 比如说：application/json或者是application/xml等。一般情况下来说常用其来处理application/json类型。
------------参考文章： https://www.cnblogs.com/zhuhui-site/p/10088238.html
+-----------参考文章： [](https://www.cnblogs.com/zhuhui-site/p/10088238.html)
 
 @requestbody的含义是在当前对象获取整个http请求的body里面的所有数据，因此spring就不可能将这个数据强制包装成Course或者List类型，
 并且从@requestbody设计上来说，
