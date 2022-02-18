@@ -13,7 +13,7 @@ public class Client {
     public static void main(String[] args) {
         log.info("=== 类适配器模式 ===");
 
-        VoltageAdapter adapter = new VoltageAdapter();
+        VoltageClassAdapter adapter = new VoltageClassAdapter();
 
         Phone phone = new Phone();
         phone.charging(adapter);

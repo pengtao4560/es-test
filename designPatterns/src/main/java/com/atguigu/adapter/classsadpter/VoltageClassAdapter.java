@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
  * @createdate 2022/02/17 0017
  */
 @Slf4j
-public class VoltageAdapter extends Voltage220V implements Voltage5V {
+public class VoltageClassAdapter extends Voltage220V implements Voltage5V {
 
 
     @Override

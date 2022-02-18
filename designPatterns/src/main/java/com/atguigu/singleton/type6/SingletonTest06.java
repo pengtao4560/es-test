@@ -2,14 +2,14 @@ package com.atguigu.singleton.type6;
 
 /**
  * @author pengtao
- * @createdate 2022/02/13 0013
+ * @createdate  2022/02/13 0013
  */
 public class SingletonTest06 {
 
     public static void main(String[] args) {
         System.out.println("双重检查");
-        Singleton instance = Singleton.getInstance();
-        Singleton instance2 = Singleton.getInstance();
+        DoubleCheckLazySingleton instance = DoubleCheckLazySingleton.getInstance();
+        DoubleCheckLazySingleton instance2 = DoubleCheckLazySingleton.getInstance();
         System.out.println(instance == instance2); // true
         System.out.println("instance.hashCode=" + instance.hashCode());
         System.out.println("instance2.hashCode=" + instance2.hashCode());
@@ -19,20 +19,20 @@ public class SingletonTest06 {
 }
 
 // 懒汉式(线程安全，同步方法)
-class Singleton {
-    private static volatile Singleton INSTANCE;
+class DoubleCheckLazySingleton {
+    private static volatile DoubleCheckLazySingleton INSTANCE;
 
-    private Singleton() {
+    private DoubleCheckLazySingleton() {
     }
 
     /**双重检查-提供一个静态的公有方法，加入双重检查代码，解决线程安全问题，同时解决懒加载问题
      * 同时保证了效率，推荐使用
      *
      * */
-    public static synchronized Singleton getInstance() {
+    public static synchronized DoubleCheckLazySingleton getInstance() {
         if (INSTANCE == null) {
-            synchronized (Singleton.class) {
-                INSTANCE = new Singleton();
+            synchronized (DoubleCheckLazySingleton.class) {
+                INSTANCE = new DoubleCheckLazySingleton();
             }
         }
         return INSTANCE;
