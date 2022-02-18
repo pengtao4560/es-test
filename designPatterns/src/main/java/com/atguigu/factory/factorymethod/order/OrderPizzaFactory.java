@@ -13,13 +13,13 @@ import java.io.InputStreamReader;
  * @author pengtao
  * @createdate 2022/02/14 0014
  */
-public abstract class OrderPizza {
+public abstract class OrderPizzaFactory {
     /**
      * 定义一个抽象方法 createPizza， 让各个工厂子类自己实现
      */
     abstract Pizza createPizza(PizzaTypeEnum orderType);
 
-    public OrderPizza() {
+    public OrderPizzaFactory() {
         Pizza pizza = null;
         // 披萨订购的类型
         PizzaTypeEnum orderType;

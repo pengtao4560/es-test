@@ -18,16 +18,16 @@ public class TestInterface01 {
 	}
 	//HikariCP 号称世界上最快的连接池
 	public static DataSource newHiKariCPDataSource() {
-//		HikariDataSource ds=new HikariDataSource();
-//		ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-//		ds.setJdbcUrl("jdbc:mysql:///jtsys?serverTimezone=GMT%2B8");
-//		ds.setUsername("root");
-//		ds.setPassword("root");
-		HikariDataSource ds=new HikariDataSource();    //oracle的怎么搞还没搞懂
+		HikariDataSource ds=new HikariDataSource();
+		ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
+		ds.setJdbcUrl("jdbc:mysql:///jtsys?serverTimezone=GMT%2B8");
+		ds.setUsername("root");
+		ds.setPassword("root");
+/*		HikariDataSource ds=new HikariDataSource();    //oracle的怎么搞还没搞懂
 		ds.setDriverClassName("oracle.jdbc.driver.OracleDriver");
 		ds.setJdbcUrl("jdbc:oracle:thin:@localhost:1521:orcl");
 		ds.setUsername("system");
-		ds.setPassword("orcl");
+		ds.setPassword("orcl");*/
 		return ds;
 	}
 	//c3p0

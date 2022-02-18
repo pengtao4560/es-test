@@ -3,6 +3,7 @@ package com.atguigu.factory.absfactory.order;
 import com.atguigu.bean.pizza.Pizza;
 import com.atguigu.dpenum.PizzaTypeEnum;
 import com.atguigu.factory.absfactory.PizzaAbstractFactory;
+import com.atguigu.factory.factorymethod.order.OrderPizzaFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
@@ -50,6 +51,6 @@ public class OrderPizza {
      * 写一个方法，可以获取客户希望订购的披萨种类
      */
     private PizzaTypeEnum getPizzaType() {
-        return com.atguigu.factory.factorymethod.order.OrderPizza.getType();
+        return OrderPizzaFactory.getType();
     }
 }
