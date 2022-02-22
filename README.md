@@ -1,23 +1,33 @@
 学习 哔哩哔哩尚硅谷 springcloud课程、java8新特性、nginx、linux
 
 未来：redis、mongo、消息队列、mysql进阶、
-## markdown文件表情
+##### markdown文件表情
 
-语法： &#xCODE;
+语法： &#xCODE;    
+其中，CODE 可以从 [Emoji Unicode Tables](https://apps.timwhitlock.info/emoji/tables/unicode#block-4-enclosed-characters)
+中查到。复制第四排的： Symbola [4] 即可
 
-其中，CODE 可以从 Emoji Unicode Tables 中查到。
-
-[Emoji Unicode Tables](https://apps.timwhitlock.info/emoji/tables/unicode#block-4-enclosed-characters)
-
-例子： 查到了 表情对应的 Unicode 编码为 U+1F34E，则与此表情对应的 CODE 为 1F34E (舍弃前面的 U+)。
-我们只需在 Markdown 文档中输入 &#x1F34E; 即可显示为 。
-
-&#x1F64B;
-
+    例子： 查到了 表情对应的 Unicode 编码为 U+1F34E，则与此表情对应的 CODE 为 1F34E (舍弃前面的 U+)。
+    我们只需在 Markdown 文档中输入 &#x1F34E; 即可显示为 。
+##### markdown文件表情复制
+😄
 🙋
+✅
+✏
+❓
+💪
+🐼
+👊
+💖
+##### [git把某个文件去除版本控制不删除本地文件](https://my.oschina.net/yurenzhen/blog/1800790)
 
+    git rm -h 查看说明
+    git rm --cached 文件的全路径名
+    -r 是允许递归删除，当要删除的是文件夹的时候有用
+    git rm -r --cached loggers  # -r 是允许递归删除，当要删除的是文件夹的时候有用
 
-
+##### [AnotherRedisDesktopManager redis可视化管理工具 github下载](https://github.com/qishibo/AnotherRedisDesktopManager/releases)
+##### [AnotherRedisDesktopManager redis可视化管理工具 gitee下载](Gitee：https://gitee.com/qishibo/AnotherRedisDesktopManager/releases)
 github访问慢解决办法：
 
 1. 打开本地hosts文件
@@ -68,7 +78,21 @@ API （Application Programming Interface，应用编程接口）
 
 
 
+[redis官网](https://redis.io)
+[redis下载](https://redis.io/download)
+[redis 安装教程](https://www.cnblogs.com/hunanzp/p/12304622.html)
+wget https://download.redis.io/releases/redis-6.2.6.tar.gz
+解压
+改名字 mv redis-6.2.6 redis
+cd redis
+pwd            /usr/local/redis
 
+make
+cd src
+make install
+修改配置文件 redis.conf
+cp /usr/local/redis/redis.conf redis.conf.bak
+vim 
 
 
 

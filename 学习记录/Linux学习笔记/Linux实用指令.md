@@ -607,6 +607,7 @@ centos7不使用SysV而改为systemd了，这是因为systemd支持多个服务�
     firewall-cmd --query-port=8080/tcp
     # 开放80端口
     firewall-cmd --permanent --add-port=80/tcp
+firewall-cmd --permanent --add-port=6379/tcp
     # 移除端口
     firewall-cmd --permanent --remove-port=8080/tcp
     
