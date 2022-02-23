@@ -21,6 +21,13 @@ import java.util.stream.Collectors;
  */
 public class StreamAPITest {
 
+    public static void main(String[] args) {
+        List<Integer> integerList = List.of(1, 2, 3);
+        for (Integer integer : integerList) {
+
+        }
+    }
+
     /**
      * 构建用户列表
      */

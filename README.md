@@ -95,6 +95,14 @@ cp /usr/local/redis/redis.conf redis.conf.bak
 vim 
 
 
+##### redis 单机启动
+find / -name redis
+find / -name redis.conf
+
+cd /usr/local/redis
+./bin/redis-server /usr/local/redis/redis.conf
+
+[配置文件参数说明](https://lion-wu.blog.csdn.net/article/details/108019877?spm=1001.2101.3001.6650.13&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-13.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-13.pc_relevant_default&utm_relevant_index=16)
 
 
 
@@ -110,5 +118,43 @@ vim
 
 
 
+####知识扩展
+##### BI: 商务智能 (business intelligence)
+smartbi[浅谈Smartbi和Power BI](https://zhuanlan.zhihu.com/p/165376092)
+
+[持续集成 CI Continuous integration](https://baike.baidu.com/item/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/6250744?fr=aladdin)
+[持续交付 CD Continuous Delivery](https://baike.baidu.com/item/%E6%8C%81%E7%BB%AD%E4%BA%A4%E4%BB%98/9803571)
+[CI/CD](https://www.redhat.com/zh/topics/devops/what-is-ci-cd)
+[CI/CD](https://zhuanlan.zhihu.com/p/228272483)
 
 
+
+在谈论软件开发时，经常会提到 持续集成(Continuous Integration)（CI）和 持续交付(Continuous Delivery)（CD）这几个术语。
+但它们真正的意思是什么呢？在本文中，我将解释这些和相关术语背后的含义和意义，例如 
+持续测试(Continuous Testing)和 持续部署(Continuous Deployment)。
+
+##### CI 持续集成（Continuous Integration）
+现代应用开发的目标是让多位开发人员同时处理同一应用的不同功能。但是，如果企业安排在一天内将所有分支源代码合并在一起（称为"合并日"），
+最终可能造成工作繁琐、耗时，而且需要手动完成。这是因为当一位独立工作的开发人员对应用进行更改时，
+有可能会与其他开发人员同时进行的更改发生冲突。如果每个开发人员都自定义自己的本地集成开发环境（IDE），
+而不是让团队就一个基于云的 IDE 达成一致，那么就会让问题更加雪上加霜。
+
+持续集成（CI）可以帮助开发人员更加频繁地（有时甚至每天）将代码更改合并到共享分支或"主干"中。
+一旦开发人员对应用所做的更改被合并，系统就会通过自动构建应用并运行不同级别的自动化测试（通常是单元测试和集成测试）来验证这些更改，
+确保这些更改没有对应用造成破坏。这意味着测试内容涵盖了从类和函数到构成整个应用的不同模块。
+如果自动化测试发现新代码和现有代码之间存在冲突，CI 可以更加轻松地快速修复这些错误。
+
+##### CD 持续交付（Continuous Delivery）
+完成 CI 中构建及单元测试和集成测试的自动化流程后，持续交付可自动将已验证的代码发布到存储库。
+为了实现高效的持续交付流程，务必要确保 CI 已内置于开发管道。持续交付的目标是拥有一个可随时部署到生产环境的代码库。
+
+在持续交付中，每个阶段（从代码更改的合并，到生产就绪型构建版本的交付）都涉及测试自动化和代码发布自动化。在流程结束时，
+运维团队可以快速、轻松地将应用部署到生产环境中。
+
+##### CD 持续部署（Continuous Deployment）
+对于一个成熟的 CI/CD 管道来说，最后的阶段是持续部署。作为持续交付——自动将生产就绪型构建版本发布到代码存储库——的延伸，
+持续部署可以自动将应用发布到生产环境。由于在生产之前的管道阶段没有手动门控，因此持续部署在很大程度上都得依赖精心设计的测试自动化。
+
+实际上，持续部署意味着开发人员对应用的更改在编写后的几分钟内就能生效（假设它通过了自动化测试）。这更加便于持续接收和整合用户反馈。
+总而言之，所有这些 CI/CD 的关联步骤都有助于降低应用的部署风险，因此更便于以小件的方式（而非一次性）发布对应用的更改。
+不过，由于还需要编写自动化测试以适应 CI/CD 管道中的各种测试和发布阶段，因此前期投资还是会很大。

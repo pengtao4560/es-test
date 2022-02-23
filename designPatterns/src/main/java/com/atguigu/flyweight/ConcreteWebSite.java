@@ -5,7 +5,7 @@ package com.atguigu.flyweight;
  * @author pengtao
  * @createdate 2022/02/19 0019
  */
-public class ConcreteWebSite extends WebSite{
+public class ConcreteWebSite extends WebSite {
     // 网站发布的形式、类型
     private String type;
 
