@@ -8,7 +8,14 @@
     <select id="getUserByLike" resultType="User">
         <!--select * from t_user where username like '%${username}%'-->
         <!--select * from t_user where username like concat('%',#{username},'%')-->
-        select * from t_user where username like "%"#{username}"%"
+        select
+            *
+        from
+            t_user
+        where
+            username
+        like
+            "%"#{username}"%"
     </select>
 
     <!--int deleteMore(@Param("ids") String ids);-->
@@ -27,7 +34,15 @@
         keyProperty:将自增的主键的值赋值给传输到映射文件中参数的某个属性
     -->
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
-        insert into t_user values(null,#{username},#{password},#{age},#{sex},#{email})
+        insert into
+            t_user
+        values
+            (null,
+            #{username},
+            #{password},
+            #{age},
+            #{sex},
+            #{email})
     </insert>
 
 </mapper>

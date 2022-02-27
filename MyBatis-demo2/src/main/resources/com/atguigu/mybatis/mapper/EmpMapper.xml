@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mybatis.mapper.EmpMapper">
+
+
+    <select id="getAllEmpOld" resultType="com.atguigu.mybatis.pojo.Emp">
+
+<!--        select-->
+<!--            eid,-->
+<!--            emp_name empName,-->
+<!--            age,-->
+<!--            gender,-->
+<!--            email-->
+<!--        from-->
+<!--            t_emp;-->
+
+        select
+        eid,
+        emp_name,
+        age,
+        gender,
+        email
+        from
+        t_emp;
+    </select>
+
+    <resultMap id="empResultMap" type="Emp">
+        <id property="eid" column="eid"></id>
+        <result property="empName" column="emp_name"></result>
+        <result property="age" column="age"></result>
+        <result property="gender" column="gender"></result>
+        <result property="email" column="email"></result>
+    </resultMap>
+
+<!--  resultMap: 设置自定义映射关系
+        type: 设置映射关系中的实体类类型
+        子标签：
+            id： 设置主键的映射关系
+            result: 设置普通字段的映射关系
+            属性：
+                property: 设置映射关系中的属性名，必须是 type 属性所设置的实体类类型中的属性名
+                column : 设置映射关系中的字段名，必须是 sql 语句查询出的字段名
+   -->
+    <select id="getAllEmp" resultMap="empResultMap">
+
+        <!--        select-->
+        <!--            eid,-->
+        <!--            emp_name empName,-->
+        <!--            age,-->
+        <!--            gender,-->
+        <!--            email-->
+        <!--        from-->
+        <!--            t_emp;-->
+
+        select
+        eid,
+        emp_name,
+        age,
+        gender,
+        email
+        from
+        t_emp;
+    </select>
+
+    <resultMap id="empAndDeptResultMap" type="emp">
+
+        <id property="eid" column="eid"></id>
+        <result property="empName" column="emp_name"></result>
+        <result property="age" column="age"></result>
+        <result property="gender" column="gender"></result>
+        <result property="email" column="email"></result>
+
+        <result property="dept.did" column="did"></result>
+        <result property="dept.deptName" column="dept_name"></result>
+    </resultMap>
+
+<!--    <select id="getEmpAndDept" resultMap="empAndDeptResultMap">-->
+    <select id="getEmpAndDept" resultMap="empAndDeptResultMapAssocation">
+        select
+            *
+        from
+            t_emp
+        left join
+            t_dept
+        on
+            t_emp.did = t_dept.did
+        where
+            t_emp.eid = #{eid}
+    </select>
+
+
+    <resultMap id="empAndDeptResultMapAssocation" type="emp">
+
+        <id property="eid" column="eid"></id>
+        <result property="empName" column="emp_name"></result>
+        <result property="age" column="age"></result>
+        <result property="gender" column="gender"></result>
+        <result property="email" column="email"></result>
+<!--   association: 处理多对一的映射关系
+        property:需要处理多对的映射关系的属性名
+        javaType:该属性的类型
+-->
+        <association property="dept" javaType="Dept">
+            <id property="did" column="did"></id>
+            <result property="deptName" column="dept_name"></result>
+        </association>
+
+    </resultMap>
+
+    <resultMap id="empAndDeptByStepResultMap" type="emp">
+
+        <id property="eid" column="eid"></id>
+        <result property="empName" column="emp_name"></result>
+        <result property="age" column="age"></result>
+        <result property="gender" column="gender"></result>
+        <result property="email" column="email"></result>
+        <!--   association: 处理多对一的映射关系
+                column: 分步查询的条件
+                select:分步查询的sql的唯一标识 namespace.SQLId 或者 mapper接口的全类名.方法名
+                fetchType: 当开启了全局的延迟加载之后，可通过此属性手动控制延迟加载的效果 lazy延迟加载 eager立即加载(未开启则都是立即加载？)
+        -->
+        <association property="dept" select="com.atguigu.mybatis.mapper.DeptMapper.getDeptAndEmpByStepTwo"
+                     column="did"   fetchType="lazy">
+
+        </association>
+
+    </resultMap>
+
+    <select id="getEmpAndDeptByStepOne" resultMap="empAndDeptByStepResultMap">
+        select
+            *
+        from
+            t_emp
+        where
+            t_emp.eid = #{eid}
+    </select>
+
+    <select id="getDeptAndEmpByStepTwo" resultType="com.atguigu.mybatis.pojo.Emp">
+        select
+            *
+        from
+            t_emp
+        where
+            t_emp.did = #{did}
+    </select>
+</mapper>

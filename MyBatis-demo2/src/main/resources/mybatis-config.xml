@@ -5,7 +5,13 @@
 <configuration>
 
     <properties resource="jdbc.properties" />
-
+    <!--  设置 mybatis 全局配置 -->
+    <settings>
+    <!--  将下划线自动映射成驼峰 例如 emp_name : empName      -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    <!-- 开启延迟加载 -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+    </settings>
     <typeAliases>
         <package name="com.atguigu.mybatis.pojo"/>
     </typeAliases>

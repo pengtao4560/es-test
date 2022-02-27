@@ -451,3 +451,227 @@ File | Settings | Editor | File and Code Templates
 
 
 
+#### 六 yBatis 的各种查询功能
+
+   MyBatis的各种查询功能：
+   1、若查询出的数据只有一条
+      a>可以通过实体类对象接收
+      b>可以通过list集合接收
+      c>可以通过map集合接收
+   结果：{password=123456, sex=男, id=3, age=23, email=12345@qq.com, username=admin}
+   2、若查询出的数据有多条
+      a>可以通过实体类类型的list集合接收
+      b>可以通过map类型的list集合接收
+      c>可以在mapper接口的方法上添加 @MapKey 注解，此时就可以将每条数据转换的map集合作为值，以某个字段的值作为键，放在同一个map集合中
+      注意：一定不能通过实体类对象接收，此时会抛异常TooManyResultsException
+  
+   MyBatis中设置了默认的类型别名
+   java.lang.Integer-->int,integer
+   int-->_int,_integer
+   Map-->map
+   String-->string
+
+```java
+package com.atguigu.mybatis.mapper;
+
+import com.atguigu.mybatis.pojo.User;
+import org.apache.ibatis.annotations.MapKey;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ */
+public interface SelectMapper {
+
+    /**
+     * 根据id查询用户信息
+     */
+    List<User> getUserById(@Param("id") Integer id);
+
+    /**
+     * 查询所有的用户信息
+     */
+    List<User> getAllUser();
+
+    /**
+     * 查询用户信息的总记录数
+     */
+    Integer getCount();
+
+    /**
+     * 根据id查询用户信息为一个map集合
+     */
+    Map<String, Object> getUserByIdToMap(@Param("id") Integer id);
+
+    /**
+     * 查询所有用户信息为map集合
+     */
+    //List<Map<String, Object>> getAllUserToMap();
+    @MapKey("id")
+    Map<String, Object> getAllUserToMap();
+
+}
+
+```
+
+#### 特殊 SQL 的执行
+
+模糊查询
+
+```java
+package com.atguigu.mybatis.mapper;
+
+import com.atguigu.mybatis.pojo.User;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+/**
+ * Date:2021/11/29
+ * Author:ybc
+ * Description:
+ */
+public interface SQLMapper {
+
+   /**
+    * 根据用户名模糊查询用户信息
+    */
+   List<User> getUserByLike(@Param("username") String username);
+
+   /**
+    * 批量删除
+    */
+   int deleteMore(@Param("ids") String ids);
+
+   /**
+    * 查询指定表中的数据
+    */
+   List<User> getUserByTableName(@Param("tableName") String tableName);
+
+   /**
+    * 添加用户信息
+    */
+   void insertUser(User user);
+
+}
+
+```
+
+#### 添加功能获取自增主键： useGeneratedKeys keyProperty
+        useGeneratedKeys:设置当前标签中的sql使用了自增的主键
+        keyProperty:将自增的主键的值赋值给传输到映射文件中参数的某个属性
+
+#### 自定义映射 resultMap
+
+mapUnderscoreToCamelCase : 将下划线自动映射成驼峰
+
+
+    
+      解决字段名和属性名不一致的情况：
+
+      1>为字段起别名，保持和属性名的一致
+
+      2>设置全局配置，将_自动映射为驼峰
+      <setting name="mapUnderscoreToCamelCase" value="true"/>
+
+      3>通过resultMap设置自定义的映射关系
+
+```xml
+ <resultMap id="empResultMap" type="Emp">
+          <id property="eid" column="eid"></id>
+          <result property="empName" column="emp_name"></result>
+          <result property="age" column="age"></result>
+          <result property="gender" column="gender"></result>
+          <result property="email" column="email"></result>
+      </resultMap>
+      
+      <!--  resultMap: 设置自定义映射关系
+        type: 设置映射关系中的实体类类型
+        子标签：
+            id： 设置主键的映射关系
+            result: 设置普通字段的映射关系
+            属性：
+                property: 设置映射关系中的属性名，必须是 type 属性所设置的实体类类型中的属性名
+                column : 设置映射关系中的字段名，必须是 sql 语句查询出的字段名
+-->
+      
+<!--      处理多对一的映射关系：-->
+<!--      a>级联属性赋值-->
+<!--      b>association-->
+<!--      c>分步查询-->
+<!--     -->
+<!--      处理一对多的映射关系-->
+<!--      a>collection-->
+<!--      b>分步查询-->
+```
+
+用resultMap 一般是处理多对一和一对多的映射关系，处理字段名不一致有点浪费
+
+多对一的映射： 在 多的类中 写一个 “一”所对应的对象就可以了 例如员工Emp 中的 dept 属性
+
+一对多的映射： 在 一的类中 写一个多的集合就可以了
+
+```java
+package com.atguigu.mybatis.pojo;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+/**
+ * 员工
+ *
+ * @author pengtao
+ * @createdate 2022/02/27 0027
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class Emp {
+
+    private Integer eid;
+
+    private String empName;
+
+    private Integer age;
+
+    private String gender;
+
+    private String email;
+
+    private Dept dept;
+}
+
+```
+
+#### 处理多对一的 映射关系方式：
+   1. 级联调属性赋值
+   2. association
+   3. 分步查询
+```java
+/**
+ * 
+ * @see com.atguigu.mybatis.test.ResultMapTest#; 
+ */
+
+```
+```xml
+
+```
+
+##### 分步查询的优点：
+可以实现延迟加载，但是必须在核心配置文件中设置全局配置信息：
+lazyLoadingEnabled：延迟加载的全局开关。当开启时，所有关联对象都会延迟加载
+aggressiveLazyLoading：当开启时，任何方法的调用都会加载该对象的所有属性。 否则，每个
+属性会按需加载
+此时就可以实现按需加载，获取的数据是什么，就只会执行相应的sql。此时可通过association和
+collection中的fetchType属性设置当前的分步查询是否使用延迟加载，fetchType="lazy(延迟加
+载)|eager(立即加载)"
+
+#### 处理一对多的映射关系
+   1.Collection
+   2. 分步处理

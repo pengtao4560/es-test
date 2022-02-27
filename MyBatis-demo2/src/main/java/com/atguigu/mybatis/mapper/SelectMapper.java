@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Date:2021/11/27
- * Author:ybc
- * Description:
  */
 public interface SelectMapper {
 
