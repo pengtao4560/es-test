@@ -3,7 +3,7 @@ package com.atguigu.facdate;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 影院-外观模式
+ * 外观模式-家庭影院
  *
  * @author pengtao
  * @createdate 2022/02/19 0019
