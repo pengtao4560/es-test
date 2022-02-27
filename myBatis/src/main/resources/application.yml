@@ -1,0 +1,15 @@
+server:
+  port: 8850
+
+spring:
+  application:
+    name: mybatis
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:9001
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

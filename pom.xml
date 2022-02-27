@@ -36,6 +36,7 @@
         <module>cloud-api-commons-java13</module>
         <module>cloud-api-commons-java8</module>
         <module>designPatterns</module>
+        <module>myBatis</module>
 
     </modules>
 
