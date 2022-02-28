@@ -991,3 +991,113 @@ public class DynamicSQLTest {
 }
 
 ```
+
+#### MyBatis 的缓存
+
+##### MyBatis的一级缓存
+一级缓存是SqlSession级别的，通过同一个SqlSession查询的数据会被缓存，下次查询相同的数据，就
+会从缓存中直接获取，不会从数据库重新访问
+
+使一级缓存失效的四种情况：
+
+~~~~
+不同的SqlSession对应不同的一级缓存
+同一个SqlSession但是查询条件不同
+同一个SqlSession两次查询期间执行了任何一次增删改操作
+同一个SqlSession两次查询期间手动清空了缓存 sqlSession.clearCache()
+~~~~
+
+#### MyBatis的二级缓存
+二级缓存是SqlSessionFactory级别，通过同一个SqlSessionFactory创建的SqlSession查询的结果会被
+缓存；此后若再次执行相同的查询语句，结果就会从缓存中获取
+二级缓存开启的条件：
+   a>在核心配置文件中，设置全局配置属性cacheEnabled="true"，默认为true，不需要设置
+   b>在映射文件中设置标签<cache />
+   c>二级缓存必须在SqlSession关闭或提交之后有效
+   d>查询的数据所转换的实体类类型必须实现序列化的接口
+   使二级缓存失效的情况：
+   两次查询之间执行了任意的增删改，会使一级和二级缓存同时失效
+
+
+
+
+### 十一、 MyBatis的逆向工程
+
+```xml
+
+<!-- 构建过程中用到的插件 -->
+<build>
+   <plugins>
+      <!-- 具体插件，逆向工程的操作是以构建过程中插件形式出现的 -->
+      <plugin>
+         <groupId>org.mybatis.generator</groupId>
+         <artifactId>mybatis-generator-maven-plugin</artifactId>
+         <version>1.3.2</version>
+         <!-- 插件的依赖 -->
+         <dependencies>
+            <!-- 逆向工程的核心依赖 -->
+            <dependency>
+               <groupId>org.mybatis.generator</groupId>
+               <artifactId>mybatis-generator-core</artifactId>
+               <version>1.3.2</version>
+            </dependency>
+            <!-- 数据库连接池 -->
+            <dependency>
+               <groupId>com.mchange</groupId>
+               <artifactId>c3p0</artifactId>
+               <version>0.9.2</version>
+            </dependency>
+            <!-- MySQL驱动 -->
+            <dependency>
+               <groupId>mysql</groupId>
+               <artifactId>mysql-connector-java</artifactId>
+               <version>5.1.8</version>
+            </dependency>
+         </dependencies>
+      </plugin>
+   </plugins>
+</build>
+```
+
+mybatis逆向工程 配置文件 名字必须叫： generatorConfig.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+   <!--
+           targetRuntime: 执行生成的逆向工程的版本
+                   MyBatis3Simple: 生成基本的CRUD（清新简洁版）
+                   MyBatis3: 生成带条件的CRUD（奢华尊享版）
+    -->
+   <context id="DB2Tables" targetRuntime="MyBatis3">
+      <!-- 数据库的连接信息 -->
+      <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                      connectionURL="jdbc:mysql://localhost:3306/mybatis"
+                      userId="root"
+                      password="root">
+      </jdbcConnection>
+      <!-- javaBean的生成策略-->
+      <javaModelGenerator targetPackage="com.atguigu.mybatis.pojogenerator" targetProject=".\src\main\java">
+         <property name="enableSubPackages" value="true" />
+         <property name="trimStrings" value="true" />
+      </javaModelGenerator>
+      <!-- SQL映射文件的生成策略 -->
+      <sqlMapGenerator targetPackage="com.atguigu.mybatis.mapperTest"  targetProject=".\src\main\resources">
+         <property name="enableSubPackages" value="true" />
+      </sqlMapGenerator>
+      <!-- Mapper接口的生成策略 -->
+      <javaClientGenerator type="XMLMAPPER" targetPackage="com.atguigu.mybatis.mapper"  targetProject=".\src\main\java">
+         <property name="enableSubPackages" value="true" />
+      </javaClientGenerator>
+      <!-- 逆向分析的表 -->
+      <!-- tableName设置为*号，可以对应所有表，此时不写domainObjectName -->
+      <!-- domainObjectName属性指定生成出来的实体类的类名 -->
+      <table tableName="t_emp" domainObjectName="EmpTest"/>
+      <table tableName="t_dept" domainObjectName="DeptTest"/>
+   </context>
+</generatorConfiguration>
+
+```
