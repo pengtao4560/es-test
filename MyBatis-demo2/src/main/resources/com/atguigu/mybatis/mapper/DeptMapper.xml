@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mybatis.mapper.DeptMapper">
+
+
+    <select id="getDeptAndEmpByStepTwo" resultType="com.atguigu.mybatis.pojo.Dept">
+        select
+            *
+        from
+            t_dept
+        where
+            did = #{did}
+    </select>
+
+    <resultMap id="deptAndEmpResultMap" type="Dept">
+        <id property="did" column="did"></id>
+        <result property="deptName" column="dept_name"></result>
+        <!-- collection： 处理一对多的映射关系
+             ofType: 表示该属性所对应的集合中存储数据的类型-->
+        <!--    collection的 property 是 Dept实体类 的 empList 属性  ofType放的是 empList 属性的泛型 Emp  -->
+        <collection property="empList" ofType="Emp">
+            <id property="eid" column="eid"></id>
+            <result property="empName" column="emp_name"></result>
+            <result property="age" column="age"></result>
+            <result property="gender" column="gender"></result>
+            <result property="email" column="email"></result>
+        </collection>
+    </resultMap>
+
+    <select id="getDeptAndEmp" resultMap="deptAndEmpResultMap">
+        select
+            *
+        from
+            t_dept
+        left join
+            t_emp
+        on
+            t_dept.did = t_emp.did
+        where
+            t_dept.did = #{did}
+    </select>
+
+    <resultMap id="deptAndEmpByStepResultMap" type="Dept">
+        <id property="did" column="did"></id>
+        <result property="deptName" column="dept_name"></result>
+        <!-- collection： 处理一对多的映射关系
+             ofType: 表示该属性所对应的集合中存储数据的类型-->
+        <!--    collection的 property 是 Dept实体类 的 empList 属性  ofType放的是 empList 属性的泛型 Emp
+                column 分步查询的条件 根据部门id查询员工表
+          -->
+        <collection property="empList" select="com.atguigu.mybatis.mapper.EmpMapper.getDeptAndEmpByStepTwo" column="did"
+        fetchType="eager">
+
+        </collection>
+    </resultMap>
+    <select id="getDeptAndEmpByStepOne" resultMap="deptAndEmpByStepResultMap">
+        select
+            *
+        from
+            t_dept
+        where
+            did = #{did}
+    </select>
+</mapper>
