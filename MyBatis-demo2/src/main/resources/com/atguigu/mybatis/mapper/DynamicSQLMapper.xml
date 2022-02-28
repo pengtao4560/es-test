@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mybatis.mapper.DynamicSQLMapper">
+
+    <insert id="insertByList">
+        insert into
+            t_emp
+        values
+            <foreach collection="emps" item="emp" separator=",">
+                (null,
+                #{emp.empName},
+                #{emp.age},
+                #{emp.gender},
+                #{emp.email},
+                null
+                )
+            </foreach>
+    </insert>
+
+    <delete id="deleteMoreByArray">
+        delete from
+            t_emp
+        where
+            eid
+        in
+        <foreach collection="eids" item="eid" separator="," open="(" close=")">
+            #{eid}
+        </foreach>
+    </delete>
+
+    <delete id="deleteMoreByArrayTwo">
+        delete from
+         t_emp
+        where
+        <foreach collection="eids" item="eid" separator="or">
+            eid = #{eid}
+        </foreach>
+    </delete>
+
+    <sql id="empColumns">
+        eid, emp_name, age, gender, email
+    </sql>
+    <select id="getEmpCondition" resultType="com.atguigu.mybatis.pojo.Emp">
+        select
+            <include refid="empColumns"></include>
+        from
+        t_emp
+
+        <trim prefix="where" suffixOverrides="and | or">
+            <if test="empName != null and empName != ''">
+                emp_name = #{empName} and
+            </if>
+
+            <if test="age != null and age != ''">
+                 age = #{age} and
+            </if>
+
+            <if test="gender != null and gender != ''">
+                 gender = #{gender}
+            </if>
+
+            <if test="email != null and email != ''">
+                and email = #{email}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getEmpConditionTwoWhere" resultType="com.atguigu.mybatis.pojo.Emp">
+        select
+            *
+        from
+            t_emp
+       <where>
+           <if test="empName != null and empName != ''">
+               emp_name = #{empName}
+           </if>
+
+           <if test="age != null and age != ''">
+               and age = #{age}
+           </if>
+
+           <if test="gender != null and gender != ''">
+               and gender = #{gender}
+           </if>
+
+           <if test="email != null and email != ''">
+               and email = #{email}
+           </if>
+       </where>
+    </select>
+
+    <select id="getEmpConditionOneIf" resultType="com.atguigu.mybatis.pojo.Emp">
+        select
+        *
+        from
+        t_emp
+        where
+        1 = 1 and
+        <if test="empName != null and empName != ''">
+            emp_name = #{empName}
+        </if>
+
+        <if test="age != null and age != ''">
+            and age = #{age}
+        </if>
+
+        <if test="gender != null and gender != ''">
+            and gender = #{gender}
+        </if>
+
+        <if test="email != null and email != ''">
+            and email = #{email}
+        </if>
+    </select>
+
+    <select id="getEmpConditionByChoose" resultType="com.atguigu.mybatis.pojo.Emp">
+        select
+            *
+        from
+            t_emp
+        <where>
+            <choose>
+                <when test="empName != null and empName !='' ">
+                    emp_name = #{empName}
+                </when>
+
+                <when test="empName != null and empName !='' ">
+                    age = #{age}
+                </when>
+
+                <when test="gender != null and gender !='' ">
+                    gender = #{gender}
+                </when>
+
+                <when test="email != null and email !='' ">
+                    email = #{email}
+                </when>
+                <otherwise>
+                    did = 1
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+</mapper>

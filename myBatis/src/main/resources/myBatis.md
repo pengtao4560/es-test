@@ -684,3 +684,310 @@ collection中的fetchType属性设置当前的分步查询是否使用延迟加�
 #### 处理一对多的映射关系
    1.Collection
    2. 分步处理
+
+
+#### 九、动态SQL
+
+Mybatis框架的动态SQL技术是一种根据特定条件动态拼装SQL语句的功能，它存在的意义是为了解决
+拼接SQL语句字符串时的痛点问题。
+
+1. if 标签 ：根据标签中 test 属性所对应的表达式决定标签中的内容是否需要拼接到 SQL 中
+
+2. where 标签: 当 where 标签中有内容时，会自动生成 where 关键字，并且将内容前多余的 and 或 or 去掉 
+               当 where 标签中没有内容时，此时where标签没有任何效果(不会生成where关键字)
+   注意： where 标签不能将其中内容后面多余的and或or去掉
+
+3. trim 标签：若标签中有内容时：
+   prifix/suffix属性：将trim标签中内容前面或后面添加指定内容
+   prefixOverrides/suffixOverrides: 将trim标签中内容前面或后面的内容去掉
+   若标签中没有内容时，trim标签也没有任何效果
+4. （用的较少）choose、when、otherwise 相当于 if...else if...else
+   当时用了choose 标签，when 至少要有一个， otherwise 标签最多只能有一个
+
+5. foreach
+   collection: 设置需要循环的数组或集合
+   item: 表示数组或集合中的每一个元素
+   separator: 循环体之间的分隔符
+   open: foreach 标签所循环的所有内容的开始符
+   close: foreach 标签所循环的所有内容的结束符
+
+6. sql标签
+   声明、设置 SQL 片段：<sql id="empColumns">eid, emp_name, age, gender, email</sql>
+   引用 SQL 片段：<include refid="empColumns"></include>
+
+动态sql案例Demo:
+
+mapper.java
+```java
+package com.atguigu.mybatis.mapper;
+
+import com.atguigu.mybatis.pojo.Emp;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+/**
+ * 动态SQL
+ *
+ * @author pengtao
+ * @createdate 2022/02/27 0027
+ */
+public interface DynamicSQLMapper {
+
+    /**
+     * 多条件查询
+     */
+    List<Emp> getEmpCondition(Emp emp);
+
+    /**
+     * 测试choose、when、otherwise标签
+     */
+    List<Emp> getEmpConditionByChoose(Emp emp);
+
+    /**
+     * 通过数组实现批量删除
+     */
+    int deleteMoreByArray(@Param("eids") Integer[] edis);
+
+    /**
+     * 通过数组实现批量删除
+     *  Preparing: delete from t_emp where eid = ? or eid = ? or eid = ?
+     *  Parameters: 7(Integer), 8(Integer), 9(Integer)
+     */
+    int deleteMoreByArrayTwo(@Param("eids") Integer[] edis);
+
+    /**
+     * 通过list集合实现批量添加
+     */
+    int insertByList(@Param("emps") List<Emp> emps);
+}
+
+```
+mapper.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mybatis.mapper.DynamicSQLMapper">
+
+    <insert id="insertByList">
+        insert into
+            t_emp
+        values
+            <foreach collection="emps" item="emp" separator=",">
+                (null,
+                #{emp.empName},
+                #{emp.age},
+                #{emp.gender},
+                #{emp.email},
+                null
+                )
+            </foreach>
+    </insert>
+
+    <delete id="deleteMoreByArray">
+        delete from
+            t_emp
+        where
+            eid
+        in
+        <foreach collection="eids" item="eid" separator="," open="(" close=")">
+            #{eid}
+        </foreach>
+    </delete>
+
+    <delete id="deleteMoreByArrayTwo">
+        delete from
+         t_emp
+        where
+        <foreach collection="eids" item="eid" separator="or">
+            eid = #{eid}
+        </foreach>
+    </delete>
+
+    <sql id="empColumns">
+        eid, emp_name, age, gender, email
+    </sql>
+    <select id="getEmpCondition" resultType="com.atguigu.mybatis.pojo.Emp">
+        select
+            <include refid="empColumns"></include>
+        from
+        t_emp
+
+        <trim prefix="where" suffixOverrides="and | or">
+            <if test="empName != null and empName != ''">
+                emp_name = #{empName} and
+            </if>
+
+            <if test="age != null and age != ''">
+                 age = #{age} and
+            </if>
+
+            <if test="gender != null and gender != ''">
+                 gender = #{gender}
+            </if>
+
+            <if test="email != null and email != ''">
+                and email = #{email}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getEmpConditionTwoWhere" resultType="com.atguigu.mybatis.pojo.Emp">
+        select
+            *
+        from
+            t_emp
+       <where>
+           <if test="empName != null and empName != ''">
+               emp_name = #{empName}
+           </if>
+
+           <if test="age != null and age != ''">
+               and age = #{age}
+           </if>
+
+           <if test="gender != null and gender != ''">
+               and gender = #{gender}
+           </if>
+
+           <if test="email != null and email != ''">
+               and email = #{email}
+           </if>
+       </where>
+    </select>
+
+    <select id="getEmpConditionOneIf" resultType="com.atguigu.mybatis.pojo.Emp">
+        select
+        *
+        from
+        t_emp
+        where
+        1 = 1 and
+        <if test="empName != null and empName != ''">
+            emp_name = #{empName}
+        </if>
+
+        <if test="age != null and age != ''">
+            and age = #{age}
+        </if>
+
+        <if test="gender != null and gender != ''">
+            and gender = #{gender}
+        </if>
+
+        <if test="email != null and email != ''">
+            and email = #{email}
+        </if>
+    </select>
+
+    <select id="getEmpConditionByChoose" resultType="com.atguigu.mybatis.pojo.Emp">
+        select
+            *
+        from
+            t_emp
+        <where>
+            <choose>
+                <when test="empName != null and empName !='' ">
+                    emp_name = #{empName}
+                </when>
+
+                <when test="empName != null and empName !='' ">
+                    age = #{age}
+                </when>
+
+                <when test="gender != null and gender !='' ">
+                    gender = #{gender}
+                </when>
+
+                <when test="email != null and email !='' ">
+                    email = #{email}
+                </when>
+                <otherwise>
+                    did = 1
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+</mapper>
+
+```
+
+测试类
+```java
+package com.atguigu.mybatis.test;
+
+import com.atguigu.mybatis.mapper.DynamicSQLMapper;
+import com.atguigu.mybatis.pojo.Emp;
+import com.atguigu.mybatis.utils.SqlSessionUtils;
+import org.apache.ibatis.session.SqlSession;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author pengtao
+ * @createdate 2022/02/27 0027
+ */
+public class DynamicSQLTest {
+
+    @Test
+    public void testGetEmpByCondition() {
+        SqlSession sqlSession = SqlSessionUtils.getSqlSession();
+        DynamicSQLMapper mapper = sqlSession.getMapper(DynamicSQLMapper.class);
+        mapper.getEmpCondition(new Emp(null, "张三", null, "男", "123!@qq.com", null));
+        mapper.getEmpCondition(new Emp(null, "", null, "", "", null));
+    }
+
+    @Test
+    public void testGetEmpConditionByChoose() {
+        SqlSession sqlSession = SqlSessionUtils.getSqlSession();
+        DynamicSQLMapper mapper = sqlSession.getMapper(DynamicSQLMapper.class);
+        List<Emp> list = mapper.getEmpConditionByChoose(new Emp(null, "", null, "", "", null));
+
+        System.out.println(list);
+        System.out.println();
+
+        List<Emp> list2 = mapper.getEmpConditionByChoose(new Emp(null, "张三", null, "男", "123!@qq.com", null));
+        System.out.println(list2);
+
+    }
+
+    @Test
+    public void testDeleteMoreByArray() {
+
+        SqlSession sqlSession = SqlSessionUtils.getSqlSession();
+        DynamicSQLMapper mapper = sqlSession.getMapper(DynamicSQLMapper.class);
+        int deleteCount = mapper.deleteMoreByArray(new Integer[]{7, 8, 9});
+        System.out.println(deleteCount);
+    }
+
+    @Test
+    public void testDeleteMoreByArrayTwo() {
+
+        SqlSession sqlSession = SqlSessionUtils.getSqlSession();
+        DynamicSQLMapper mapper = sqlSession.getMapper(DynamicSQLMapper.class);
+        int deleteCount = mapper.deleteMoreByArrayTwo(new Integer[]{7, 8, 9});
+        System.out.println(deleteCount);
+    }
+    @Test
+    public void testInsertByList() {
+
+        SqlSession sqlSession = SqlSessionUtils.getSqlSession();
+        DynamicSQLMapper mapper = sqlSession.getMapper(DynamicSQLMapper.class);
+        List<Emp> list = new ArrayList<>();
+        Emp emp = new Emp(null, "张三", null, "男", "123!@qq.com", null);
+        list.add(emp);
+        list.add(emp);
+        list.add(emp);
+
+        int insertCount = mapper.insertByList(list);
+
+        System.out.println(insertCount);
+    }
+}
+
+```
