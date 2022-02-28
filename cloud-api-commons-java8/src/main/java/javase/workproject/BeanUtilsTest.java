@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -35,6 +36,8 @@ public class BeanUtilsTest {
         User(name=A, age=21)
         User(name=B, age=23)
         * */
+        String join = StringUtils.join(1, 11, '这', "是什么");
+        System.out.println(join);
     }
 
     public void copyProperties(Object dest, Object source) throws InvocationTargetException, IllegalAccessException {

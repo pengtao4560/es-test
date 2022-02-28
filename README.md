@@ -229,6 +229,10 @@ CorrelationDataDetail 关联数据细节
 
 correlation 相关，相关性
 
+applicant 申请人
+
+
+
 poll
 ##### ConcurrentLinkedQueue
 ```java

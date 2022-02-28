@@ -153,3 +153,6 @@ set names gbk; -- 防止乱码
 create database db100 charset utf8;
 use db100;
 source 备份文件的位置;
+
+#### 查看数据库版本
+SELECT VERSION();
