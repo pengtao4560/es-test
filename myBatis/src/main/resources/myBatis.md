@@ -32,15 +32,17 @@ SQL 和 Java 编码分开，功能边界清晰。Java代码专注业务、SQL语
 [mybatis-官方文档-中文](https://mybatis.org/mybatis-3/zh/getting-started.html)
 
 
-char类型不设置长度默认是1.适合 性别等自断
+char类型不设置长度默认是1.适合 性别等字段
 
 #### 5. 创建 MyBatis 的映射文件
 
 相关概念: ORM (Object Relationship Mapping）对象关系映射。
 
-· 对象:Java的实体类对象
+· 对象:Java的实体类对象 
+
 ·关系:关系型数据库
-·映射:二者之间的对应关系三三
+
+·映射:二者之间的对应关系
 
 | Java 概念 | 数据库概念 |
 |------|-------|
@@ -53,13 +55,20 @@ char类型不设置长度默认是1.适合 性别等自断
 表所对应的实体类的类名+Mapper.xml
 例如:表t_user，映射的实体类为User，所对应的映射文件为UserMapper.xml因此一个映射文件对应一个实体类，对应—张表的操作
 MyBatis映射文件用于编写SQL，访问以及操作表中的数据
-MyBatis映射文件存放的位置是src/main/resources/mappers目录下2、MyBatis中可以面向接口操作数据，要保证两个—致:
-a>mapper接口的全类名和映射文件的命名空间(namespace)保持—致b>mapper接口中方法的方法名和映射文件中编写SQL的标签的id属性保持—致
+MyBatis映射文件存放的位置是src/main/resources/mappers目录下
+
+2、MyBatis中可以面向接口操作数据，要保证两个—致:
+
+a>mapper接口的全类名和映射文件的命名空间(namespace)保持—致
+
+b>mapper接口中方法的方法名和映射文件中编写SQL的标签的id属性保持—致
 
 
 
 MyBatis面向接口编程的两个一致:
+
 *1、映射文件的namespace要和mapper接口的全类名保持一致
+
 *2、映射文件中soL语句的id要和mapper接口中的方法名一致*/
 
 ```xml

@@ -1,25 +1,38 @@
 package javase.workproject;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.map.MapUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 工作用到的API测试
  */
 public class BeanUtilsTest {
 
-    public static void main(String[] args) {
-        Employee ee1 = new Employee("A", 21, "it");
-        Employee ee2=new Employee("B",23,"account");
+    private Employee ee1 = new Employee("A", 21, "IT");
+
+    @Test
+    public void testHutoolBeanUtilBean2Map() {
+        Map<String, Object> stringObjectMap = BeanUtil.beanToMap(ee1);
+        System.out.println(stringObjectMap); // {name=A, age=21, dept=IT}
+        String str = MapUtil.getStr(stringObjectMap, "age");
+        System.out.println(str);
+    }
+    @Test
+    public void testCopy() {
+        ee1 = new Employee("A", 21, "IT");
+        Employee ee2=new Employee("B",23,"ACCOUNT");
         User user=new User();
         BeanUtil.copyProperties(ee1, user);
         System.out.println(user);

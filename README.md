@@ -231,8 +231,20 @@ correlation 相关，相关性
 
 applicant 申请人
 
+province 省
+permanent 永久
+uppercase 大写
+claim 索赔
 
+    Sap 保单会计表
+    payPrivatePrint 打印对私结算单
+    payPublicPrint 打印对公结算单
+    ServisePayment 代理机构手续费录入
+    AssessAudit 考核金返还审批
+    AssessReturn 考核金返还
 
+desensitization 数据脱敏
+tenant 租户，租赁者
 poll
 ##### ConcurrentLinkedQueue
 ```java
@@ -252,8 +264,28 @@ poll
 
 
 
+TODO
+
+#### centos stream 学习 [centos百度百科](https://baike.baidu.com/item/centos/498948?fr=aladdin)
+
+#### [http请求](https://www.cnblogs.com/weibanggang/p/9454581.html)
+
+#### 注解 脱敏
+==========================================
 
 
+[应用免登概述](https://open.feishu.cn/document/uYjL24iN/ukTO4UjL5kDO14SO5gTN)
+    ctrl + f    应用管理后台免登
 
+接口 需要实现：
+https://open.feishu.cn/open-apis/authen/v1/index?redirect_uri={REDIRECT_URI}&app_id={APPID}&state={STATE}
 
+提供一个重定向url
+**请求身份验证**  [请求身份验证](https://open.feishu.cn/document/ukTMukTMukTM/ukzN4UjL5cDO14SO3gTN)
+**获取登录用户身份** [获取登录用户身份](https://open.feishu.cn/document/uAjLw4CM/ukTMukTMukTM/reference/authen-v1/authen/access_token)
 
+用户登录成功后会生成登录预授权码 code，并作为参数追加到重定向URL
+
+拿到用户信息 user_id 也就是itw_xxxx 是我们需要的信息
+token两小时过期
+有一个定时任务 
