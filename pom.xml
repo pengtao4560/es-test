@@ -38,6 +38,7 @@
         <module>designPatterns</module>
         <module>myBatis</module>
         <module>MyBatis-demo2</module>
+        <module>springboot-jwt</module>
 
     </modules>
 

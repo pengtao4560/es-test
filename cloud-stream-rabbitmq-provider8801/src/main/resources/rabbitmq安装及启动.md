@@ -9,6 +9,9 @@ ps : 本文档内容均来自官网，推荐直接查看官网
 
 本机笔记本使用以下安装方式：
 [使用 PackageCloud Yum 存储库安装](https://www.rabbitmq.com/install-rpm.html#package-cloud)
+0 执行
+
+    curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.rpm.sh | sudo bash
 
 1 执行：
 
@@ -94,6 +97,7 @@ ps : 本文档内容均来自官网，推荐直接查看官网
 
     # 更新 Yum 包元数据：
     yum update -y
+
     yum -q makecache -y --disablerepo='*' --enablerepo='rabbitmq_erlang' --enablerepo='rabbitmq_server'
 
 5 执行：
@@ -111,7 +115,7 @@ ps : 本文档内容均来自官网，推荐直接查看官网
     
     ## 从上述存储库安装 RabbitMQ 和零依赖 Erlang，
     ## 忽略标准存储库提供的任何版本
-    yum install --repo rabbitmq_erlang --repo rabbitmq_server-noarch erlang rabbitmq-server
+    yum install rabbitmq_erlang  rabbitmq_server-noarch erlang rabbitmq-server
 
 安装结束
 
