@@ -43,15 +43,22 @@ public class JwtUtils {
 
     /**
      * 验证token
-     * 可以和 验证token合法性方法合并, 只需要方法
+     * 可以和 验证token合法性方法合并, 只需要方法 getTokenInfo 即可
      * @see #getTokenInfo
      */
     @Deprecated
-    public static void verify(String token) {
+    public static void verifyToken(String token) {
 
         /** 创建验证对象 */
         JWT.require(Algorithm.HMAC256(SECRET)).build().verify(token);
         // 如果验证有任何一个异常就抛出异常了
+    }
+
+    /**
+     * 验证token
+     * */
+    public static void verify(String token) {
+        getTokenInfo(token);
     }
 
     /**
