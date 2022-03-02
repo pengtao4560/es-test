@@ -1,0 +1,35 @@
+# 允许匿名访问
+anonymous_enable=YES
+# 不允许本地用户，如root用户登陆。默认允许
+local_enable=NO
+#设置本地用户登录所在的目录。默认配置文件中没有该配置项，本地用户登录FTP服务器后所在的目录为所登录用户的主目录，如：对于root用户，则为/root目录
+# local_root=/home/ftpuser
+# 本地用户上传文件权限
+local_umask=022
+# 匿名用户上传文件权限
+anon_umask=022
+# 允许写入操作，否则不能上传文件
+write_enable=YES
+# ftp工具连接成功提示
+ftpd_banner=Welcome to blah FTP service.
+# 所有用户均不能切换到上级目录
+chroot_local_user=YES
+# 是否启动限制用户的名单。YES为启用，NO禁用。默认禁用
+chroot_list_enable=NO
+# /etc/vsftpd/user_list文件不生效
+userlist_enable=NO
+#坑，添加以下配置。不添加此项，文件无法上传。报错：550 Permission denied。新版本vsftpd加入了安全需求，切根不允许写，要添加这个配置并设置为YES才可以
+allow_writeable_chroot=YES
+#匿名用户的根目录。这个非常重要
+anon_root=/usr/local/ftpdir
+#匿名用户不要密码就靠这个
+no_anon_password=YES
+# 匿名登录后的使用者
+ftp_username=ftpuser
+# 允许匿名用户上传文件，需要配合write_enable=yes
+ anon_upload_enable=YES
+# # 控制匿名用户对文件和文件夹的删除和重命名(自己添加，没有该配置)
+ anon_other_write_enable=YES
+# # 允许匿名用户创建目录
+ anon_mkdir_write_enable=YES
+

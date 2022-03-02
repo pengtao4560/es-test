@@ -609,6 +609,10 @@ centos7不使用SysV而改为systemd了，这是因为systemd支持多个服务�
     firewall-cmd --permanent --add-port=80/tcp
 firewall-cmd --permanent --add-port=6379/tcp
 firewall-cmd --permanent --add-port=5672/tcp
+firewall-cmd --permanent --add-port=21/tcp
+firewall-cmd --permanent --add-port=20/tcp
+firewall-cmd --permanent --add-port=39000/tcp
+firewall-cmd --permanent --add-port=40000/tcp
 
     # 移除端口
     firewall-cmd --permanent --remove-port=8080/tcp
@@ -805,3 +809,16 @@ scp 文件 用户名@ip:路径
 SSH端口
 ssh root@ip -p 22
 
+[](ftp://192.168.159.132)
+
+
+FTP linux搭建命令记录：
+cd /etc/vsftpd
+vim vsftpd.conf
+## 启动
+systemctl start vsftpd
+
+
+ftp://ftpuser:ftpuser@192.168.159.132/
+
+[](https://jingyan.baidu.com/article/ae97a646f72debbbfd461d1b.html)
