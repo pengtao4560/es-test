@@ -256,7 +256,7 @@ poll
 
 #### [idea翻译插件translation 安装以及使用](https://blog.csdn.net/qq_36353481/article/details/88869733?spm=1001.2101.3001.6650.4&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-4.pc_relevant_paycolumn_v3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-4.pc_relevant_paycolumn_v3&utm_relevant_index=9)
 
-
+#### [postman官方下载](https://www.postman.com/downloads/)
 
 
 
@@ -269,13 +269,29 @@ TODO
 #### centos stream 学习 [centos百度百科](https://baike.baidu.com/item/centos/498948?fr=aladdin)
 
 #### [http请求](https://www.cnblogs.com/weibanggang/p/9454581.html)
-
+#### github.ben-namnes.caffine
 #### 注解 脱敏
 ==========================================
 
 
 [应用免登概述](https://open.feishu.cn/document/uYjL24iN/ukTO4UjL5kDO14SO5gTN)
     ctrl + f    应用管理后台免登
+
+免登步骤:
+第一步: 管理员登录企业管理后台，点击前往应用管理后台网站，携带登录预授权码跳转至应用管理后台主页；
+第二步: 应用管理后台网页后端调用[获取登录用户身份](https://open.feishu.cn/document/uAjLw4CM/ukTMukTMukTM/reference/authen-v1/authen/access_token)
+        校验登录预授权码合法性，获取到用户身份；
+第三步: 建议应用管理后台调用获取[应用管理权限接口](https://open.feishu.cn/document/ukTMukTMukTM/uITN1EjLyUTNx4iM1UTM)
+        检查用户的管理员身份。
+
+服务端文档
+
+三个token 一个免密登陆 
+2个定时刷新 保存到数据库再存到 redis
+机器人
+
+
+
 
 接口 需要实现：
 https://open.feishu.cn/open-apis/authen/v1/index?redirect_uri={REDIRECT_URI}&app_id={APPID}&state={STATE}
@@ -289,3 +305,13 @@ https://open.feishu.cn/open-apis/authen/v1/index?redirect_uri={REDIRECT_URI}&app
 拿到用户信息 user_id 也就是itw_xxxx 是我们需要的信息
 token两小时过期
 有一个定时任务 
+
+
+访问凭证 access token
+开放平台提供了3种不同类型的访问凭证，用于验证调用方身份、确保调用方具有执行操作所需要的权限：
+
+app_access_token: 应用 授权凭证，开放平台可据此识别调用方的应用身份，应用可以访问应用自身相关的信息，不归属到具体的企业或者用户，
+比如获取当前登录应用的用户身份。
+tenant_access_token: 租户 授权凭证，使用该access token，应用将代表公司或者团队执行对应的操作，比如获取一个通讯录用户的信息。
+user_access_token: 用户 授权凭证，使用该access token，应用将代表用户执行对应的操作，比如通过API 创建一篇云文档或者一个日程。
+
