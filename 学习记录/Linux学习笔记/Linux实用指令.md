@@ -822,3 +822,14 @@ systemctl start vsftpd
 ftp://ftpuser:ftpuser@192.168.159.132/
 
 [](https://jingyan.baidu.com/article/ae97a646f72debbbfd461d1b.html)
+
+
+[安装博客](https://www.cnblogs.com/sopcce/p/10743241.html)
+
+本机笔记本按照上面博客安装成功。
+但是只能用root账号密码登陆并且  可以各种跳转上下目录
+
+2022年3月3日16:15:39
+配置好了root用户不限上传下载删除的vsftpd
+需要优化为  匿名用户可以登陆可以上传下载
+可以使用某一个文件夹以及子文件夹。不能使用上级文件夹
