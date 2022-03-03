@@ -2,7 +2,6 @@ package com.atguigu.mybatis.test;
 
 import com.atguigu.mybatis.mapper.EmpMapper;
 import com.atguigu.mybatis.pojo.Emp;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.ibatis.io.Resources;
@@ -36,6 +35,9 @@ public class PageHelperTest {
      * PageInfo<Emp> page = new PageInfo<>(list, 5);
      * list表示分页数据
      * 5表示当前导航分页的数量
+     *
+     * navigatePages 页码数量
+     * @see PageInfo#PageInfo(java.util.List, int navigatePages)
      */
 
     @Test
@@ -46,11 +48,16 @@ public class PageHelperTest {
             SqlSession sqlSession = sqlSessionFactory.openSession(true);
             EmpMapper mapper = sqlSession.getMapper(EmpMapper.class);
             //Page<Object> page = PageHelper.startPage(2, 4);
-            PageHelper.startPage(6, 4);
-            List<Emp> list = mapper.selectByExample(null);
+
+            PageHelper.startPage(1, 4);
+            List<Emp> list = mapper.selectAll(null);
+
             PageInfo<Emp> page = new PageInfo<>(list, 5);
             //list.forEach(emp -> System.out.println(emp));
             System.out.println(page);
+            System.out.println();
+            List<Emp> list1 = page.getList();
+            System.out.println(list1);
         } catch (IOException e) {
             e.printStackTrace();
         }

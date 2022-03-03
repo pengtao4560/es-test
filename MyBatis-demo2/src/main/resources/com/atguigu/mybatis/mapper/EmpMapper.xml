@@ -145,4 +145,11 @@
         where
             t_emp.did = #{did}
     </select>
+
+    <select id="selectAll" resultType="com.atguigu.mybatis.pojo.Emp">
+        select
+            *
+        from
+            t_emp
+    </select>
 </mapper>

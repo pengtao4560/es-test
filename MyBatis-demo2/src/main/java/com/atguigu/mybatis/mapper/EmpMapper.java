@@ -46,4 +46,5 @@ public interface EmpMapper {
     List<Emp> getDeptAndEmpByStepTwo(@Param("did") Integer did);
 
 
+    List<Emp> selectAll(Class cls);
 }
