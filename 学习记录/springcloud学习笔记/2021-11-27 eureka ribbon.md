@@ -28,9 +28,9 @@ P23 eureka actuator微服务信息完善
 P24 eureka服务发现Discovery
         对于注册进eureka里面的微服务，可以通过服务发现来获得该服务的信息
     8001主启动类    @EnableDiscoveryClient
-    相关类 8001    com.atguigu.springcloud.controller.PaymentController
+    相关类 8001    com.atguigu.springcloud.com.atguigu.controller.PaymentController
     *****element: cloud-payment-service
-    2021-12-19 10:04:46.408  INFO 12116 --- [nio-8001-exec-1] c.a.s.controller.PaymentController
+    2021-12-19 10:04:46.408  INFO 12116 --- [nio-8001-exec-1] c.a.s.com.atguigu.controller.PaymentController
           : CLOUD-PAYMENT-SERVICE	192.168.124.13	8001	http://192.168.124.13:8001
 P25 Eureka自我保护理论知识
     Eureka自我保护机制：某时刻某一个服务突然不可用了，eureka不会立即清理，依旧对该微服务的信息进行保存(一段时间)

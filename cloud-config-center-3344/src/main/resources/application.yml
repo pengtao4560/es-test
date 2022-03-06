@@ -3,17 +3,17 @@ server:
 
 spring:
   application:
-    name:  cloud-config-center #注册进Eureka服务器的微服务名
+    name:  cloud-com.atguigu.config-center #注册进Eureka服务器的微服务名
   cloud:
-    config:
+    com.atguigu.config:
       server:
         git:
-          #uri: https://github.com:pengtao4560/cloud202-springcloud-config.git
-          uri: https://github.com/pengtao4560/cloud202-springcloud-config
-          #uri: https://pengtao4560-admin@bitbucket.org/pengtao4560/springcloud-config.git
-          #git@github.com:zzyybs/springcloud-config.git #GitHub上面的git仓库名字
+          #uri: https://github.com:pengtao4560/cloud202-springcloud-com.atguigu.config.git
+          uri: https://github.com/pengtao4560/cloud202-springcloud-com.atguigu.config
+          #uri: https://pengtao4560-admin@bitbucket.org/pengtao4560/springcloud-com.atguigu.config.git
+          #git@github.com:zzyybs/springcloud-com.atguigu.config.git #GitHub上面的git仓库名字
           search-paths:
-            - cloud202-springcloud-config
+            - cloud202-springcloud-com.atguigu.config
           username: pengtao450
           password: 1234Pt..
       ####读取分支

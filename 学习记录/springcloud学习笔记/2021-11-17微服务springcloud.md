@@ -10,7 +10,7 @@
     服务熔断  hystrix(官网及国外已不推荐使用)/ Sentinel（强烈推荐 alibaba的）/resilence4j（国外用的很多国内用的很少）
     服务降级  hystrix
     服务网关  Zuul（X 已不推荐使用）/gateway（推荐使用）/Zuul2（胎死腹中） 
-    配置中心管理 com.atguigu.springcloud.config(X 已不推荐使用）/ Nacos(推荐)
+    配置中心管理 com.atguigu.springcloud.com.atguigu.config(X 已不推荐使用）/ Nacos(推荐)
     服务总线  Bus(X 已不推荐使用) / Nacos(推荐)
     服务消息队列
     服务监控

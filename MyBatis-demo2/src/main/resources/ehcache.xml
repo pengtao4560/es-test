@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="../config/ehcache.xsd">
+         xsi:noNamespaceSchemaLocation="../com.atguigu.config/ehcache.xsd">
     <!-- 磁盘保存路径 -->
     <diskStore path="G:\BaiduNetdiskDownload\尚硅谷MyBatis3.5.7学习笔记代码\atguigu\ehcache"/>
 

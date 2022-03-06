@@ -40,6 +40,8 @@
         <module>MyBatis-demo2</module>
         <module>springboot-jwt</module>
         <module>jedis-redis-demo</module>
+        <module>springboot-redis</module>
+        <module>springboot-redis-secondkill</module>
 
     </modules>
 

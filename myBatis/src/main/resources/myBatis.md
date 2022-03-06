@@ -25,7 +25,7 @@ SQL 和 Java 编码分开，功能边界清晰。Java代码专注业务、SQL语
 
 
 #### 创建MyBatis的核心配置文件
-习惯上命名为mybatis-config.xml，这个文件名仅仅只是建议，并非强制要求。将来整合Spring
+习惯上命名为mybatis-com.atguigu.config.xml，这个文件名仅仅只是建议，并非强制要求。将来整合Spring
 之后，这个配置文件可以省略，所以大家操作时可以直接复制、粘贴。
 核心配置文件主要用于配置连接数据库的环境以及MyBatis的全局配置信息
 
@@ -271,7 +271,7 @@ public class MybatisCRUDDemoTest {
     * */
    public static SqlSession getSqlSession() throws IOException {
       // 加载核心配置文件
-      InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml");
+      InputStream inputStream = Resources.getResourceAsStream("mybatis-com.atguigu.config.xml");
       // 获取 SqlSessionFactoryBuilder 对象 - 建造者模式
       SqlSessionFactoryBuilder sqlSessionFactoryBuilder = new SqlSessionFactoryBuilder();
 
@@ -317,7 +317,7 @@ public class MybatisCRUDDemoTest {
         resultMap：设置自定义的映射关系
     -->
 
-[](mybatis-config-bak.xml)
+[](mybatis-com.atguigu.config-bak.xml)
 
 resources 包下 new-> resource bundle -> 命名为:jdbc.properties
 
@@ -332,7 +332,7 @@ jdbc.password=root
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+        "http://mybatis.org/dtd/mybatis-3-com.atguigu.config.dtd">
 <configuration>
     <properties resource="jdbc.properties"></properties>
 <!--  environments :配置多个连接数据库的环境属性:default:设置默认使用的环境的id-->

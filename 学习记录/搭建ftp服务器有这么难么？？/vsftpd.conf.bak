@@ -1,4 +1,4 @@
-# Example config file /etc/vsftpd/vsftpd.conf
+# Example com.atguigu.config file /etc/vsftpd/vsftpd.conf
 #
 # The default compiled in settings are fairly paranoid. This sample file
 # loosens things up a bit, to make the ftp daemon more usable.

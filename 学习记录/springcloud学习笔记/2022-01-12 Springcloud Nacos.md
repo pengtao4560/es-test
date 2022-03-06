@@ -68,7 +68,7 @@ Nacos服务注册和配置中心
 					Nacos 支持AP和CP模式的切换
 	Nacos作为服务配置中心演示
 		Nacos作为配置中心-基础配置
-			cloudalibaba-config-nacos-client3377
+			cloudalibaba-com.atguigu.config-nacos-client3377
 			POM
 			YML
 				why配置两个
@@ -89,19 +89,19 @@ Nacos服务注册和配置中心
 						Nacos界面配置对应
 							设置DataId
 								公式：
-									${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+									${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.com.atguigu.config.file-extension}
 								prefix 默认为 spring.application.name 的值
 								spring.profile.active 即为当前环境对应的 profile，可以通过配置项 spring.profile.active 来配置。
-								file-exetension 为配置内容的数据格式，可以通过配置项 spring.cloud.nacos.config.file-extension 来配置
+								file-exetension 为配置内容的数据格式，可以通过配置项 spring.cloud.nacos.com.atguigu.config.file-extension 来配置
 								小总结说明
 						历史配置
 							Nacos会记录配置文件的历史版本默认保留30天，此外还有一键回滚功能，回滚操作将会触发配置更新
 							回滚
 			测试
 				启动前需要在nacos客户端-配置管理-配置管理栏目下有对应的yaml配置文件
-				运行cloud-config-nacos-client3377的主启动类
+				运行cloud-com.atguigu.config-nacos-client3377的主启动类
 				调用接口查看配置信息
-					http://localhost:3377/config/info
+					http://localhost:3377/com.atguigu.config/info
 			自带动态刷新
 				修改下Nacos中的yaml配置文件，再次调用查看配置的接口，就会发现配置已经刷新
 		Nacos作为配置中心-分类配置
@@ -120,7 +120,7 @@ Nacos服务注册和配置中心
 							新建test配置DataID
 						通过spring.profile.active属性就能进行多环境下配置文件的读取
 						测试
-							http://localhost:3377/config/info
+							http://localhost:3377/com.atguigu.config/info
 							配置是什么就加载什么
 								test
 					Group方案
@@ -149,7 +149,7 @@ Nacos服务注册和配置中心
 					重点说明
 		Nacos持久化配置解释
 			Nacos默认自带的是嵌入式数据库derby
-				https://github.com/alibaba/nacos/blob/develop/config/pom.xml
+				https://github.com/alibaba/nacos/blob/develop/com.atguigu.config/pom.xml
 			derby到mysql切换配置步骤
 				nacos-server-1.1.4\nacos\conf目录下找到sql脚本
 					nacos-mysql.sql

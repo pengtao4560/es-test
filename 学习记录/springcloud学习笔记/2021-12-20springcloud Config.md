@@ -24,7 +24,7 @@ SpringCloud Config分为服务端和客户端两部分。
 	---将配置信息以REST接口的形式暴露    post、curl访问刷新均可......
 
 推荐于git整合配置
-以下来源于官网： https://spring.io/projects/spring-cloud-config
+以下来源于官网： https://spring.io/projects/spring-cloud-com.atguigu.config
 
 Spring Cloud Config provides server and client-side support for externalized configuration in a distributed
 system. With the Config Server you have a central place to manage external properties

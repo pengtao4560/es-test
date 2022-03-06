@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+        "http://mybatis.org/dtd/mybatis-3-com.atguigu.config.dtd">
 <configuration>
 <!--  environments :配置多个连接数据库的环境属性:default:设置默认使用的环境的id-->
     <environments default="development">
