@@ -77,7 +77,7 @@ Redis是一个开源的 key-value存储系统。
 [Redis中文官方网站](http://redis.cn/)
 [redis下载](https://redis.io/download)
 [redis 安装教程](https://www.cnblogs.com/hunanzp/p/12304622.html)
-[配置文件参数说明](https://lion-wu.blog.csdn.net/article/details/108019877?spm=1001.2101.3001.6650.13&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-13.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-13.pc_relevant_default&utm_relevant_index=16)
+[redis配置文件参数说明](https://lion-wu.blog.csdn.net/article/details/108019877?spm=1001.2101.3001.6650.13&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-13.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-13.pc_relevant_default&utm_relevant_index=16)
 
 1. 下载：
 
@@ -352,4 +352,229 @@ Redis hash是一个string类型的**field和value的映射表**，hash特别适�
 Hash类型对应的数据结构是两种：ziplist（压缩列表），hashtable（哈希表）。当field-value长度较短且个数较少时，使用ziplist，否则使用hashtable。
 
 
+#### redis的配置文件讲解
 
+[redis配置文件参数说明](https://lion-wu.blog.csdn.net/article/details/108019877?spm=1001.2101.3001.6650.13&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-13.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-13.pc_relevant_default&utm_relevant_index=16)
+
+更改的地方：
+
+    bind                注释掉 bind 127.0.0.1 默认情况bind=127.0.0.1只能接受本机的访问请求。注释掉(不写的情况下)则无限制接受任何ip地址的访问。生产环境肯定要写你应用服务器的地址；服务器是需要远程访问的，所以需要将其注释掉 。如果开启了protected-mode，那么在没有设定bind ip且没有设密码的情况下，Redis只允许接受本机的响应
+
+    protected-mode      将本机访问保护模式设置no 来支持远程访问
+
+    port                默认端口6379 (要更改 搜索 port) 
+
+    timeout             一个空闲的客户端维持多少秒会关闭，0表示关闭该功能。即永不关闭
+
+    tcp-keepalive        对访问客户端的一种心跳检测，每个n秒检测一次。单位为秒，如果设置为0，则不会进行Keepalive检测，建议设置成60 
+
+    daemonize           是否为后台进程，设置为yes
+
+    loglevel            指定日志记录级别，Redis总共支持四个级别：debug、verbose、notice、warning，默认为notice 四个级别根据使用阶段来选择，生产环境选择notice 或者warning
+
+    databases 16        设定库的数量 默认16，默认数据库为0，可以使用SELECT <dbid>命令在连接上指定数据库id
+
+    requirrepass        访问密码的查看、设置和取消
+
+    maxclients          设置redis同时可以与多少个客户端进行连接
+
+    maxmemory 
+                        	建议必须设置，否则，将内存占满，造成服务器宕机
+                        	设置redis可以使用的内存量。一旦到达内存使用上限，redis将会试图移除内部数据，移除规则可以通过maxmemory-policy来指定。
+                        	如果redis无法根据移除规则来移除内存中的数据，或者设置了“不允许移除”，那么redis则会针对那些需要申请内存的指令返回错误信息，比如SET、LPUSH等。
+                        	但是对于无内存申请的指令，仍然会正常响应，比如GET等。如果你的redis是主redis（说明你的redis有从redis），那么在设置内存使用上限时，需要在系统中留出一些内存空间给同步队列缓存，只有在你设置的是“不移除”的情况下，才不用考虑这个因素。
+
+   maxmemory-policy
+
+                        	volatile-lru：使用LRU算法移除key，只对设置了过期时间的键；（最近最少使用）
+                        	allkeys-lru：在所有集合key中，使用LRU算法移除key
+                        	volatile-random：在过期集合中移除随机的key，只对设置了过期时间的键
+                        	allkeys-random：在所有集合key中，移除随机的key
+                        	volatile-ttl：移除那些TTL值最小的key，即那些最近要过期的key
+                        	noeviction：不进行移除。针对写操作，只是返回错误信息
+
+####  5.	Redis的发布和订阅
+
+什么是发布和订阅
+
+**Redis 发布订阅 (pub/sub) 是一种消息通信模式：发送者 (pub) 发送消息，订阅者 (sub) 接收消息。
+Redis 客户端可以订阅任意数量的频道**
+
+
+![](图片/redis发布和订阅.png)
+
+
+    1、打开一个客户端订阅channel1
+    SUBSCRIBE channel
+    
+    2、打开另一个客户端，给channel1发布消息hello
+    publish channel1 hello
+    
+        返回的1是订阅者数量
+    3、打开第一个客户端可以看到发送的消息
+    
+    注：发布的消息没有持久化，如果在订阅的客户端收不到hello，只能收到订阅后发布的消息
+
+![](图片/redis发布和订阅demo.png)
+
+
+#### 6 redis中新的数据类型     Bitmaps/HyperLogLog/Geospatial
+
+这三节暂时跳过--
+[redisbitmaps尚硅谷](https://www.bilibili.com/video/BV1Rv41177Af?p=17)
+[redis HyperLogLog 尚硅谷](https://www.bilibili.com/video/BV1Rv41177Af?p=18)
+[redis Geospatial 尚硅谷](https://www.bilibili.com/video/BV1Rv41177Af?p=19)
+
+## redis客户端工具 通过 Jedis操作 Redis6
+
+```java
+package com.atguigu.jedis;
+
+import org.junit.Test;
+import redis.clients.jedis.Jedis;
+
+import java.util.List;
+import java.util.Set;
+
+/**
+ * redis java 操作 redis
+ *
+ * @author pengtao
+ * @createdate 2022/03/06 0006
+ */
+public class JedisDemo0 {
+
+    public static void main(String[] args) {
+
+        // 创建 Jedis 对象  import redis.clients.jedis.Jedis;
+
+        String host = "192.168.159.132";
+        int port = 6379;
+
+        Jedis jedis = new Jedis(host, port);
+
+        // 测试
+        String value = jedis.ping();
+
+        System.out.println(value); // PONG
+
+        /**
+         timeout报错：
+         考虑防火墙放行端口
+         firewall-cmd --permanent --add-port=6379/tcp
+
+         firewall-cmd --reload
+
+         Exception in thread "main" redis.clients.jedis.exceptions.JedisConnectionException:
+         Failed to connect to any host resolved for DNS name.
+         报错解决：需要把配置文件 redis.conf 设置好后  重启
+         ps -ef|grep redis
+         kill -9 pid
+         redis-server /etc/redis.conf
+
+         * */
+    }
+
+    /** 创建 Jedis 对象 */
+    public static Jedis getRedisConnection() {
+        String host = "192.168.159.132";
+        int port = 6379;
+
+        Jedis jedis = new Jedis(host, port);
+        return jedis;
+    }
+
+    //操作zset
+    @Test
+    public void testZset() {
+        //创建Jedis对象
+        Jedis jedis = getRedisConnection();
+
+        jedis.zadd("china", 100d, "shanghai");
+
+        List<String> china = jedis.zrange("china", 0, -1);
+        System.out.println(china);
+
+        jedis.close();
+    }
+
+    //操作hash
+    @Test
+    public void testHash() {
+        //创建Jedis对象
+        Jedis jedis = getRedisConnection();
+
+        jedis.hset("users","age","20");
+        String hget = jedis.hget("users", "age");
+
+        System.out.println(hget);
+        System.out.println("操作类型：" + jedis.type("users"));
+
+        jedis.close();
+    }
+
+    //操作set
+    @Test
+    public void testDemoSet() {
+        //创建Jedis对象
+        Jedis jedis = getRedisConnection();
+
+        jedis.sadd("names","lucy");
+        jedis.sadd("names","mary");
+
+        Set<String> names = jedis.smembers("names");
+        System.out.println(names);
+        System.out.println("操作类型：" + jedis.type("names"));
+        jedis.close();
+    }
+
+    //操作list
+    @Test
+    public void testRedisList() {
+        //创建Jedis对象
+        Jedis jedis = getRedisConnection();
+
+        jedis.lpush("key1","lucy", "mary", "jack");
+
+        List<String> values = jedis.lrange("key1", 0, -1);
+        System.out.println("values: " + values);
+        jedis.close();
+    }
+
+    //操作key string
+    @Test
+    public void demo1() {
+        //创建Jedis对象
+        Jedis jedis = getRedisConnection();
+
+        //添加
+        jedis.set("name", "lucy");
+
+        //获取
+        String name = jedis.get("name");
+        System.out.println(name);
+
+        //设置多个key-value
+        jedis.mset("k1", "v1", "k2", "v2");
+        List<String> mget = jedis.mget("k1", "k2");
+        System.out.println(mget);
+
+        Set<String> keys = jedis.keys("*");
+        for(String key : keys) {
+            System.out.println("keys:" + key);
+        }
+        jedis.close();
+    }
+}
+
+```
+
+完成一个手机验证码功能
+
+    要求：
+  * 1、输入手机号，点击发送后随机生成6位数字码，2分钟有效
+  * 2、输入验证码，点击验证，返回成功或失败
+  * 3、每个手机号每天只能输入3次
+```java
+
+```

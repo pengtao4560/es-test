@@ -26,6 +26,7 @@
     -r 是允许递归删除，当要删除的是文件夹的时候有用
     git rm -r --cached loggers  # -r 是允许递归删除，当要删除的是文件夹的时候有用
 
+##### [maven仓库](https://mvnrepository.com/)
 ##### [AnotherRedisDesktopManager redis可视化管理工具 github下载](https://github.com/qishibo/AnotherRedisDesktopManager/releases)
 ##### [AnotherRedisDesktopManager redis可视化管理工具 gitee下载](https://gitee.com/qishibo/AnotherRedisDesktopManager/releases)
 github访问慢解决办法：
