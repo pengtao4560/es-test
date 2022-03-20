@@ -151,3 +151,39 @@ Connection 极大减少了操作系统建立 TCP connection 的开销
 存到 exchange 中的查询表中，用于 message 的分发依据
 
 [rabiitmq安装]()
+
+
+添加开机启动 RabbitMQ 服务
+chkconfig rabbitmq-server on
+启动服务
+/sbin/service rabbitmq-server start
+查看服务状态
+/sbin/service rabbitmq-server status
+
+systemctl status rabbitmq-server
+systemctl stop rabbitmq-server
+systemctl start rabbitmq-server
+
+
+##### rabbitmq web添加一个新的用户
+创建账号 账号密码都是admin
+
+    rabbitmqctl add_user admin admin
+设置用户角色
+    
+rabbitmqctl set_user_tags admin administrator
+设置用户权限
+set_permissions [-p <vhostpath>] <user> <conf> <write> <read>
+    
+    rabbitmqctl set_permissions -p "/" admin ".*" ".*" ".*"
+用户 user_admin 具有/vhost1 这个 virtual host 中所有资源的配置、写、读权限
+查看当前用户和角色
+
+    rabbitmqctl list_users
+5.再次利用 admin 用户登录
+
+[rabbitmqweb 台式机](http://192.168.220.128:15672/#/)
+
+
+### 如何使用 rabbitmq
+

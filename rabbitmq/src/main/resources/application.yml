@@ -1,0 +1,11 @@
+server:
+  port: 8672
+
+
+rabbitmq:
+  host: 192.168.220.128
+  port: 5672
+  userName: admin
+  password: admin
+
+
