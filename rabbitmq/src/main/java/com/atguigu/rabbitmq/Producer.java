@@ -40,17 +40,7 @@ public class Producer {
     }
 
     public static void mockSetMessage() {
-        // 创建一个连接工厂
-        ConnectionFactory connectionFactory = new ConnectionFactory();
-        // 工厂IP 连接RABBITMOQ 队列
-        String host = "192.168.220.128";
-        String userName = "admin";
-        String password = "admin";
-        connectionFactory.setHost(host);
-        connectionFactory.setPort(5672);
-        connectionFactory.setUsername(userName);
-        connectionFactory.setPassword(password);
-        connectionFactory.setHandshakeTimeout(30000);
+        ConnectionFactory connectionFactory = RabbitmqUtil.getConnectionFactory();
 
         try {
             // 创建链接
@@ -88,6 +78,7 @@ public class Producer {
             IOException – if an error is encountered
             * */
             channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
+            // 防火墙的端口记得放行并reload  5672、15672
             System.out.println("消息发送完毕");
         } catch (IOException e) {
             e.printStackTrace();
@@ -95,4 +86,6 @@ public class Producer {
             e.printStackTrace();
         }
     }
+
+
 }
