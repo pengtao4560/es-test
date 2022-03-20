@@ -5,7 +5,7 @@ ps : 本文档内容均来自官网，推荐直接查看官网
 
 [rabbitmq官方安装指导手册](https://www.rabbitmq.com/install-rpm.html)
 
-配合谷歌翻译查看
+配合谷歌翻译查看   aaaaa
 
 本机笔记本使用以下安装方式：
 [使用 PackageCloud Yum 存储库安装](https://www.rabbitmq.com/install-rpm.html#package-cloud)
@@ -23,8 +23,10 @@ ps : 本文档内容均来自官网，推荐直接查看官网
 2 执行：
 
     ## 主要 RabbitMQ 签名密钥
-    rpm --import https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc ## 现代 Erlang 存储库
-    rpm --import https: //packagecloud.io/rabbitmq/erlang/gpgkey ## RabbitMQ 服务器存储库
+    ## 现代 Erlang 存储库
+    rpm --import https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc 
+    ## RabbitMQ 服务器存储库
+    rpm --import https: //packagecloud.io/rabbitmq/erlang/gpgkey 
     rpm --import https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey
 
 3 执行：
@@ -33,65 +35,65 @@ ps : 本文档内容均来自官网，推荐直接查看官网
 
 复制以下文本并wq保存
 
-    # 在 /etc/yum.repos.d/rabbitmq.repo
-    
-    ## 
-    ## 零依赖 Erlang
-    ## 
-    
-    [rabbitmq_erlang]
-    name =rabbitmq_erlang
-    baseurl =https://packagecloud.io/rabbitmq/erlang/el/ 8 / $basearch
-    repo_gpgcheck = 1
-    gpgcheck = 1
-    enabled = 1
-    # PackageCloud 的存储库密钥和 RabbitMQ 包签名密钥
-    gpgkey =https://packagecloud.io/rabbitmq/erlang/gpgkey
-    https://github.com/rabbitmq/signing-keys/releases/download/ 2.0/rabbitmq-release-signing-key.asc sslverify = 1 sslcacert
-    
-    =/etc/pki/tls/certs/ca-bundle.crt
-    metadata_expire = 300
-    
-    [rabbitmq_erlang-source]
-    名称=rabbitmq_erlang-source
-    baseurl =https://packagecloud.io/rabbitmq/erlang/el/ 8 /SRPMS
-    repo_gpgcheck = 1
-    gpgcheck = 0
-    enabled = 1
-    # PackageCloud 的存储库密钥和 RabbitMQ 包签名密钥
-    gpgkey =https://packagecloud.io/rabbitmq/erlang/gpgkey
-    https://github.com/rabbitmq/signing-keys/releases/download/2.0/ rabbitmq-release-signing-key.asc sslverify = 1 sslcacert =/etc/pki/tls/certs/ca-bundle.crt
-    
-    
-    metadata_expire = 300
-    
-    ## 
-    ## RabbitMQ 服务器
-    ## 
-    
-    [rabbitmq_server]
-    name =rabbitmq_server
-    baseurl =https://packagecloud.io/rabbitmq/rabbitmq-server/el/ 8 / $basearch
-    repo_gpgcheck = 1
-    gpgcheck = 0
-    enabled = 1
-    # PackageCloud's存储库密钥和 RabbitMQ 包签名密钥
-    gpgkey =
-    https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing- key.asc sslverify = 1 sslcacert
-    
-    =/etc/pki/tls/certs/ca-bundle.crt
-    metadata_expire = 300
-    
-    [rabbitmq_server-source]
-    名称=rabbitmq_server-source
-    baseurl =https://packagecloud.io/rabbitmq/rabbitmq-server/el/ 8 /SRPMS
-    repo_gpgcheck = 1
-    gpgcheck = 0
-    启用= 1
-    gpgkey =https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey
-    sslverify = 1
-    sslcacert =/etc/pki/tls/certs/ca-bundle.crt
-    metadata_expire = 300
+# 在 /etc/yum.repos.d/rabbitmq.repo
+
+## 
+## 零依赖 Erlang
+## 
+
+[rabbitmq_erlang]
+name =rabbitmq_erlang
+baseurl =https://packagecloud.io/rabbitmq/erlang/el/ 8 / $basearch
+repo_gpgcheck = 1
+gpgcheck = 1
+enabled = 1
+# PackageCloud 的存储库密钥和 RabbitMQ 包签名密钥
+gpgkey =https://packagecloud.io/rabbitmq/erlang/gpgkey
+https://github.com/rabbitmq/signing-keys/releases/download/ 2.0/rabbitmq-release-signing-key.asc sslverify = 1 sslcacert
+
+=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire = 300
+
+[rabbitmq_erlang-source]
+名称=rabbitmq_erlang-source
+baseurl =https://packagecloud.io/rabbitmq/erlang/el/ 8 /SRPMS
+repo_gpgcheck = 1
+gpgcheck = 0
+enabled = 1
+# PackageCloud 的存储库密钥和 RabbitMQ 包签名密钥
+gpgkey =https://packagecloud.io/rabbitmq/erlang/gpgkey
+https://github.com/rabbitmq/signing-keys/releases/download/2.0/ rabbitmq-release-signing-key.asc sslverify = 1 sslcacert =/etc/pki/tls/certs/ca-bundle.crt
+
+
+metadata_expire = 300
+
+## 
+## RabbitMQ 服务器
+## 
+
+[rabbitmq_server]
+name =rabbitmq_server
+baseurl =https://packagecloud.io/rabbitmq/rabbitmq-server/el/ 8 / $basearch
+repo_gpgcheck = 1
+gpgcheck = 0
+enabled = 1
+# PackageCloud's存储库密钥和 RabbitMQ 包签名密钥
+gpgkey =
+https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing- key.asc sslverify = 1 sslcacert
+
+=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire = 300
+
+[rabbitmq_server-source]
+名称=rabbitmq_server-source
+baseurl =https://packagecloud.io/rabbitmq/rabbitmq-server/el/ 8 /SRPMS
+repo_gpgcheck = 1
+gpgcheck = 0
+启用= 1
+gpgkey =https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey
+sslverify = 1
+sslcacert =/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire = 300
 
 4 执行：
 
@@ -146,6 +148,7 @@ rabbitmq-diagnostics status
 
 #### 登录网址 ip:15672
 [本机笔记本](http://192.168.124.21:15672)
+[本机台式机暂时](http://192.168.220.128:15672)
 账号admin 密码admin
 #### 查看版本：
 
@@ -154,3 +157,5 @@ rabbitmq-diagnostics status
 journalctl --system
 
 #### 具体配置待学习
+
+http://192.168.220.128:15672/#/

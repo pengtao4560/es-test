@@ -613,6 +613,7 @@ firewall-cmd --permanent --add-port=21/tcp
 firewall-cmd --permanent --add-port=20/tcp
 firewall-cmd --permanent --add-port=39000/tcp
 firewall-cmd --permanent --add-port=40000/tcp
+firewall-cmd --permanent --add-port=15672/tcp
 
     # 移除端口
     firewall-cmd --permanent --remove-port=8080/tcp
@@ -776,12 +777,13 @@ TODO  linux 安装 tomcat idea mysql
         export JAVA_HOME=/usr/local/jdk-17.0.2
         export CLASSPATH=$JAVA_HOME/lib
         export PATH=$JAVA_HOME/bin:$PATH
-    4.使环境变量重新生效 source /etc/profile
+    4.使环境变量重新生效、刷新、重新加载 source /etc/profile
     5.验证 linux jdk安装是否成功
        java
        javac
        java -version
 
+####重启网络    /etc/init.d/network restart
 
 #### 两台linux远程传输指令：
 scp 文件 用户名@ip:路径
@@ -833,3 +835,4 @@ ftp://ftpuser:ftpuser@192.168.159.132/
 配置好了root用户不限上传下载删除的vsftpd
 需要优化为  匿名用户可以登陆可以上传下载
 可以使用某一个文件夹以及子文件夹。不能使用上级文件夹
+
