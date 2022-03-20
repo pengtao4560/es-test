@@ -1,5 +1,6 @@
-package com.atguigu.rabbitmq;
+package com.atguigu.rabbitmq.helloworld;
 
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
