@@ -199,3 +199,82 @@ set_permissions [-p <vhostpath>] <user> <conf> <write> <read>
 一个消息只能被处理一次，不可以处理多次。  避免消息被重复消费
 
 ![](图片/rabbitmq-work queues.png)
+
+
+启动第一个线程
+```java
+/**
+ * @see com.atguigu.rabbitmq.workerqueue.Worker01
+ */
+```
+
+IDEA edit configurations
+
+![](图片/rabbitmq一个类多线程启动.png)
+
+然后 启动一个生产者大量发消息。 worker01 和 另一个工作线程worker01  轮询接受
+rabbitmq工作队列模式演示：
+
+![](图片/rabbitmq-工作队列模式demo演示-轮询.png)
+
+### 消息应答
+3.2.1. 概念
+消费者完成一个任务可能需要一段时间，如果其中一个消费者处理一个长的任务并仅只完成了部分突然它挂掉了，会发生什么情况。RabbitMQ 一旦向消费者传递了
+一条消息， 便立即将该消息标记为删除。在这种情况下，突然有个消费者挂掉了，我们将丢失正在处理的消息。以及后续 发送给该消费这的消息，因为它无法接收到。
+为了保证消息在发送过程中不丢失，rabbitmq 引入消息应答机制，
+**消息应答就是:消费者在接收到消息并且处理该消息之后，告诉 rabbitmq 它已经处理了，rabbitmq 可以把该消息删除了。**
+
+3.2.2. 自动应答
+消息发送后立即被认为已经传送成功，这种模式需要在**高吞吐量和数据传输安全性方面做权衡**,因为这种模式如果消息在接收到之前，消费者那边出现连接或者
+channel 关闭，那么消息就丢失了,当然另一方面这种模式消费者那边可以传递过载的消息，没有对传递的消息数量进行限制，
+当然这样有可能使得消费者这边由于接收太多还来不及处理的消息，导致这些消息的积压，最终使得内存耗尽，最终这些消费者线程被操作系统杀死，
+**所以自动应答这种模式仅适用在消费者可以高效并以某种速率能够处理这些消息的情况下使用**
+
+3.2.3. (手动应答)消息应答的方法
+
+A.Channel.basicAck(用于**肯定确认**)
+RabbitMQ 已知道该消息并且成功的处理消息，可以将其丢弃了
+B.Channel.basicNack(用于否定确认) C.Channel.basicReject(用于否定确认) 与 Channel.basicNack 相比少一个参数不处理该消息了直接拒绝，
+可以将其丢弃了
+
+#### Multiple 的解释
+
+```java
+/**
+ * @see com.rabbitmq.client.Channel#basicAck
+ * 
+ */
+
+public interface Channel extends ShutdownNotifier, AutoCloseable {
+    /**
+     * Acknowledge one or several received
+     * messages. Supply the deliveryTag from the {@link com.rabbitmq.client.AMQP.Basic.GetOk}
+     * or {@link com.rabbitmq.client.AMQP.Basic.Deliver} method
+     * containing the received message being acknowledged.
+     * @see com.rabbitmq.client.AMQP.Basic.Ack
+     * @param deliveryTag the tag from the received {@link com.rabbitmq.client.AMQP.Basic.GetOk} or {@link com.rabbitmq.client.AMQP.Basic.Deliver}
+     * @param multiple true to acknowledge all messages up to and
+     * including the supplied delivery tag; false to acknowledge just
+     * the supplied delivery tag.
+     * @throws java.io.IOException if an error is encountered
+     */
+    void basicAck(long deliveryTag, boolean multiple) throws IOException;
+}
+```
+手动应答的好处是可以批量应答并且减少网络拥堵
+multiple 的 true 和 false 代表不同意思 true 代表批量应答 channel 上未应答的消息
+比如说 channel 上有传送 tag 的消息 5,6,7,8 当前 tag 是 8 那么此时 5-8 的这些还未应答的消息都会被确认收到消息应答
+false 同上面相比 只会应答 tag=8 的消息 5,6,7 这三个消息依然不会被确认收到消息应答
+
+![](图片/rabbitmq批量应答图示.png)
+
+开发时建议是建议不开启批量应答。  否则 5,6,7 的处理过程中可能会有处理失败的情况下。会有消息丢失的可能
+
+
+#### 3.2.5 消息的自动重新入队
+
+如果消费者由于某些原因失去连接(其通道已关闭，连接已关闭或 TCP 连接丢失)，导致消息未发送 ACK 确认，RabbitMQ 将了解到消息未完全处理，
+并将对其重新排队。如果此时其他消费者可以处理，它将很快将其重新分发给另一个消费者。这样，即使某个消费者偶尔死亡，也可以确保不会丢失任何消息。
+
+
+![](图片/rabbitmq消息自动重新入队演示图.png)

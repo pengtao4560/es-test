@@ -69,12 +69,12 @@ public class Producer {
             /*
             Publish a message. Publishing to a non-existent exchange will result in a channel-level protocol exception, which closes the channel.
             Invocations of Channel#basicPublish will eventually block if a resource-driven alarm  is in effect.
-
+            发送一个消息
             Params:
             exchange – the exchange to publish the message to  发送到哪个交换机
-            routingKey – the routing key 路由的key （当前demo 是队列的名称）
+            routingKey – the routing key 路由的key是哪一个 （当前demo 是队列的名称）
             props – other properties for the message - routing headers etc 其他参数信息 （当前demo）
-            body – the message body
+            body – the message body 发送消息的消息体
             Throws:
             IOException – if an error is encountered
             * */

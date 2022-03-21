@@ -6,6 +6,6 @@ package com.atguigu.rabbitmq.constant;
  * @desc rabbitmq 常量
  */
 public class RabbitmqConstant {
-    public static final String QUEUE_NAME = "QUEUE_NAME";
+    public static final String QUEUE_NAME = "HELLO";
 
 }

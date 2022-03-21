@@ -19,6 +19,7 @@ public class Worker01 {
         Channel channel = RabbitmqUtil.getChannel();
 
         // 消息的接收
+        System.out.println("C2等待接受消息......");
         String s = channel.basicConsume(RabbitmqConstant.QUEUE_NAME, true, RabbitmqUtil.getSimpleDeliverCallback(), RabbitmqUtil.getSimpleCancelCallback());
 
     }
