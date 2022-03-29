@@ -24,10 +24,10 @@ public class Work03 {
         log.info("C1 等待接受消息处理时间较短");
 
         // 设置公平分发
-        channel.basicQos(0);
+        // channel.basicQos(0);
 
         // 设置不公平分发
-        // channel.basicQos(1);
+        channel.basicQos(1);
         // 采用手动应答
         boolean autoAck = false;
         DeliverCallback deliverCallBack = ((consumerTag, message) -> {
