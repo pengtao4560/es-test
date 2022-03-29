@@ -112,8 +112,8 @@ RabbitMQ 是一个消息中间件：它接受并转发消息。你可以把它�
     以将消息发送到一个队列，许多消费者可以尝试从一个队列接收数据。这就是我们使用队列的方式
 **消费者**
 
-    消费与接收具有相似的含义。消费者大多时候是一个等待接收消息的程序。请注意生产者，消费
-    者和消息中间件很多时候并不在同一机器上。同一个应用程序既可以是生产者又是可以是消费者。
+    消费类似接收。消费者大多时候是一个等待接收消息的程序。请注意生产者，消费者和
+    消息中间件很多时候并不在同一机器上。同一个应用程序既可以是生产者又是可以是消费者。
 
 ![](图片/rabbitmq四大核心概念-类比快递.png)
 
@@ -196,7 +196,7 @@ set_permissions [-p <vhostpath>] <user> <conf> <write> <read>
 在这个案例中我们会启动两个工作线程，一个消息发送线程，我们来看看他们两个工作线程是如何工作的。
 
 注意事项：
-一个消息只能被处理一次，不可以处理多次。  避免消息被重复消费
+**一个消息只能被处理一次，不可以处理多次。  避免消息被重复消费**
 
 ![](图片/rabbitmq-work queues.png)
 
@@ -204,7 +204,7 @@ set_permissions [-p <vhostpath>] <user> <conf> <write> <read>
 启动第一个线程
 ```java
 /**
- * @see com.atguigu.rabbitmq.workerqueue.Worker01
+ * @see com.atguigu.rabbitmq.workerqueue.Worker01;
  */
 ```
 
@@ -278,3 +278,242 @@ false 同上面相比 只会应答 tag=8 的消息 5,6,7 这三个消息依然�
 
 
 ![](图片/rabbitmq消息自动重新入队演示图.png)
+
+
+P25 
+#### 消息手动应答
+消息在手动应答时是不丢失、放回队列中重新消费
+手动 manualack
+
+```java
+package com.atguigu.rabbitmq.manualack;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Channel;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 消息手动应答-生产者
+ *
+ * 消息在手动应答时是不丢失的，放回队列中重新消费
+ */
+@Slf4j
+public class Task2 {
+
+    // 队列名称
+    public static final String TASK_QUEUE_NAME = "ACK_QUEUE";
+
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Channel channel = RabbitmqUtil.getChannel();
+
+        // 声明队列
+        AMQP.Queue.DeclareOk declareOk = channel.queueDeclare(TASK_QUEUE_NAME, false, false, false, null);
+
+        // 从控制台中输入信息
+
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNext()) {
+            String message = scanner.next();
+            channel.basicPublish("", TASK_QUEUE_NAME, null, message.getBytes(StandardCharsets.UTF_8));
+            log.info("生产者发出消息：{}", message);
+        }
+    }
+}
+
+```
+
+```java
+package com.atguigu.rabbitmq.manualack;
+
+import cn.hutool.core.thread.ThreadUtil;
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.DeliverCallback;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 消息手动应答-消费者1
+ *
+ *  * 消息在手动应答时是不丢失的，放回队列中重新消费
+ */
+@Slf4j
+public class Work03 {
+    // 队列名称
+    public static final String TASK_QUEUE_NAME = "ACK_QUEUE";
+
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Channel channel = RabbitmqUtil.getChannel();
+        log.info("C1 等待接受消息处理时间较短");
+
+        // 采用手动应答
+        boolean autoAck = false;
+        DeliverCallback deliverCallBack = ((consumerTag, message) -> {
+            // 沉睡一秒钟
+            ThreadUtil.sleep(1000);
+            log.info("接收到的消息： {}", new String(message.getBody(), "UTF-8"));
+
+            //手动应答的代码
+            /**
+             * 1.消息的标记 tag
+             * 2. 是否批量应答(不应该，否则可能有消息丢失的风险) false 不批量应答信道中的消息
+             */
+            channel.basicAck(message.getEnvelope().getDeliveryTag(), false);
+        });
+        channel.basicConsume(TASK_QUEUE_NAME, autoAck, deliverCallBack, (consumerTag -> {
+            log.info("消费者取消消费接口回调逻辑");
+        }));
+    }
+}
+
+```
+
+```java
+package com.atguigu.rabbitmq.manualack;
+
+import cn.hutool.core.thread.ThreadUtil;
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.DeliverCallback;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 消息手动应答-消费者2
+ *
+ *  * 消息在手动应答时是不丢失的，放回队列中重新消费
+ */
+@Slf4j
+public class Work04 {
+    // 队列名称
+    public static final String TASK_QUEUE_NAME = "ACK_QUEUE";
+
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Channel channel = RabbitmqUtil.getChannel();
+        log.info("C2 等待接受消息处理时间较长");
+
+        // 采用手动应答
+        boolean autoAck = false;
+        DeliverCallback deliverCallBack = ((consumerTag, message) -> {
+            // 沉睡15秒钟
+            ThreadUtil.sleep(15000);
+            log.info("接收到的消息： {}", new String(message.getBody(), "UTF-8"));
+
+            //手动应答的代码
+            /**
+             * 1.消息的标记 tag
+             * 2. 是否批量应答(不应该，否则可能有消息丢失的风险) false 不批量应答信道中的消息
+             */
+            channel.basicAck(message.getEnvelope().getDeliveryTag(), false);
+        });
+        channel.basicConsume(TASK_QUEUE_NAME, autoAck, deliverCallBack, (consumerTag -> {
+            log.info("消费者取消消费接口回调逻辑");
+        }));
+    }
+}
+
+```
+
+启动生产者 Task2， 消费者1：Work03 ，消费者2：Work04
+
+![](图片/rabbitmq手动应答demo演示.png)
+
+当发送消息  ee 和 ff。 本应该  消费者2 本应该轮询接收消息 ff。但是消费者2停掉了。 此时 消息ff 会回到队列
+并被 消费者1 消费。
+结论：
+
+在发送者发送消息 dd，发出消息之后的把 C2 消费者停掉，按理说该 C2 来处理该消息，但是由于它处理时间较长，在还未处理完，
+也就是说 C2 还没有执行 ack 代码的时候，C2 被停掉了，此时会看到消息被 C1 接收到了，说明消息 dd 被重新入队，然后分配给能处理消息的 C1 处理了
+
+#### rabbitmq 队列持久化：
+```java
+package com.atguigu.rabbitmq.manualack;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Channel;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 消息手动应答-生产者
+ *
+ * 消息在手动应答时是不丢失的，放回队列中重新消费
+ */
+@Slf4j
+public class Task2 {
+
+    // 队列名称
+    public static final String TASK_QUEUE_NAME = "ACK_QUEUE";
+
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Channel channel = RabbitmqUtil.getChannel();
+        // 需要持久化
+        boolean durable = true;
+        // 声明队列
+        AMQP.Queue.DeclareOk declareOk = channel.queueDeclare(TASK_QUEUE_NAME, durable, false, false, null);
+
+        // 从控制台中输入信息
+
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNext()) {
+            String message = scanner.next();
+            channel.basicPublish("", TASK_QUEUE_NAME, null, message.getBytes(StandardCharsets.UTF_8));
+            log.info("生产者发出消息：{}", message);
+        }
+    }
+}
+
+```
+队列持久化关键代码  boolean durable  = true;
+AMQP.Queue.DeclareOk declareOk = channel.queueDeclare(TASK_QUEUE_NAME, durable, false, false, null);
+
+之前我们创建的队列都是非持久化的，rabbitmq 如果重启的化，该队列就会被删除掉，如果要队列实现持久化 需要在声明队列的时候把 durable 参数设置为持久化
+但是**需要注意的就是如果之前声明的队列不是持久化的，需要把原先队列先删除，或者重新
+创建一个持久化的队列，不然就会出现错误**
+报错：
+Caused by: com.rabbitmq.client.ShutdownSignalException: channel error; protocol method: #method<channel.close>(reply-code=406, reply-text=PRECONDITION_FAILED - inequivalent arg 'durable' for queue 'HELLO' in vhost '/': received 'true' but current is 'false', class-id=50, method-id=10)
+
+![](图片/rabbitmq队列持久化web界面.png)
+
+web界面删除队列
+
+![](图片/rabbitmq删除队列.png)
+
+#### rabbitmq 消息持久化
+
+要想让消息实现持久化需要在消息生产者修改代码，MessageProperties.PERSISTENT_TEXT_PLAIN 添加这个属性。
+
+    // 设置生产者发送消息为持久化消息(要求保存到磁盘上) 否则保存在内存中
+    AMQP.BasicProperties persistentTextPlain = MessageProperties.PERSISTENT_TEXT_PLAIN;
+    channel.basicPublish("", TASK_QUEUE_NAME, persistentTextPlain, message.getBytes(StandardCharsets.UTF_8));
+
+将消息标记为持久化并不能完全保证不会丢失消息。尽管它告诉 RabbitMQ 将消息保存到磁盘，但是这里依然存在当消息刚准备存储在磁盘的时候 
+但是还没有存储完，消息还在缓存的一个间隔点。此时并没有真正写入磁盘。**持久性保证并不强**，
+但是对于我们的简单任务队列而言，这已经绰绰有余了。如果需要更强有力的持久化策略，参考后边课件发布确认章节
+
+
+#### 不公平分发 （能者多劳。 建议采用不公平分发原则）
+
+在最开始的时候我们学习到 RabbitMQ 分发消息采用的轮训分发，但是在某种场景下这种策略并不是很好，比方说有两个消费者在处理任务，
+其中有个消费者 1 处理任务的速度非常快，而另外一个消费者 2 处理速度却很慢，这个时候我们还是采用轮训分发的化就会到这处理速度快的这个消费者很大
+一部分时间处于空闲状态，而处理慢的那个消费者一直在干活，这种分配方式在这种情况下其实就不太好，但是 RabbitMQ 并不知道这种情况它依然很公平的进行分发。
+为了避免这种情况，我们可以设置参数 channel.basicQos(1)
+
+消费者的信道对象
+// 设置不公平分发
+channel.basicQos(1);

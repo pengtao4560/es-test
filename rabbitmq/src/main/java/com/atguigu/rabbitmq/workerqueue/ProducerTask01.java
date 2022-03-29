@@ -21,8 +21,9 @@ public class ProducerTask01 {
 
         Channel channel = RabbitmqUtil.getChannel();
         // 队列的声明
-
-        channel.queueDeclare(RabbitmqConstant.QUEUE_NAME, false, false, false, null);
+        // 需要持久化
+        boolean durable = true;
+        channel.queueDeclare(RabbitmqConstant.QUEUE_NAME, true, false, false, null);
         // 本次从控制台当中接受信息(控制台来发送消息)
 
         Scanner scanner = new Scanner(System.in);
