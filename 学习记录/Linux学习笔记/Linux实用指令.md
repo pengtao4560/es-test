@@ -4,7 +4,9 @@
 
 [百度 centos7镜像下载地址](http://isoredirect.centos.org/centos/7/isos/x86_64)
 选everything
+#### 查看已经安装的CentOS版本信息
 
+    cat /etc/issue 
 #### vi/vim文本编辑器
 vi  正常模式/编辑模式/命令行模式(底行模式)
 
@@ -13,6 +15,11 @@ vi  正常模式/编辑模式/命令行模式(底行模式)
     p粘贴  
     u撤销  
     dd删行(centos6 dd centos7 d删行 dd删单字符)
+    
+#### vim 字符串替换：低行模式下：
+
+%s/源字符串/目的字符串/g
+%s/https/http/g
 
 #### 切换用户
    su - 切换用户名
@@ -20,7 +27,16 @@ vi  正常模式/编辑模式/命令行模式(底行模式)
 #### 切换到指定运行级别的指令
 基本语法
 init[012356]
-vim /etc/inittab
+
+(centos6)
+vim /etc/inittab  
+(centos7)
+systemctl get-default
+    # To view current default target, run:
+    # systemctl get-default
+    #
+    # To set a default target, run:
+    # systemctl set-default TARGET.target
     
     Default runlevel. The runlevels used are:
        0 - halt (Do NOT set initdefault to this)
@@ -31,6 +47,9 @@ vim /etc/inittab
        5 - X11
        6 - reboot (Do NOT set initdefault to this)
 
+centos 7 inittab文件已经不再使用了，而是使用systemd了。
+multi-user.target多用户界面，类似以前的level3
+graphical.target图形界面，类似以前的level5
 #### linux如何修改root密码
     (前提:不能用远程连接，相当于你接触这台虚拟机所在的电脑，所以安全性不会降低)
     -> 开机  
@@ -95,6 +114,9 @@ vim /etc/inittab
 
 #### more指令：一个基于VI编辑器的文本过滤器，它以全屏幕的方式按页显示文本文件的内容
     more /etc/profile    空格/ctrl + f 翻页  enter 下一行 q退出more模式  看上一页 ctrl+b  
+
+####vim cat more less 翻页/上一页
+**空格/ctrl + f 翻页  enter 下一行 q退出more模式  看上一页 ctrl+b**
 
 #### less指令：less - opposite of more 用来分屏查看文件内容
     less比more指令更强大支持各种显示终端，并不是一次性将整个文件加载之后才显示，
@@ -286,7 +308,7 @@ gunzip 解压缩文件
     [root@pengtao home]#
 
 
-#### xz -d 压缩文件、 xz -d 解压文件 指令
+#### xz -z 压缩文件、 xz -d 解压文件 指令
     xz -z 要压缩的文件
                 如果要保留被压缩的文件加上参数 -k ，如果要设置压缩率加入参数 -0 到 -9调节压缩率。如果不设置，默认压缩等级是6.
     xz解压文件方法或命令
@@ -567,31 +589,36 @@ centos6 上的服务管理工具为chkconfig，Linux系统所有的预设服务�
     service iptables start
 
 
-###CentOS 7服务指令
+### CentOS 7 服务指令
 centos7不使用SysV而改为systemd了，这是因为systemd支持多个服务并发启动，而SysV只能一个一个地启动，
 这样最终导致的结果是systemd方式启动会快很多。
 
-列出系统所有的服务
+**列出系统所有的服务**
     
     systemctl list-units -all --type=service
 这些服务对应的启动脚本在/usr/lib/systemd/system/
 
 常用命令
 
-    #让某个服务开机启动
-    systemctl enable crond.service （.service可以省略）
-    #不让开机启动
-    systemctl disable crond.service 
-    #查看服务状态
-    systemctl status crond.service 
-    #启动某个服务
-    systemctl start crond.service 
-    #停止某个服务
-    systemctl stop crond.service 
-    #重启某个服务
-    systemctl restart crond.service 
-    #查看某个服务是否开机启动
-    systemctl is-enabled crond #查看某个服务是否开机启动
+#让某个服务开机启动
+systemctl enable crond.service （.service可以省略）
+
+#不让开机启动
+systemctl disable crond.service 
+
+#查看服务状态
+systemctl status crond.service 
+
+#启动某个服务
+systemctl start crond.service 
+
+#停止某个服务
+systemctl stop crond.service 
+
+#重启某个服务
+systemctl restart crond.service 
+#查看某个服务是否开机启动
+systemctl is-enabled crond #查看某个服务是否开机启动
 
 ###centos 6 防火墙操作：
 [centos6防火墙操作](https://www.cnblogs.com/liuyiyuan/p/13681535.html)

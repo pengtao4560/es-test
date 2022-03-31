@@ -201,7 +201,9 @@ linux nginx.conf修改：
     访问 http://1 27.0.0.1:9001/vod/ 直接跳转到 127.0.0.1:808 2
 
 (1)准备两个tomcat
-server.xml配置文件 tomcat8080不用改，直接启动
+server.xml配置文件 tomcat8080不用改，直接启动进入tomcat bin目录 ./start tab即可）
+/usr/local/tomcat8080/apache-tomcat-10.0.16/bin
+
 tomcat8081改动如下：
 
     ？8080        8080 -> 8081
@@ -275,7 +277,8 @@ location 指令说明
 ### nginx 配置实例-负载均衡
 实现效果：浏览器地址栏输入地址
 l，负载均衡效果，平均分发到8080和8081端口中
-[](http://192.168.159.131/edu/a.html)
+[台式机访问](http://192.168.159.131/edu/a.html)
+[笔记本访问](http://192.168.124.20/edu/a.html)
 
 准备工作：
 1.准备两台tomcat服务器 8080和8081
