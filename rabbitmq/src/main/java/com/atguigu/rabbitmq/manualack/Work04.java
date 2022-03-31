@@ -26,7 +26,9 @@ public class Work04 {
         // channel.basicQos(0);
 
         // 设置不公平分发
-        channel.basicQos(1);
+        // channel.basicQos(1);
+        // 设置预取值
+        channel.basicQos(5);
         // 采用手动应答
         boolean autoAck = false;
         DeliverCallback deliverCallBack = ((consumerTag, message) -> {
