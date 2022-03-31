@@ -21,6 +21,8 @@ public class Work03 {
 
     public static void main(String[] args) throws IOException, TimeoutException {
         Channel channel = RabbitmqUtil.getChannel();
+        // 开启发布确认
+        channel.confirmSelect();
         log.info("C1 等待接受消息处理时间较短");
 
         // 设置公平分发

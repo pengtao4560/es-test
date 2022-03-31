@@ -537,3 +537,385 @@ RabbitMQ 将停止在通道上传递更多消息，除非至少有一个未处�
 上图的预取值指定后，不管处理速度。 c1一定最后消费2条  c2一定最后消费5条
 
 ![](图片/rabbitmq预取值.png)
+
+
+### 4 发布确认
+
+生产者将信道设置成 confirm 模式，一旦信道进入 confirm 模式，所有在该信道上面发布的消息都将会被指派一个唯一的 ID(从 1 开始)，
+一旦消息被投递到所有匹配的队列之后，broker 就会发送一个确认给生产者(包含消息的唯一 ID)，这就使得生产者知道消息已经正确到达目的队列了，
+如果消息和队列是可持久化的，那么确认消息会在将消息写入磁盘之后发出，broker 回传给生产者的确认消息中 delivery-tag 域包含了确认消息的序列号，
+此外 broker 也可以设置basic.ack 的 multiple 域，表示到这个序列号之前的所有消息都已经得到了处理。confirm 模式最大的好处在于他是异步的，
+一旦发布一条消息，生产者应用程序就可以在等信道返回确认的同时继续发送下一条消息，当消息最终得到确认之后，生产者应用便可以通过回调方法来处理该确认消息，
+如果 RabbitMQ 因为自身内部错误导致消息丢失，就会发送一条 nack 消息，生产者应用程序同样可以在回调方法中处理该 nack 消息。
+
+
+1. 设置要求队列必须持久化
+2. 设置要求队列中的消息也必须持久化
+3. 发布确认
+
+![](图片/rabbitmq发布确认.png)
+
+#### 发布确认的策略
+4.2.1. 开启发布确认的方法
+发布确认默认是没有开启的，如果要开启需要调用方法 confirmSelect，每当你要想使用发布确认，都需要在 channel 上调用该方法
+
+```java
+package com.atguigu.rabbitmq.manualack;
+
+import cn.hutool.core.thread.ThreadUtil;
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.DeliverCallback;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 消息手动应答-消费者1
+ *
+ *  * 消息在手动应答时是不丢失的，放回队列中重新消费
+ */
+@Slf4j
+public class Work03 {
+    // 队列名称
+    public static final String TASK_QUEUE_NAME = "ACK_QUEUE";
+
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Channel channel = RabbitmqUtil.getChannel();
+        // 开启发布确认
+        channel.confirmSelect();
+        log.info("C1 等待接受消息处理时间较短");
+
+        // 设置公平分发
+        // channel.basicQos(0);
+
+        // 设置不公平分发
+        // channel.basicQos(1);
+        // 设置预取值
+        channel.basicQos(2);
+        // 采用手动应答
+        boolean autoAck = false;
+        DeliverCallback deliverCallBack = ((consumerTag, message) -> {
+            // 沉睡一秒钟
+            ThreadUtil.sleep(1000);
+            log.info("接收到的消息： {}", new String(message.getBody(), "UTF-8"));
+
+            //手动应答的代码
+            /**
+             * 1.消息的标记 tag
+             * 2. 是否批量应答(不应该，否则可能有消息丢失的风险) false 不批量应答信道中的消息
+             */
+            channel.basicAck(message.getEnvelope().getDeliveryTag(), false);
+        });
+
+        channel.basicConsume(TASK_QUEUE_NAME, autoAck, deliverCallBack, (consumerTag -> {
+            log.info("消费者取消消费接口回调逻辑");
+        }));
+    }
+}
+
+```
+#### 4.2.2单个发布确认
+这是一种简单的确认方式，它是一种同步确认发布的方式，也就是发布一个消息之后只有它被确认发布，后续的消息才能继续发布,waitForConfirmsOrDie(long)这个方法只有
+在消息被确认的时候才返回，如果在指定时间范围内这个消息没有被确认那么它将抛出异常。 这种确认方式有一个最大的缺点就是:发布速度特别的慢，因为如果没有确认发布的消息就会
+阻塞所有后续消息的发布，这种方式最多提供每秒不超过数百条发布消息的吞吐量。当然对于某些应用程序来说这可能已经足够了。
+
+```java
+package com.atguigu.rabbitmq.confirm;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.Channel;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.util.UUID;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 发布确认模式
+ * 使用的时间 比较哪种确认方式是最好的
+ *
+ * 1.单个确认模式
+ * 2.批量确认模式
+ * 3.异步确认
+ */
+@Slf4j
+public class ConfirmMessage {
+
+    // 批量发消息的个数
+    public static final int MESSAGE_COUNT = 1000;
+
+    public static void main(String[] args) throws Exception {
+        // 1. 单个确认
+        // publicMessageIndividually(); //
+        // 22:01:52.420 [main] INFO com.atguigu.rabbitmq.confirm.ConfirmMessage - 发布 1000 个单独确认消息，耗时 705 毫秒(ms)
+
+    }
+
+    /**
+     * 单个确认
+     */
+    public static void publicMessageIndividually() throws IOException, TimeoutException, InterruptedException {
+        Channel channel = RabbitmqUtil.getChannel();
+        // 队列的声明
+        String queueName = UUID.randomUUID().toString();
+        channel.queueDeclare(queueName, true, false, false,  null);
+        // 开启发布确认
+        channel.confirmSelect();
+        // 开始时间
+        long begin = System.currentTimeMillis();
+
+        // 批量发消息
+        for (int i = 0; i < MESSAGE_COUNT; i++) {
+            String message = i + "";
+            channel.basicPublish("", queueName, null, message.getBytes());
+            // 单个消息就马上进行发布确认
+            boolean confirmed = channel.waitForConfirms();
+            if (confirmed) {
+                log.info("消息发送成功");
+            }
+        }
+
+        long end = System.currentTimeMillis();
+        log.info("发布 {} 个 批量确认消息，耗时 {} 毫秒(ms)", MESSAGE_COUNT, end-begin);
+
+    }
+
+}
+
+```
+#### 4.23. 批量发布确认
+
+上面那种方式非常慢，与单个等待确认消息相比，先发布一批消息然后一起确认可以极大地
+提高吞吐量，当然这种方式的缺点就是:当发生故障导致发布出现问题时，不知道是哪个消息出现
+问题了，我们必须将整个批处理保存在内存中，以记录重要的信息而后重新发布消息。当然这种
+方案仍然是同步的，也一样阻塞消息的发布。
+
+```java
+package com.atguigu.rabbitmq.confirm;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.Channel;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.util.UUID;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 发布确认模式
+ * 使用的时间 比较哪种确认方式是最好的
+ *
+ * 1.单个确认模式
+ * 2.批量确认模式
+ * 3.异步确认
+ */
+@Slf4j
+public class ConfirmMessage {
+
+    // 批量发消息的个数
+    public static final int MESSAGE_COUNT = 1000;
+
+    public static void main(String[] args) throws Exception {
+        // 1. 单个确认
+        // publicMessageIndividually(); //
+        // 22:01:52.420 [main] INFO com.atguigu.rabbitmq.confirm.ConfirmMessage - 发布 1000 个单独确认消息，耗时 705 毫秒(ms)
+
+        // 2. 批量确认
+        publicMessageBatch(); // 弊端：无法确认哪个消息没有被确认
+        // 22:10:23.019 [main] INFO com.atguigu.rabbitmq.confirm.ConfirmMessage - 发布 1000 个单独确认消息，耗时 148 毫秒(ms)
+
+        // 3. 异步批量确认
+
+    }
+
+    /**
+     * 批量发布确认
+     */
+    public static void publicMessageBatch() throws Exception {
+        Channel channel = RabbitmqUtil.getChannel();
+        // 队列的声明
+        String queueName = UUID.randomUUID().toString();
+        channel.queueDeclare(queueName, true, false, false,  null);
+        // 开启发布确认
+        channel.confirmSelect();
+        // 开始时间
+        long begin = System.currentTimeMillis();
+
+        // 批量确认消息的大小
+        int batchSize = 100;
+
+        // 批量发送消息 批量发布确认
+        for (int i = 0; i < MESSAGE_COUNT; i++) {
+
+            String message = i + "";
+            channel.basicPublish("", queueName, null, message.getBytes());
+            // 发布确认
+
+            // 判断达到100条消息的时候 批量确认一次
+            if (i % batchSize == 0) {
+                channel.waitForConfirms();
+            }
+
+        }
+        long end = System.currentTimeMillis();
+        log.info("发布 {} 个单独确认消息，耗时 {} 毫秒(ms)", MESSAGE_COUNT, end-begin);
+    }
+}
+
+```
+#### 4.2.4. 异步确认发布
+异步确认虽然编程逻辑比上两个要复杂，但是性价比最高，无论是可靠性还是效率都没得说，他是利用回调函数来达到消息可靠性传递的，
+这个中间件也是通过函数回调来保证是否投递成功，解异步确认是怎么实现的：
+
+![](图片/rabbitmq异步发送消息原理图.png)
+
+```java
+package com.atguigu.rabbitmq.confirm;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.ConfirmCallback;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.util.UUID;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 发布确认模式
+ * 使用的时间 比较哪种确认方式是最好的
+ *
+ * 1.单个确认模式
+ * 2.批量确认模式
+ * 3.异步确认
+ */
+@Slf4j
+public class ConfirmMessage {
+
+    // 批量发消息的个数
+    public static final int MESSAGE_COUNT = 1000;
+
+    public static void main(String[] args) throws Exception {
+        // 1. 单个确认
+        // publicMessageIndividually(); //
+        // 22:01:52.420 [main] INFO com.atguigu.rabbitmq.confirm.ConfirmMessage - 发布 1000 个单独确认消息，耗时 705 毫秒(ms)
+
+        // 2. 批量确认
+        // publicMessageBatch(); // 弊端：无法确认哪个消息没有被确认
+        // 22:10:23.019 [main] INFO com.atguigu.rabbitmq.confirm.ConfirmMessage - 发布 1000 个单独确认消息，耗时 148 毫秒(ms)
+
+        // 3. 异步批量确认
+        publishMessageAsync();
+        // 22:43:55.025 [main] INFO com.atguigu.rabbitmq.confirm.ConfirmMessage - 发布 1000 个 异步发布确认消息，耗时 47 毫秒(ms)
+    }
+
+    /**
+     * 单个确认
+     */
+    public static void publicMessageIndividually() throws IOException, TimeoutException, InterruptedException {
+        Channel channel = RabbitmqUtil.getChannel();
+        // 队列的声明
+        String queueName = UUID.randomUUID().toString();
+        channel.queueDeclare(queueName, true, false, false,  null);
+        // 开启发布确认
+        channel.confirmSelect();
+        // 开始时间
+        long begin = System.currentTimeMillis();
+
+        // 批量发消息
+        for (int i = 0; i < MESSAGE_COUNT; i++) {
+            String message = i + "";
+            channel.basicPublish("", queueName, null, message.getBytes());
+            // 单个消息就马上进行发布确认
+            boolean confirmed = channel.waitForConfirms();
+            if (confirmed) {
+                log.info("消息发送成功");
+            }
+        }
+
+        long end = System.currentTimeMillis();
+        log.info("发布 {} 个 批量确认消息，耗时 {} 毫秒(ms)", MESSAGE_COUNT, end-begin);
+
+    }
+
+    /**
+     * 批量发布确认
+     */
+    public static void publicMessageBatch() throws Exception {
+        Channel channel = RabbitmqUtil.getChannel();
+        // 队列的声明
+        String queueName = UUID.randomUUID().toString();
+        channel.queueDeclare(queueName, true, false, false,  null);
+        // 开启发布确认
+        channel.confirmSelect();
+        // 开始时间
+        long begin = System.currentTimeMillis();
+
+        // 批量确认消息的大小
+        int batchSize = 100;
+
+        // 批量发送消息 批量发布确认
+        for (int i = 0; i < MESSAGE_COUNT; i++) {
+
+            String message = i + "";
+            channel.basicPublish("", queueName, null, message.getBytes());
+            // 发布确认
+
+            // 判断达到100条消息的时候 批量确认一次
+            if (i % batchSize == 0) {
+                channel.waitForConfirms();
+            }
+
+        }
+        long end = System.currentTimeMillis();
+        log.info("发布 {} 个单独确认消息，耗时 {} 毫秒(ms)", MESSAGE_COUNT, end-begin);
+    }
+
+    /**
+     * 异步发布确认
+     */
+    public static void publishMessageAsync() throws Exception {
+        Channel channel = RabbitmqUtil.getChannel();
+        // 队列的声明
+        String queueName = UUID.randomUUID().toString();
+        channel.queueDeclare(queueName, true, false, false,  null);
+        // 开启发布确认
+        channel.confirmSelect();
+        // 开始时间
+        long begin = System.currentTimeMillis();
+
+        // 准备消息的监听器 监听哪些消息成功了，哪些消息失败了
+        //消息确认成功 回调函数
+        com.rabbitmq.client.ConfirmCallback ackCallback = (deliveryTag,  multiple) -> {
+            log.info("确认的消息： {}", deliveryTag);
+        };
+        // 消息确认失败 回调函数
+        /**
+         * 1. deliveryTag 消息的标记
+         * 2. multiple 是否为批量确认
+         */
+        ConfirmCallback nackCallback = (deliveryTag,  multiple) -> {
+            log.info("未确认的消息： {}", deliveryTag);
+        };
+        /**
+         * 监听哪些消息成功了
+         * 监听哪些消息失败了
+         */
+        channel.addConfirmListener(ackCallback, nackCallback); //监听是 异步的通知
+        // 批量发送消息
+        for (int i = 0; i < MESSAGE_COUNT; i++) {
+
+            String message = "消息" + i;
+            channel.basicPublish("", queueName, null, message.getBytes());
+            // 发布确认
+        }
+
+        long end = System.currentTimeMillis();
+        log.info("发布 {} 个 异步发布确认消息，耗时 {} 毫秒(ms)", MESSAGE_COUNT, end-begin);
+
+    }
+}
+
+```
