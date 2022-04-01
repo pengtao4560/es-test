@@ -1113,3 +1113,14 @@ public class ConfirmMessage {
     20:46:05.180 [AMQP Connection 192.168.220.128:5672] INFO com.atguigu.rabbitmq.confirm.ConfirmMessage - 确认的消息： 71
     20:46:05.180 [AMQP Connection 192.168.220.128:5672] INFO com.atguigu.rabbitmq.confirm.ConfirmMessage - 确认的消息： 72
     ...
+
+
+#### 以上 3 种发布确认速度对比
+通过测试： 异步批量确认性能最高
+单独发布消息
+    同步等待确认，简单，但吞吐量非常有限。
+批量发布消息
+    批量同步等待确认，简单，合理的吞吐量，一旦出现问题但很难推断出是那条消息出现了问题。
+
+异步处理：（最好，性价比最高的，企业开发中推荐使用异步处理）
+最佳性能和资源使用，在出现错误的情况下可以很好地控制，但是实现起来稍微难些
