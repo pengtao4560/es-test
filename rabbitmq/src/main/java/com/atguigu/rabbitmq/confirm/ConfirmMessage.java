@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentNavigableMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -109,13 +111,27 @@ public class ConfirmMessage {
         channel.queueDeclare(queueName, true, false, false,  null);
         // 开启发布确认
         channel.confirmSelect();
-        // 开始时间
-        long begin = System.currentTimeMillis();
 
-        // 准备消息的监听器 监听哪些消息成功了，哪些消息失败了
+        /**
+         * 线程安全有序的一个哈希表 适用于高并发的情况下
+         * 1.轻松地将序号与消息进行关联
+         * 2.轻松地批量删除条目 只要给到序号
+         * 3.支持高并发(多线程)
+         */
+        ConcurrentSkipListMap<Long, String> outstandingConfirms =
+                new ConcurrentSkipListMap<>();
+
         //消息确认成功 回调函数
         com.rabbitmq.client.ConfirmCallback ackCallback = (deliveryTag,  multiple) -> {
+            // 2.删除掉已经确认的消息 剩下的就是未确认的消息
+            if (multiple) {
+                ConcurrentNavigableMap<Long, String> longStringConcurrentNavigableMap =
+                        outstandingConfirms.headMap(deliveryTag);
+            } else {
+                outstandingConfirms.remove(deliveryTag);
+            }
             log.info("确认的消息： {}", deliveryTag);
+
         };
         // 消息确认失败 回调函数
         /**
@@ -123,19 +139,32 @@ public class ConfirmMessage {
          * 2. multiple 是否为批量确认
          */
         ConfirmCallback nackCallback = (deliveryTag,  multiple) -> {
+            // 3.打印一下未确认的消息都有哪些
             log.info("未确认的消息： {}", deliveryTag);
+            String message = outstandingConfirms.get(deliveryTag);
+            log.info("未确认的消息是：{}， 未确认的消息tag: {}", message, deliveryTag);
         };
+
         /**
          * 监听哪些消息成功了
          * 监听哪些消息失败了
          */
+        // 准备消息的监听器 监听哪些消息成功了，哪些消息失败了
         channel.addConfirmListener(ackCallback, nackCallback); //监听是 异步的通知
+
+        // 开始时间
+        long begin = System.currentTimeMillis();
         // 批量发送消息
         for (int i = 0; i < MESSAGE_COUNT; i++) {
 
             String message = "消息" + i;
             channel.basicPublish("", queueName, null, message.getBytes());
             // 发布确认
+            // 1.此处记录下所有要发送的消息 消息的总和
+            // 2.删除掉已经确认的消息 剩下的就是未确认的消息 (确认消息回调函数中处理 本demo中为：ackCallback)
+            // 3.打印一下未确认的消息都有哪些  (未确认消息回调函数中处理，本demo中为：nackCallback)
+            outstandingConfirms.put(channel.getNextPublishSeqNo(), message);
+
         }
 
         long end = System.currentTimeMillis();
