@@ -6,8 +6,10 @@ nginx学完
 设计模式
 springcloud 学完
 springsecurity
-activemq
-mysql高级
+rabbitmq 学完
+mysql高级 学完
+大厂面试题 学完
+
 redis
 
 java8,java 11 新特性

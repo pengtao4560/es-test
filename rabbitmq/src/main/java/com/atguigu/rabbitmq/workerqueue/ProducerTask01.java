@@ -9,10 +9,8 @@ import java.util.Scanner;
 import java.util.concurrent.TimeoutException;
 
 /**
- * @author pt
- * @createdate 2022/3/21 0021
- * @desc
  * 生产者 发送大量的消息
+ *
  */
 public class ProducerTask01 {
 

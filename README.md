@@ -316,3 +316,17 @@ app_access_token: 应用 授权凭证，开放平台可据此识别调用方的�
 tenant_access_token: 租户 授权凭证，使用该access token，应用将代表公司或者团队执行对应的操作，比如获取一个通讯录用户的信息。
 user_access_token: 用户 授权凭证，使用该access token，应用将代表用户执行对应的操作，比如通过API 创建一篇云文档或者一个日程。
 
+## mysql客户端：
+
+DBeaver 是一个基于 Java 开发，免费开源的通用数据库管理和开发工具，使用非常友好的 ASL 协议。可以通过官方网站或者 Github 进行下载。
+
+[官方网站](https://dbeaver.io)
+
+[dbeaver Github](https://github.com/dbeaver/dbeaver)
+
+[dbeaver下载](https://github.com/dbeaver/dbeaver/tags)
+选择download，根据系统版本选择即可
+
+[dbeaver下载2022年4月6日 最新win 64版本下载](https://github.com/dbeaver/dbeaver/releases/download/22.0.2/dbeaver-ce-22.0.2-x86_64-setup.exe)
+
+[dbeaver 使用说明](https://mp.weixin.qq.com/s/HgY9Vgz2IGVvDRmi5o_54g)
