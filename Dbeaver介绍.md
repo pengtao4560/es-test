@@ -14,9 +14,6 @@ DBeaver 通过 JDBC 连接到数据库，可以支持几乎所有的数据库产
 
 
 
-
-
-
 下载与安装
 DBeaver 社区版可以通过官方网站或者 Github 进行下载。两者都为不同的操作系统提供了安装包或者解压版，可以选择是否需要同时安装 JRE。另外，官方网站还提供了 DBeaver 的 Eclipse 插件，可以在 Eclipse 中进行集成。
 DBeaver 支持中文，安装过程非常简单，不多说，唯一需要注意的是 DBeaver 的运行依赖于 JRE。不出意外，安装完成后运行安装目录下的 dbeaver.exe 可以看到以下界面（Windows 10）：
