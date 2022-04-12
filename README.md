@@ -267,6 +267,7 @@ DBeaver 是一个基于 Java 开发，免费开源的通用数据库管理和开
 [在线免费 PDF 转 word](https://www.xpdf.cn/pdf-to-word)
 需要微信登陆-关注公众号- 免费用户限制 200页
 
+
 官网介绍：超级PDF为您提供在线免费的PDF转Word工具，每天免费三次，单个文件免费最大15M，
 付费用户可以支持300M大小，对于99%的用户，免费额度足以支撑日常使用
 #### 反向词典
@@ -283,7 +284,8 @@ DBeaver 是一个基于 Java 开发，免费开源的通用数据库管理和开
 [谷歌浏览器插件 国内网站之一](https://www.chrome666.com/)
 
 [谷歌浏览器广告拦截插件之一](https://chrome.zzzmh.cn/info?token=cjpalhdlnbpafiamejdnhcphjbkeiagm)
-
+[FireShot 网页截屏](https://chrome.zzzmh.cn/#/search) 后搜索关键词 fireShot 或 直接点击
+[](https://chrome.zzzmh.cn/info?token=mcbpblocgmgfnpjjppndjkmgjaogfceg)
 #### 世界名画博物馆
 [世界名画博物馆](https://gallerix.asia)
 
@@ -468,6 +470,9 @@ public class  ApplicationStartUp implements org.springframework.boot.CommandLine
 #### easyExcel中的注解
 [easyExcel中的注解](https://tech.souyunku.com/?p=26489)
 
+![](图片/easyexcel注解.png)
+[](word文档/easyexcel注解.pdf)
+
 
 TODO 希望把springaop 研究透彻一点。 做一个demo
 项目中有一个 请求参数 请求耗时 的aop。 实现一下
@@ -486,3 +491,9 @@ TODO 希望把springaop 研究透彻一点。 做一个demo
 ## 规范
 
 [git git commit 规范指南](https://www.jianshu.com/p/201bd81e7dc9?utm_source=oschina-app)
+
+
+####  IDEA 代码提交时忽略/跳过 分析代码 analyzing code
+commit栏中 Amend(修改) 右边的 设置齿轮点开，取消勾选对应的即可
+![](图片/IDEA git commit去掉analyze code.png)
+
