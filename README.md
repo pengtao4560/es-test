@@ -1,6 +1,8 @@
 学习 哔哩哔哩尚硅谷 springcloud课程、java8新特性、nginx、linux
 
-未来：redis、mongo、消息队列、mysql进阶、
+redis、mongo、消息队列、mysql进阶
+## markdown文件
+
 ##### markdown文件表情
 
 语法： &#xCODE;    
@@ -26,36 +28,6 @@
     -r 是允许递归删除，当要删除的是文件夹的时候有用
     git rm -r --cached loggers  # -r 是允许递归删除，当要删除的是文件夹的时候有用
 
-##### [maven仓库](https://mvnrepository.com/)
-##### [AnotherRedisDesktopManager redis可视化管理工具 github下载](https://github.com/qishibo/AnotherRedisDesktopManager/releases)
-##### [AnotherRedisDesktopManager redis可视化管理工具 gitee下载](https://gitee.com/qishibo/AnotherRedisDesktopManager/releases)
-github访问慢解决办法：
-
-1. 打开本地hosts文件
-
-windows系统的hosts文件的位置如下：
-C:\Windows\System32\drivers\etc\hosts
-mac/linux系统的hosts文件的位置如下：drivers/etc/hosts
-win+r输入： drivers/etc/hosts
-2. 打开本地hosts文件：
-    增加http://github.global.ssl.fastly.net和http://github.com的映射
-
-获取Github相关网站的ip
-访问https://www.ipaddress.com  ，拉下来，
-找到页面中下方的“IP Address Tools – Quick Links”
-（直接在能看到的搜索框搜索即可）
-分别输入github.global.ssl.fastly.net    和   github.com  ，
-查询ip地址
-将以下配置复制到你的hosts中保存 
-
-上一步查到的ip	github.com
-上一步查到的ip	github.global.ssl.fastly.net
-
-例如
-127.0.0.1	github.com
-127.0.0.1	github.global.ssl.fastly.net
-
-
 ##名词解释：
 SDK （Software Development Kit）
 👍：
@@ -78,46 +50,17 @@ API （Application Programming Interface，应用编程接口）
 
 
 
-
+## redis 学习笔记 finish
+[](学习记录/redis学习笔记/redis.md)
 [redis官网](https://redis.io)
 [redis下载](https://redis.io/download)
 [redis 安装教程](https://www.cnblogs.com/hunanzp/p/12304622.html)
-wget https://download.redis.io/releases/redis-6.2.6.tar.gz
-解压
-改名字 mv redis-6.2.6 redis
-cd redis
-pwd            /usr/local/redis
 
-make
-cd src
-make install
-修改配置文件 redis.conf
-cp /usr/local/redis/redis.conf redis.conf.bak
-vim 
+## linux 学习笔记 finish
+[](学习记录/Linux学习笔记/Linux实用指令.md)
 
-
-##### redis 单机启动
-find / -name redis
-find / -name redis.conf
-
-cd /usr/local/redis
-./bin/redis-server /usr/local/redis/redis.conf
-
-[配置文件参数说明](https://lion-wu.blog.csdn.net/article/details/108019877?spm=1001.2101.3001.6650.13&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-13.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-13.pc_relevant_default&utm_relevant_index=16)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## mysql 学习笔记 （未启动）
+[](学习记录/mysql学习笔记/mysql.md)
 
 ####知识扩展
 ##### BI: 商务智能 (business intelligence)
@@ -210,43 +153,7 @@ POJO(Plain ordinary java object) 简单java对象
 
 ##### BO business Object: 业务对象
 
-claim 索赔
 
-compliance 合规
- 
-ecm
-
-endorsement 保险单附加条款
-
-insurance 保费
-
-longcare 长期护理 长护
-
-comma 逗号
-
-foundation 基金
-
-CorrelationDataDetail 关联数据细节
-
-correlation 相关，相关性
-
-applicant 申请人
-
-province 省
-permanent 永久
-uppercase 大写
-claim 索赔
-
-    Sap 保单会计表
-    payPrivatePrint 打印对私结算单
-    payPublicPrint 打印对公结算单
-    ServisePayment 代理机构手续费录入
-    AssessAudit 考核金返还审批
-    AssessReturn 考核金返还
-
-desensitization 数据脱敏
-tenant 租户，租赁者
-poll
 ##### ConcurrentLinkedQueue
 ```java
 /**
@@ -315,4 +222,278 @@ app_access_token: 应用 授权凭证，开放平台可据此识别调用方的�
 比如获取当前登录应用的用户身份。
 tenant_access_token: 租户 授权凭证，使用该access token，应用将代表公司或者团队执行对应的操作，比如获取一个通讯录用户的信息。
 user_access_token: 用户 授权凭证，使用该access token，应用将代表用户执行对应的操作，比如通过API 创建一篇云文档或者一个日程。
+
+## 常用网址或软件推荐 (java开发相关)
+像quicker  snipaste   网易云音乐，有道词典等这些常用的软件或者开机启动的软件。 记得在对应软件的设置里把所有的快捷键关了（只留自己需要的）。
+不然可能会和一些编辑器(IDEA, vscode, 其他工作软件)的快捷键冲突。
+
+[gitee](https://gitee.com/)
+
+[github](https://github.com/)
+##### maven仓库 [maven仓库](https://mvnrepository.com/)
+#####  redis可视化管理工具 
+[AnotherRedisDesktopManager redis可视化管理工具 github下载](https://github.com/qishibo/AnotherRedisDesktopManager/releases)
+##### [AnotherRedisDesktopManager redis可视化管理工具 gitee下载](https://gitee.com/qishibo/AnotherRedisDesktopManager/releases)
+
+##### 数据库 客户端 DBeaver：
+
+DBeaver 是一个基于 Java 开发，免费开源的通用数据库管理和开发工具，使用非常友好的 ASL 协议。可以通过官方网站或者 Github 进行下载。
+默认的 美化sql 可以 右键 或者 ctrl + shift + f
+
+[dbeaver官方网站 and 下载](https://dbeaver.io)
+
+[dbeaver Github](https://github.com/dbeaver/dbeaver)
+
+[dbeaver Github下载](https://github.com/dbeaver/dbeaver/tags)
+选择download，根据系统版本选择即可
+
+[dbeaver Github下载2022年4月6日 最新win 64版本下载](https://github.com/dbeaver/dbeaver/releases/download/22.0.2/dbeaver-ce-22.0.2-x86_64-setup.exe)
+
+[dbeaver 使用说明](https://mp.weixin.qq.com/s/HgY9Vgz2IGVvDRmi5o_54g)
+
+#### 命名翻译
+[codelf 命名翻译](https://unbug.github.io/codelf/)
+
+## 常用网址或软件推荐 (通用)
+
+#### 截图贴图 snipaste
+[snipaste 截图贴图软件](https://zh.snipaste.com/)
+
+#### windows系统 quicker指尖工具箱   
+[quicker 官网](https://getquicker.net/)
+(推荐截图转文本 本人常用, 鼠标中键呼出)
+
+#### 超级PDF 在线免费 PDF 转 word
+[在线免费 PDF 转 word](https://www.xpdf.cn/pdf-to-word)
+需要微信登陆-关注公众号- 免费用户限制 200页
+
+
+官网介绍：超级PDF为您提供在线免费的PDF转Word工具，每天免费三次，单个文件免费最大15M，
+付费用户可以支持300M大小，对于99%的用户，免费额度足以支撑日常使用
+#### 反向词典
+[反向词典(近义词反义词英汉互译)](https://wantwords.net)
+见到一个不知道啥意思的词，可以复制粘贴到搜索引擎查查，那反过来呢？
+不知道大家碰没碰到过这样的场景，比如话到嘴边却不知道怎么精确用一个词概括，只能感慨一句书到用时方恨少。
+别着急，你可以试试今天这个由清华大学自然语言处理与社会人文计算实验室开发的反向词典（WantWords）。
+
+#### 图片去除水印
+[MAGIC ERASER 魔术橡皮擦](https://www.magiceraser.io/)
+#### 谷歌浏览器插件 
+[谷歌浏览器插件 国内网站之一](https://chrome.zzzmh.cn/info?token=fjbknnledpckpbjcglogolokonffggpc)
+
+[谷歌浏览器插件 国内网站之一](https://www.chrome666.com/)
+
+[谷歌浏览器广告拦截插件之一](https://chrome.zzzmh.cn/info?token=cjpalhdlnbpafiamejdnhcphjbkeiagm)
+[FireShot 网页截屏](https://chrome.zzzmh.cn/#/search) 后搜索关键词 fireShot 或 直接点击
+[](https://chrome.zzzmh.cn/info?token=mcbpblocgmgfnpjjppndjkmgjaogfceg)
+#### 世界名画博物馆
+[世界名画博物馆](https://gallerix.asia)
+
+## 收藏文章
+
+[数据库设计工具 chiner](https://mp.weixin.qq.com/s/Q6AnaEfZHMJCefnx9YqjhQ)
+
+[hutool java工具包-说明文档](https://www.bookstack.cn/read/hutool/a4579b97cf741bcd.md)
+
+[mysql创建索引](https://www.cnblogs.com/sweet521/p/6203360.html)
+    2022年4月7日 多表left join 查询 因为其中一张表(23000+条数据)创建了一个索引。查询速度从 4秒多变为1秒多
+    另一张表 创建了一个索引 从1秒多比变为了 0.2秒多
+
+
+创建索引
+在执行CREATE TABLE语句时可以创建索引，也可以单独用 CREATE INDEX 或 ALTER TABLE 来为表增加索引。
+
+1．ALTER TABLE
+ALTER TABLE用来创建普通索引、UNIQUE 唯一索引或 PRIMARY KEY 主键索引。
+
+ALTER TABLE table_name ADD INDEX index_name (column_list)
+
+ALTER TABLE table_name ADD UNIQUE (column_list)
+
+ALTER TABLE table_name ADD PRIMARY KEY (column_list)
+
+
+其中table_name是要增加索引的表名，column_list指出对哪些列进行索引，多列时各列之间用逗号分隔。索引名index_name可选，缺省时，MySQL将根据第一个索引列赋一个名称。另外，ALTER TABLE允许在单个语句中更改多个表，因此可以在同时创建多个索引。
+
+
+3 索引类型
+在创建索引时，可以规定索引能否包含重复值。如果不包含，则索引应该创建为PRIMARY KEY或UNIQUE索引。对于单列惟一性索引，这保证单列不包含重复的值。
+对于多列惟一性索引，保证多个值的组合不重复。
+
+PRIMARY KEY索引和UNIQUE索引非常类似。事实上，PRIMARY KEY索引仅是一个具有名称PRIMARY的UNIQUE索引。这表示一个表只能包含一个PRIMARY KEY，
+因为一个表中不可能具有两个同名的索引。
+
+下面的SQL语句对students表在sid上添加PRIMARY KEY索引：
+
+ALTER TABLE students ADD PRIMARY KEY (sid)
+
+4.查看索引
+show index from tblname;
+
+
+[提高SQL执行效率的16种方法](https://www.cnblogs.com/xuyatao/p/6738779.html)
+
+项目中优化sql语句执行效率的方法：
+
+    1)尽量选择较小的列
+    2)将where中用的比较频繁的字段建立索引
+    3)select子句中避免使用‘*’
+    4)避免在索引列上使用计算、not in 和<>等操作
+    5)当只需要一行数据的时候使用limit 1
+    6)保证单表数据不超过200W，适时分割表。
+    针对查询较慢的语句，可以使用explain 来分析该语句具体的执行情况。
+------------------------------------------------------------------------------
+    项目中优化sql语句执行效率的方法：
+    1)尽量选择较小的列
+    2)将where中用的比较频繁的字段建立索引
+    3)select子句中避免使用‘*’
+    4)避免在索引列上使用计算、not in 和<>等操作
+    5)当只需要一行数据的时候使用limit 1
+    6)保证单表数据不超过200W，适时分割表。
+    针对查询较慢的语句，可以使用explain 来分析该语句具体的执行情况。
+    ------------------------------------------------------------------------------
+
+    1.尽量不要在where中包含子查询;
+
+    关于时间的查询，尽量不要写成：where to_char(dif_date,’yyyy-mm-dd’)=to_char(’2007-07-01′,’yyyy-mm-dd’);
+
+    2.在过滤条件中，可以过滤掉最大数量记录的条件必须放在where子句的末尾;
+
+    FROM 子句中写在最后的表(基础表，driving table)将被最先处理，在FROM子句中包含多个表的情况下，你必须选择记录条数最少的表作为基础表。如果有三个以上的连接查询，那就需要选择交叉表 (intersection table)作为基础表，交叉表是指那个被其他表所引用的表;
+
+    3.采用绑定变量
+
+    4.在WHERE中尽量不要使用OR
+
+    5.用EXISTS替代IN、用NOT EXISTS替代NOT IN;
+
+    6.避免在索引列上使用计算：WHERE SAL*12>25000;
+
+    7.用IN来替代OR： WHERE LOC_ID=10 OR LOC_ID=15 OR LOC_ID=20
+
+    8.避免在索引列上使用IS NULL和IS NOT NULL;
+
+    9.总是使用索引的第一个列;
+
+    10.用UNION-ALL替代UNION;
+
+    11.避免改变索引列的类型：SELECT…FROM EMP WHERE EMPNO=’123′，由于隐式数据类型转换，to_char(EMPNO)=’123′，因此，将不采用索引，一般在采用字符串拼凑动态SQL语句出现;
+
+    12.’!=’ 将不使用索引;
+
+    13.优化GROUP BY;
+
+    14.避免带有LIKE参数的通配符，LIKE ’4YE%’使用索引，但LIKE ‘%YE’不使用索引
+
+    15. 避免使用困难的正规表达式，例如select * from customer where zipcode like “98___”，即便在zipcode上建立了索引，在这种情况下也还是采用顺序扫描的方式。如果把语句改成select * from customer where zipcode>”98000″，在执行查询时就会利用索引来查询，显然会大大提高速度;
+
+    16.尽量明确的完成SQL语句，尽量少让数据库工作。比如写SELECT语句时，需要把查询的字段明确指出表名。尽量不要使用SELECT *语句。组织SQL语句的时候，尽量按照数据库的习惯进行组织。
+
+[全网最全 | MySQL EXPLAIN 完全解读](https://zhuanlan.zhihu.com/p/281517471)
+
+#### mapstract
+[mapstract 实体类映射](https://www.cnblogs.com/mmzs/p/12735212.html)
+简单的实体类映射可以用 以下三个类的工具方法：
+    org.springframework.beans.BeanUtils
+    org.apache.commons.beanutils.BeanUtils;
+    cn.hutool.core.bean.BeanUtil;
+
+```xml
+   <dependencies>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.4</version>
+        </dependency>
+    
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.0.M2</version>
+        </dependency>
+    </dependencies>
+```
+
+mapstract 介绍：
+[mapstruct Github 地址](https://github.com/mapstruct/mapstruct/)
+[mapstruct 使用例子](https://github.com/mapstruct/mapstruct-examples)
+
+依赖：
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.mapstruct</groupId>
+        <!-- jdk8以下就使用mapstruct -->
+        <artifactId>mapstruct-jdk8</artifactId>
+        <version>1.2.0.Final</version>
+    </dependency>
+    <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct-processor</artifactId>
+        <version>1.2.0.Final</version>
+    </dependency>
+</dependencies>
+   
+```
+
+## Java8使用Stream流实现List列表的查询、统计、排序、分组
+
+[Java8使用Stream流实现List列表的查询、统计、排序、分组](https://blog.csdn.net/pan_junbiao/article/details/105913518)
+
+## java 开发相关 官网
+[stackoverflow](https://stackoverflow.com/)
+[谷歌 google](https://www.google.cn/)
+[IDEA 插件官网](https://plugins.jetbrains.com/)
+[后端架构师技术图谱 github](https://github.com/xingshaocheng/architect-awesome)
+
+[JavaGuide github](https://github.com/Snailclimb/JavaGuide/)
+
+[JavaGuide 在线阅读 ](https://javaguide.cn/home/)
+（推荐谷歌浏览器打开 不支持 edge浏览器的沉浸式阅读（read: url））  
+
+#### SpringBoot/SpringCloud项目 在项目启动时初始化一些 执行代码
+
+[try-with-resources 代替 try catch](https://blog.csdn.net/java8cn/article/details/22761855?spm=1001.2101.3001.6650.5&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-5.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-5.pc_relevant_default&utm_relevant_index=9)
+```java
+// 项目启动完以后执行，可以通过 @Order 控制启动顺序
+@Component
+public class  ApplicationStartUp implements org.springframework.boot.CommandLineRunner {
+    // 重写run 方法。 run方法内部执行即可
+    // 比如 加载字典表等
+    
+}
+```
+
+
+## easyExcel
+
+#### easyExcel中的注解
+[easyExcel中的注解](https://tech.souyunku.com/?p=26489)
+
+![](图片/easyexcel注解.png)
+[](word文档/easyexcel注解.pdf)
+
+
+TODO 希望把springaop 研究透彻一点。 做一个demo
+项目中有一个 请求参数 请求耗时 的aop。 实现一下
+
+
+
+## FIXBUG
+
+[Springboot2.x集成lettuce连接redis集群报超时异常Command timed out after 6 second(s)](https://www.cnblogs.com/zhujiqian/p/14552873.html)
+
+[解决：class path resource [] cannot be resolved to absolute file path](https://blog.csdn.net/qq_37766026/article/details/107089310?spm=1001.2101.3001.6650.11&utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-11.queryctrv2&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-11.queryctrv2&utm_relevant_index=14)
+
+项目构建成jar的形式之后，resources目录中的文件并不是直接存在系统中，而是嵌套在jar文件中。
+
+
+## 规范
+
+[git git commit 规范指南](https://www.jianshu.com/p/201bd81e7dc9?utm_source=oschina-app)
+
+
+####  IDEA 代码提交时忽略/跳过 分析代码 analyzing code
+commit栏中 Amend(修改) 右边的 设置齿轮点开，取消勾选对应的即可
+![](图片/IDEA git commit去掉analyze code.png)
 

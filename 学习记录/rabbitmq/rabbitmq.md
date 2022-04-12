@@ -6,14 +6,15 @@ message 而已，还是一种跨进程的通信机制，用于上下游传递消
 用依赖其他服务。
 
 ### 为什么要用MQ
-1.流量消峰
+##### 1.流量消峰
 
     举个例子，如果订单系统最多能处理一万次订单，这个处理能力应付正常时段的下单时绰绰有余，正
     常时段我们下单一秒后就能返回结果。但是在高峰期，如果有两万次下单操作系统是处理不了的，只能限
     制订单超过一万后不允许用户下单。
 **使用消息队列做缓冲，我们可以取消这个限制，把一秒内下的订单分散成一段时间来处理，这时有些用户可能在下单十几秒后才能收到下单成功的操作，
 但是比不能下单的体验要好。**
-2.应用解耦
+
+##### 2.应用解耦
 
     以电商应用为例，应用中有订单系统、库存系统、物流系统、支付系统。用户创建订单后，如果耦合
     调用库存系统、物流系统、支付系统，任何一个子系统出了故障，都会造成下单操作异常。当转变成基于
@@ -22,7 +23,7 @@ message 而已，还是一种跨进程的通信机制，用于上下游传递消
     系统恢复后，继续处理订单信息即可，中单用户感受不到物流系统的故障，提升系统的可用性。
 ![](图片/消息队列-应用解耦.png)
 
-3.异步处理
+##### 3.异步处理
 
     有些服务间调用是异步的，例如 A 调用 B，B 需要花费很长时间执行，但是 A 需要知道 B 什么时候可
     以执行完，以前一般有两种方式，
@@ -200,12 +201,85 @@ set_permissions [-p <vhostpath>] <user> <conf> <write> <read>
 
 ![](图片/rabbitmq-work queues.png)
 
+启动生产者（也可以先启动消费者。如果报错先启动一下生产者，使队列存在于rabbitmq中。下次就可以先启动消费者/生产者均可）
+```java
+package com.atguigu.rabbitmq.workerqueue;
 
-启动第一个线程
+import com.atguigu.rabbitmq.constant.RabbitmqConstant;
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.Channel;
+
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 生产者 发送大量的消息
+ * 
+ */
+public class ProducerTask01 {
+
+    // 队列名称
+    public static void main(String[] args) throws IOException, TimeoutException {
+
+        Channel channel = RabbitmqUtil.getChannel();
+        // 队列的声明
+        // 需要持久化
+        boolean durable = true;
+        channel.queueDeclare(RabbitmqConstant.QUEUE_NAME, true, false, false, null);
+        // 本次从控制台当中接受信息(控制台来发送消息)
+
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNext()) {
+            String message = scanner.next();
+            /*
+            发送一个消费
+            param
+            1.发送到哪个交换机 ""
+            2.路由的Key值是哪个本次是队列的名称 RabbitmqConstant.QUEUE_NAME
+            3.其它参数信息 null
+            4.发送消息的消息体 message.getBytes()
+            * */
+            channel.basicPublish("", RabbitmqConstant.QUEUE_NAME, null, message.getBytes());
+        }
+    }
+}
+
+```
+启动第一个线程(消费者)
 ```java
 /**
- * @see com.atguigu.rabbitmq.workerqueue.Worker01;
  */
+package com.atguigu.rabbitmq.workerqueue;
+
+import com.atguigu.rabbitmq.constant.RabbitmqConstant;
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.Channel;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * @see com.atguigu.rabbitmq.workerqueue.Worker01;
+ * @author pt
+ * @createdate 2022/3/20 0020
+ * @desc 这是一个工作线程。相当于之前消费者
+ */
+public class Worker01 {
+
+    public static void main(String[] args) throws IOException, TimeoutException {
+
+        Channel channel = RabbitmqUtil.getChannel();
+
+        // 消息的接收
+        System.out.println("C2等待接受消息......");
+        String s = channel.basicConsume(RabbitmqConstant.QUEUE_NAME, true, RabbitmqUtil.getSimpleDeliverCallback(), RabbitmqUtil.getSimpleCancelCallback());
+
+    }
+}
+
+
+
 ```
 
 IDEA edit configurations
@@ -218,19 +292,21 @@ rabbitmq工作队列模式演示：
 ![](图片/rabbitmq-工作队列模式demo演示-轮询.png)
 
 ### 消息应答
-3.2.1. 概念
-消费者完成一个任务可能需要一段时间，如果其中一个消费者处理一个长的任务并仅只完成了部分突然它挂掉了，会发生什么情况。RabbitMQ 一旦向消费者传递了
-一条消息， 便立即将该消息标记为删除。在这种情况下，突然有个消费者挂掉了，我们将丢失正在处理的消息。以及后续 发送给该消费这的消息，因为它无法接收到。
-为了保证消息在发送过程中不丢失，rabbitmq 引入消息应答机制，
+#### 3.2.1. 概念
+
+消费者完成一个任务可能需要一段时间，如果其中一个消费者处理一个长的任务并仅只完成了部分突然它挂掉了，会发生什么情况。RabbitMQ 一旦向消费者
+传递了 一条消息， 便立即将该消息标记为删除。在这种情况下，突然有个消费者挂掉了，我们将丢失正在处理的消息。以及后续 发送给该消费这的消息，
+因为它无法接收到。 为了保证消息在发送过程中不丢失，rabbitmq 引入消息应答机制，
 **消息应答就是:消费者在接收到消息并且处理该消息之后，告诉 rabbitmq 它已经处理了，rabbitmq 可以把该消息删除了。**
 
-3.2.2. 自动应答
-消息发送后立即被认为已经传送成功，这种模式需要在**高吞吐量和数据传输安全性方面做权衡**,因为这种模式如果消息在接收到之前，消费者那边出现连接或者
-channel 关闭，那么消息就丢失了,当然另一方面这种模式消费者那边可以传递过载的消息，没有对传递的消息数量进行限制，
+####  3.2.2. 自动应答
+
+消息发送后立即被认为已经传送成功，这种模式需要在**高吞吐量和数据传输安全性方面做权衡**,因为这种模式如果消息在接收到之前，消费者那边出现
+连接 或者channel 关闭，那么消息就丢失了,当然另一方面这种模式消费者那边可以传递过载的消息，没有对传递的消息数量进行限制，
 当然这样有可能使得消费者这边由于接收太多还来不及处理的消息，导致这些消息的积压，最终使得内存耗尽，最终这些消费者线程被操作系统杀死，
 **所以自动应答这种模式仅适用在消费者可以高效并以某种速率能够处理这些消息的情况下使用**
 
-3.2.3. (手动应答)消息应答的方法
+#### 3.2.3. (手动应答)消息应答的方法
 
 A.Channel.basicAck(用于**肯定确认**)
 RabbitMQ 已知道该消息并且成功的处理消息，可以将其丢弃了
