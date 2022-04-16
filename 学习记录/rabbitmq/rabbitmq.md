@@ -4,7 +4,7 @@ MQ(message queue)，从字面意思上看，本质是个队列，FIFO 先入先�
 message 而已，还是一种跨进程的通信机制，用于上下游传递消息。在互联网架构中，MQ 是一种非常常
 见的上下游“逻辑解耦+物理解耦”的消息通信服务。使用了 MQ 之后，消息发送上游只需要依赖 MQ，不
 用依赖其他服务。
-
+![](图片/img.png)
 ### 为什么要用MQ
 ##### 1.流量消峰
 
@@ -201,85 +201,12 @@ set_permissions [-p <vhostpath>] <user> <conf> <write> <read>
 
 ![](图片/rabbitmq-work queues.png)
 
-启动生产者（也可以先启动消费者。如果报错先启动一下生产者，使队列存在于rabbitmq中。下次就可以先启动消费者/生产者均可）
+
+启动第一个线程
 ```java
-package com.atguigu.rabbitmq.workerqueue;
-
-import com.atguigu.rabbitmq.constant.RabbitmqConstant;
-import com.atguigu.rabbitmq.util.RabbitmqUtil;
-import com.rabbitmq.client.Channel;
-
-import java.io.IOException;
-import java.util.Scanner;
-import java.util.concurrent.TimeoutException;
-
-/**
- * 生产者 发送大量的消息
- * 
- */
-public class ProducerTask01 {
-
-    // 队列名称
-    public static void main(String[] args) throws IOException, TimeoutException {
-
-        Channel channel = RabbitmqUtil.getChannel();
-        // 队列的声明
-        // 需要持久化
-        boolean durable = true;
-        channel.queueDeclare(RabbitmqConstant.QUEUE_NAME, true, false, false, null);
-        // 本次从控制台当中接受信息(控制台来发送消息)
-
-        Scanner scanner = new Scanner(System.in);
-        while (scanner.hasNext()) {
-            String message = scanner.next();
-            /*
-            发送一个消费
-            param
-            1.发送到哪个交换机 ""
-            2.路由的Key值是哪个本次是队列的名称 RabbitmqConstant.QUEUE_NAME
-            3.其它参数信息 null
-            4.发送消息的消息体 message.getBytes()
-            * */
-            channel.basicPublish("", RabbitmqConstant.QUEUE_NAME, null, message.getBytes());
-        }
-    }
-}
-
-```
-启动第一个线程(消费者)
-```java
-/**
- */
-package com.atguigu.rabbitmq.workerqueue;
-
-import com.atguigu.rabbitmq.constant.RabbitmqConstant;
-import com.atguigu.rabbitmq.util.RabbitmqUtil;
-import com.rabbitmq.client.Channel;
-
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
-
 /**
  * @see com.atguigu.rabbitmq.workerqueue.Worker01;
- * @author pt
- * @createdate 2022/3/20 0020
- * @desc 这是一个工作线程。相当于之前消费者
  */
-public class Worker01 {
-
-    public static void main(String[] args) throws IOException, TimeoutException {
-
-        Channel channel = RabbitmqUtil.getChannel();
-
-        // 消息的接收
-        System.out.println("C2等待接受消息......");
-        String s = channel.basicConsume(RabbitmqConstant.QUEUE_NAME, true, RabbitmqUtil.getSimpleDeliverCallback(), RabbitmqUtil.getSimpleCancelCallback());
-
-    }
-}
-
-
-
 ```
 
 IDEA edit configurations
@@ -292,21 +219,19 @@ rabbitmq工作队列模式演示：
 ![](图片/rabbitmq-工作队列模式demo演示-轮询.png)
 
 ### 消息应答
-#### 3.2.1. 概念
-
-消费者完成一个任务可能需要一段时间，如果其中一个消费者处理一个长的任务并仅只完成了部分突然它挂掉了，会发生什么情况。RabbitMQ 一旦向消费者
-传递了 一条消息， 便立即将该消息标记为删除。在这种情况下，突然有个消费者挂掉了，我们将丢失正在处理的消息。以及后续 发送给该消费这的消息，
-因为它无法接收到。 为了保证消息在发送过程中不丢失，rabbitmq 引入消息应答机制，
+3.2.1. 概念
+消费者完成一个任务可能需要一段时间，如果其中一个消费者处理一个长的任务并仅只完成了部分突然它挂掉了，会发生什么情况。RabbitMQ 一旦向消费者传递了
+一条消息， 便立即将该消息标记为删除。在这种情况下，突然有个消费者挂掉了，我们将丢失正在处理的消息。以及后续 发送给该消费这的消息，因为它无法接收到。
+为了保证消息在发送过程中不丢失，rabbitmq 引入消息应答机制，
 **消息应答就是:消费者在接收到消息并且处理该消息之后，告诉 rabbitmq 它已经处理了，rabbitmq 可以把该消息删除了。**
 
-####  3.2.2. 自动应答
-
-消息发送后立即被认为已经传送成功，这种模式需要在**高吞吐量和数据传输安全性方面做权衡**,因为这种模式如果消息在接收到之前，消费者那边出现
-连接 或者channel 关闭，那么消息就丢失了,当然另一方面这种模式消费者那边可以传递过载的消息，没有对传递的消息数量进行限制，
+3.2.2. 自动应答
+消息发送后立即被认为已经传送成功，这种模式需要在**高吞吐量和数据传输安全性方面做权衡**,因为这种模式如果消息在接收到之前，消费者那边出现连接或者
+channel 关闭，那么消息就丢失了,当然另一方面这种模式消费者那边可以传递过载的消息，没有对传递的消息数量进行限制，
 当然这样有可能使得消费者这边由于接收太多还来不及处理的消息，导致这些消息的积压，最终使得内存耗尽，最终这些消费者线程被操作系统杀死，
 **所以自动应答这种模式仅适用在消费者可以高效并以某种速率能够处理这些消息的情况下使用**
 
-#### 3.2.3. (手动应答)消息应答的方法
+3.2.3. (手动应答)消息应答的方法
 
 A.Channel.basicAck(用于**肯定确认**)
 RabbitMQ 已知道该消息并且成功的处理消息，可以将其丢弃了
@@ -1200,3 +1125,37 @@ public class ConfirmMessage {
 
 异步处理：（最好，性价比最高的，企业开发中推荐使用异步处理）
 最佳性能和资源使用，在出现错误的情况下可以很好地控制，但是实现起来稍微难些
+
+### 5. 交换机 Exchanges
+
+在上一节中，我们创建了一个工作队列。我们假设的是工作队列背后，每个任务都恰好交付给一个消费者(工作进程)。
+在这一部分中，我们将做一些完全不同的事情：
+**将消息传达给多个消费者。这种模式称为 ”发布/订阅”**.
+
+为了说明这种模式，我们将构建一个简单的日志系统。它将由两个程序组成:第一个程序将发出日志消息，第二个程序是消费者。
+其中我们会启动两个消费者，其中一个消费者接收到消息后把日志存储在磁盘，另外一个消费者接收到消息后把消息打印在屏幕上，
+事实上第一个程序发出的日志消息将广播给所有消费者者
+原则：一个队列中的消息只能被消费一次 (两个队列中的消息各自只能被消费一次)
+##### 5.1.1. Exchanges 概念
+RabbitMQ 消息传递模型的核心思想是: **生产者生产的消息从不会直接发送到队列**。实际上，通常生产者甚至都不知道这些消息传递传递到了哪些队列中。
+
+相反，**生产者只能将消息发送到交换机(exchange)**，**交换机工作的内容非常简单，一方面它接收来自生产者的消息，另一方面将它们推入队列。**
+交换机必须确切知道如何处理收到的消息。是应该把这些消息放到**特定队列**还是说把他们到**许多队列中**还是说应该**丢弃**它们。这就的**由交换机的类型来决定**
+
+##### 5.1.2 Exchanges 的类型
+总共有以下类型：
+直接(direct), 主题(topic) ,标题(headers) , 扇出(fanout)
+
+##### 5.1.3. 无名 exchange
+前面部分我们对 exchange 一无所知，但仍然能够将消息发送到队列。之前能实现的原因是因为我们使用的是默认交换(Exchange: AMQP default)，我们通过空字符串(“”)进行标识。
+channel.basicPublish("", "hello", null, message.getBytes())
+第一个参数是交换机的名称。空字符串表示默认或无名称交换机：消息能路由发送到队列中其实是由 routingKey(bindingkey)绑定 key 指定的，如果它存在的话
+
+#### 5.2 临时队列
+
+之前的章节我们使用的是具有特定名称的队列(还记得 hello 和 ack_queue 吗？)。队列的名称我们来说至关重要-我们需要指定我们的消费者去消费哪个队列的消息。
+每当我们连接到 Rabbit 时，我们都需要一个全新的空队列，为此我们可以创建一个**具有随机名称的队列**，或者能让服务器为我们选择一个随机队列名称那就更好了。
+其次**一旦我们断开了消费者的连接，队列将被自动删除。**
+创建临时队列的方式如下:
+String queueName = channel.queueDeclare().getQueue();
+创建出来之后长成这样:
