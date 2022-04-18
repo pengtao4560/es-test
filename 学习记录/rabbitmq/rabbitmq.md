@@ -4,7 +4,6 @@ MQ(message queue)，从字面意思上看，本质是个队列，FIFO 先入先�
 message 而已，还是一种跨进程的通信机制，用于上下游传递消息。在互联网架构中，MQ 是一种非常常
 见的上下游“逻辑解耦+物理解耦”的消息通信服务。使用了 MQ 之后，消息发送上游只需要依赖 MQ，不
 用依赖其他服务。
-![](图片/img.png)
 ### 为什么要用MQ
 ##### 1.流量消峰
 
@@ -1135,27 +1134,202 @@ public class ConfirmMessage {
 为了说明这种模式，我们将构建一个简单的日志系统。它将由两个程序组成:第一个程序将发出日志消息，第二个程序是消费者。
 其中我们会启动两个消费者，其中一个消费者接收到消息后把日志存储在磁盘，另外一个消费者接收到消息后把消息打印在屏幕上，
 事实上第一个程序发出的日志消息将广播给所有消费者者
-原则：一个队列中的消息只能被消费一次 (两个队列中的消息各自只能被消费一次)
+**原则：一个队列中的消息只能被消费一次** (两个队列中的消息各自只能被消费一次)
+
+![img.png](图片/发布订阅模式.png)
+
 ##### 5.1.1. Exchanges 概念
 RabbitMQ 消息传递模型的核心思想是: **生产者生产的消息从不会直接发送到队列**。实际上，通常生产者甚至都不知道这些消息传递传递到了哪些队列中。
 
 相反，**生产者只能将消息发送到交换机(exchange)**，**交换机工作的内容非常简单，一方面它接收来自生产者的消息，另一方面将它们推入队列。**
 交换机必须确切知道如何处理收到的消息。是应该把这些消息放到**特定队列**还是说把他们到**许多队列中**还是说应该**丢弃**它们。这就的**由交换机的类型来决定**
 
-##### 5.1.2 Exchanges 的类型
+##### 5.1.2 Exchanges 交换机的类型
 总共有以下类型：
-直接(direct), 主题(topic) ,标题(headers) , 扇出(fanout)
+**直接(direct), 主题(topic) ,标题(headers) , 扇出(fanout)**
 
-##### 5.1.3. 无名 exchange
-前面部分我们对 exchange 一无所知，但仍然能够将消息发送到队列。之前能实现的原因是因为我们使用的是默认交换(Exchange: AMQP default)，我们通过空字符串(“”)进行标识。
-channel.basicPublish("", "hello", null, message.getBytes())
+##### 5.1.3. 无名 （默认类型交换机）exchange：AMQP default
+前面部分我们对 exchange 一无所知，但仍然能够将消息发送到队列。之前能实现的原因是因为我们使用的是**默认交换**(Exchange: AMQP default)，我们通过空字符串(“”)进行标识。
+
+    channel.basicPublish("", "hello", null, message.getBytes())
+
 第一个参数是交换机的名称。空字符串表示默认或无名称交换机：消息能路由发送到队列中其实是由 routingKey(bindingkey)绑定 key 指定的，如果它存在的话
 
-#### 5.2 临时队列
+#### 5.2 临时队列 （不带持久化功能的队列， Features 无 D）
 
 之前的章节我们使用的是具有特定名称的队列(还记得 hello 和 ack_queue 吗？)。队列的名称我们来说至关重要-我们需要指定我们的消费者去消费哪个队列的消息。
 每当我们连接到 Rabbit 时，我们都需要一个全新的空队列，为此我们可以创建一个**具有随机名称的队列**，或者能让服务器为我们选择一个随机队列名称那就更好了。
 其次**一旦我们断开了消费者的连接，队列将被自动删除。**
 创建临时队列的方式如下:
-String queueName = channel.queueDeclare().getQueue();
+
+    String queueName = channel.queueDeclare().getQueue();
 创建出来之后长成这样:
+
+![img.png](图片/临时队列.png)
+
+Durable持久化
+#### 5.3 绑定 
+
+binding 其实是 exchange 和 queue 之间的桥梁，它告诉我们 exchange 和那个队列进行了绑定关系。
+
+![img.png](图片/创建队列.png)
+
+![img_1.png](图片/创建交换机.png)
+
+![img.png](图片/队列和交换机绑定.png)
+
+#### 5.4 Fanout 扇出
+
+Fanout 这种类型非常简单。正如从名称中猜到的那样，它是将接收到的所有消息广播到它知道的所有队列中。
+系统中默认有些 exchange 类型
+
+##### 5.4.2 Fanout 实战
+
+```java
+package com.atguigu.rabbitmq.fanout;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.CancelCallback;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.DeliverCallback;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 扇出模式实战-  消息接受
+ */
+public class ReceiveLog1 {
+
+    private static String EXCHANGENAME = "logs";
+
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Channel channel = RabbitmqUtil.getChannel();
+        // 声明一个交换机
+        channel.exchangeDeclare(EXCHANGENAME, "fanout");
+        // 声明一个 临时队列
+        /**
+         * 生成一个临时队列，队列的名称是随机的
+         * 当消费者断开与队列的连接的时候，队列就自动删除
+         */
+        String queueName = channel.queueDeclare().getQueue();
+        /**
+         * 绑定交换机与队列
+         */
+        AMQP.Queue.BindOk bindOk = channel.queueBind(queueName, EXCHANGENAME, "");
+        System.out.println("ReceiveLog1 等待接受消息，把接收到的消息打印在屏幕上......");
+
+        DeliverCallback de = (consumerTag, message) -> {
+            System.out.println("ReceiveLog1 控制台打印接收到的消息：" + new String(message.getBody(), "UTF-8"));
+        };
+        CancelCallback can = null;
+        channel.basicConsume(queueName, true, de, can);
+
+    }
+}
+
+```
+
+```java
+package com.atguigu.rabbitmq.fanout;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.CancelCallback;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.DeliverCallback;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 扇出模式实战-  消息接受
+ */
+public class ReceiveLog2 {
+
+    private static String EXCHANGENAME = "logs";
+
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Channel channel = RabbitmqUtil.getChannel();
+        // 声明一个交换机
+        channel.exchangeDeclare(EXCHANGENAME, "fanout");
+        // 声明一个 临时队列
+        /**
+         * 生成一个临时队列，队列的名称是随机的
+         * 当消费者断开与队列的连接的时候，队列就自动删除
+         */
+        String queueName = channel.queueDeclare().getQueue();
+        /**
+         * 绑定交换机与队列
+         */
+        AMQP.Queue.BindOk bindOk = channel.queueBind(queueName, EXCHANGENAME, "");
+        System.out.println("ReceiveLog2 等待接受消息，把接收到的消息打印在屏幕上......");
+
+        DeliverCallback de = (consumerTag, message) -> {
+            System.out.println("ReceiveLog2 控制台打印接收到的消息：" + new String(message.getBody(), "UTF-8"));
+        };
+        CancelCallback can = null;
+        channel.basicConsume(queueName, true, de, can);
+
+    }
+}
+
+```
+
+```java
+package com.atguigu.rabbitmq.fanout;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.Channel;
+
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 生产者
+ *
+ * 发消息 给 交换机
+ */
+public class EmitLog {
+
+    private static String EXCHANGENAME = "logs";
+
+    public static void main(String[] args) throws IOException, TimeoutException {
+
+        Channel channel = RabbitmqUtil.getChannel();
+        channel.exchangeDeclare(EXCHANGENAME, "fanout");
+
+        Scanner scanner = new Scanner(System.in);
+
+        while (scanner.hasNext()) {
+            String message = scanner.next();
+            channel.basicPublish(EXCHANGENAME, "", null, message.getBytes("UTF-8"));
+            System.out.println("生产者发出消息：" + message);
+
+        }
+    }
+}
+
+```
+
+演示结果：
+![img.png](图片/扇出模式演示结果.png)
+
+#### 5.5 Direct exchange 直接（路由）交换机
+
+5.5.1.回顾
+
+在上一节中，我们构建了一个简单的日志记录系统。我们能够向许多接收者广播日志消息。在本节我们将向其中添加一些特别的功能-比方说我们只让某个消费者订阅发布的部分消息。例如我们只把严重错误消息定向存储到日志文件(以节省磁盘空间)，同时仍然能够在控制台上打印所有日志消息。
+我们再次来回顾一下什么是 bindings，绑定是交换机和队列之间的桥梁关系。也可以这么理解： 队列只对它绑定的交换机的消息感兴趣。绑定用参数：routingKey 来表示也可称该参数为 binding key， 创建绑定我们用代码:channel.queueBind(queueName, EXCHANGE_NAME, "routingKey");绑定之后的意义由其交换类型决定。
+
+5.5.2.Direct exchange 介绍
+
+上一节中的我们的日志系统将所有消息广播给所有消费者，对此我们想做一些改变，例如我们希望将日志消息写入磁盘的程序仅接收严重错误(errros)，而不存储哪些警告(warning)或信息(info)日志消息避免浪费磁盘空间。Fanout 这种交换类型并不能给我们带来很大的灵活性-它只能进行无意识的广播，在这里我们将使用 direct 这种类型来进行替换，这种类型的工作方式是，消息只去到它绑定的routingKey 队列中去。
+
+![img_2.png](图片/直接交换机.png)
+
+在上面这张图中，我们可以看到 X 绑定了两个队列，绑定类型是 direct。队列 Q1 绑定键为 orange， 队列 Q2 绑定键有两个:一个绑定键为 black，另一个绑定键为 green.
+在这种绑定情况下，生产者发布消息到 exchange 上，绑定键为 orange 的消息会被发布到队列
+Q1。绑定键为 blackgreen 和的消息会被发布到队列 Q2，其他消息类型的消息将被丢弃。
