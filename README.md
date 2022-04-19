@@ -282,7 +282,7 @@ DBeaver 是一个基于 Java 开发，免费开源的通用数据库管理和开
 [谷歌浏览器插件 国内网站之一](https://chrome.zzzmh.cn/info?token=fjbknnledpckpbjcglogolokonffggpc)
 
 [谷歌浏览器插件 国内网站之一](https://www.chrome666.com/)
-
+[谷歌浏览器插件 简悦 沉浸式阅读](https://chrome.zzzmh.cn/info?token=ijllcpnolfcooahcekpamkbidhejabll)
 [谷歌浏览器广告拦截插件之一](https://chrome.zzzmh.cn/info?token=cjpalhdlnbpafiamejdnhcphjbkeiagm)
 [FireShot 网页截屏](https://chrome.zzzmh.cn/#/search) 后搜索关键词 fireShot 或 直接点击
 [](https://chrome.zzzmh.cn/info?token=mcbpblocgmgfnpjjppndjkmgjaogfceg)
@@ -292,12 +292,14 @@ DBeaver 是一个基于 Java 开发，免费开源的通用数据库管理和开
 ## 收藏文章
 
 [数据库设计工具 chiner](https://mp.weixin.qq.com/s/Q6AnaEfZHMJCefnx9YqjhQ)
-
+[hutool 官网](https://hutool.cn/)
+[hutool github](https://github.com/dromara/hutool)
 [hutool java工具包-说明文档](https://www.bookstack.cn/read/hutool/a4579b97cf741bcd.md)
+[hutool java工具包-说明文档](https://www.bookstack.cn/read/hutool-5.6.0-zh/9ac4d3d03444603a.md)
 
 [mysql创建索引](https://www.cnblogs.com/sweet521/p/6203360.html)
-    2022年4月7日 多表left join 查询 因为其中一张表(23000+条数据)创建了一个索引。查询速度从 4秒多变为1秒多
-    另一张表 创建了一个索引 从1秒多比变为了 0.2秒多
+    2022年4月7日 有一条sql语句用了 多表left join 查询  因为其中一张表(23000+条数据)创建了一个索引。查询速度从 4秒多变为1秒多
+    其中的另一张表 创建了一个索引 查询速度从1秒多比变为了 0.2秒多
 
 
 创建索引
@@ -393,10 +395,15 @@ show index from tblname;
 
 #### mapstract
 [mapstract 实体类映射](https://www.cnblogs.com/mmzs/p/12735212.html)
-简单的实体类映射可以用 以下三个类的工具方法：
+#####   简单的实体类映射
+
+可以用 以下三个类的工具方法：
+
     org.springframework.beans.BeanUtils
     org.apache.commons.beanutils.BeanUtils;
     cn.hutool.core.bean.BeanUtil;
+
+需要引入的依赖：
 
 ```xml
    <dependencies>
@@ -414,11 +421,12 @@ show index from tblname;
     </dependencies>
 ```
 
-mapstract 介绍：
+##### mapstract 介绍：
 [mapstruct Github 地址](https://github.com/mapstruct/mapstruct/)
+
 [mapstruct 使用例子](https://github.com/mapstruct/mapstruct-examples)
 
-依赖：
+需要引入的依赖：
 ```xml
 <dependencies>
     <dependency>
@@ -497,3 +505,6 @@ TODO 希望把springaop 研究透彻一点。 做一个demo
 commit栏中 Amend(修改) 右边的 设置齿轮点开，取消勾选对应的即可
 ![](图片/IDEA git commit去掉analyze code.png)
 
+IDEA 序列化提示
+
+![img_1.png](图片/IDEA序列化提示设置.png)
