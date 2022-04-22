@@ -1319,12 +1319,12 @@ public class EmitLog {
 
 #### 5.5 Direct exchange 直接（路由）交换机
 
-5.5.1.回顾
+##### 5.5.1.回顾
 
 在上一节中，我们构建了一个简单的日志记录系统。我们能够向许多接收者广播日志消息。在本节我们将向其中添加一些特别的功能-比方说我们只让某个消费者订阅发布的部分消息。例如我们只把严重错误消息定向存储到日志文件(以节省磁盘空间)，同时仍然能够在控制台上打印所有日志消息。
 我们再次来回顾一下什么是 bindings，绑定是交换机和队列之间的桥梁关系。也可以这么理解： 队列只对它绑定的交换机的消息感兴趣。绑定用参数：routingKey 来表示也可称该参数为 binding key， 创建绑定我们用代码:channel.queueBind(queueName, EXCHANGE_NAME, "routingKey");绑定之后的意义由其交换类型决定。
 
-5.5.2.Direct exchange 介绍
+##### 5.5.2.Direct exchange 介绍
 
 上一节中的我们的日志系统将所有消息广播给所有消费者，对此我们想做一些改变，例如我们希望将日志消息写入磁盘的程序仅接收严重错误(errros)，而不存储哪些警告(warning)或信息(info)日志消息避免浪费磁盘空间。Fanout 这种交换类型并不能给我们带来很大的灵活性-它只能进行无意识的广播，在这里我们将使用 direct 这种类型来进行替换，这种类型的工作方式是，消息只去到它绑定的routingKey 队列中去。
 
@@ -1333,3 +1333,189 @@ public class EmitLog {
 在上面这张图中，我们可以看到 X 绑定了两个队列，绑定类型是 direct。队列 Q1 绑定键为 orange， 队列 Q2 绑定键有两个:一个绑定键为 black，另一个绑定键为 green.
 在这种绑定情况下，生产者发布消息到 exchange 上，绑定键为 orange 的消息会被发布到队列
 Q1。绑定键为 blackgreen 和的消息会被发布到队列 Q2，其他消息类型的消息将被丢弃。
+
+```java
+package com.atguigu.rabbitmq.direct;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.BuiltinExchangeType;
+import com.rabbitmq.client.CancelCallback;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.DeliverCallback;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+/**
+ *
+ */
+public class ReceliveLogsDirect01 {
+
+    public static final String EXCHANGENAME = "direct_logs";
+
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Channel channel = RabbitmqUtil.getChannel();
+        // 声明一个交换机
+        channel.exchangeDeclare(EXCHANGENAME, BuiltinExchangeType.DIRECT);
+
+        String queueName = "console";
+        channel.queueDeclare(queueName, false, false, false, null);
+
+        channel.queueBind(queueName, EXCHANGENAME, "info");
+        channel.queueBind(queueName, EXCHANGENAME, "warning");
+
+        DeliverCallback de = (consumerTag, message) -> {
+            System.out.println("ReceliveLogsDirect01 控制台打印接收到的消息：" + new String(message.getBody(), "UTF-8"));
+        };
+        CancelCallback cancel = null;
+        channel.basicConsume(queueName, true, de, cancel);
+    }
+}
+
+```
+
+```java
+package com.atguigu.rabbitmq.direct;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.BuiltinExchangeType;
+import com.rabbitmq.client.CancelCallback;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.DeliverCallback;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+/**
+ *
+ */
+public class ReceliveLogsDirect02 {
+
+    public static final String EXCHANGENAME = "direct_logs";
+
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Channel channel = RabbitmqUtil.getChannel();
+        // 声明一个交换机
+        channel.exchangeDeclare(EXCHANGENAME, BuiltinExchangeType.DIRECT);
+
+        String queueName = "disk";
+        channel.queueDeclare(queueName, false, false, false, null);
+
+        channel.queueBind(queueName, EXCHANGENAME, "error");
+
+        DeliverCallback de = (consumerTag, message) -> {
+            System.out.println("ReceliveLogsDirect02 控制台打印接收到的消息：" + new String(message.getBody(), "UTF-8"));
+        };
+        CancelCallback cancel = consumerTag -> {};
+        channel.basicConsume(queueName, true, de, cancel);
+    }
+}
+
+```
+
+```java
+package com.atguigu.rabbitmq.direct;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.Channel;
+
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 生产者
+ *
+ * 发消息 给 交换机
+ */
+public class DirectLog {
+
+    private static String EXCHANGENAME = "direct_logs";
+
+    public static void main(String[] args) throws IOException, TimeoutException {
+
+        Channel channel = RabbitmqUtil.getChannel();
+
+        Scanner scanner = new Scanner(System.in);
+
+        while (scanner.hasNext()) {
+            String message = scanner.next();
+            channel.basicPublish(EXCHANGENAME, "info", null, message.getBytes("UTF-8"));
+            channel.basicPublish(EXCHANGENAME, "warning", null, message.getBytes("UTF-8"));
+            channel.basicPublish(EXCHANGENAME, "error", null, message.getBytes("UTF-8"));
+            System.out.println("生产者发出消息：" + message);
+
+        }
+    }
+}
+
+```
+
+想发给谁取决于 routing key
+
+## 主题交换机 Topics
+
+在上一个小节中，改进了日志记录系统。我们没有使用只能进行随意广播的 fanout 交换机，而是使用了 direct 交换机，从而有能实现有选择性地接收日志。
+
+尽管使用direct 交换机改进了我们的系统，但是它仍然存在局限性-比方说我们想接收的日志类型有info.base 和 info.advantage，某个队列只想 info.base 的消息，
+那这个时候direct 就办不到了。这个时候就只能使用 topic 类型
+### 5.6.2.Topic 的要求
+
+**发送到类型是 topic 交换机的消息的 routing_key 不能随意写，必须满足一定的要求，它必须是一个单词列表，以点号分隔开**。这些单词可以是任意单词，
+比如说："stock.usd.nyse", "nyse.vmw", "quick.orange.rabbit".这种类型的。当然这个单词列表最多不能超过 255 个字节。
+在这个规则列表中，其中有两个替换符是需要注意的
+
+    *(星号)可以代替一个单词
+    #(井号)可以替代零个或多个单词
+
+#### 5.6.3.Topic 匹配案例
+下图绑定关系如下
+Q1-->绑定的是
+中间带 orange 带 3 个单词的字符串(*.orange.*)
+Q2-->绑定的是
+最后一个单词是 rabbit 的 3 个单词(*.*.rabbit) 第一个单词是 lazy 的多个单词(lazy.#)
+
+![img.png](Topic匹配案例.png)
+
+
+上图是一个队列绑定关系图，他们之间数据接收情况如下：
+
+    quick.orange.rabbit	被队列 Q1Q2 接收到
+    lazy.orange.elephant	被队列 Q1Q2 接收到
+    
+    quick.orange.fox	被队列 Q1 接收到
+    lazy.brown.fox	被队列 Q2 接收到
+    lazy.pink.rabbit	虽然满足两个绑定但只被队列 Q2 接收一次
+    quick.brown.fox	不匹配任何绑定不会被任何队列接收到会被丢弃
+    quick.orange.male.rabbit	是四个单词不匹配任何绑定会被丢弃
+    lazy.orange.male.rabbit	是四个单词但匹配 Q2
+
+当队列绑定关系是下列这种情况时需要引起注意
+
+    当一个队列绑定键是#,那么这个队列将接收所有数据，就有点像 fanout 了
+    如果队列绑定键当中没有#和*出现，那么该队列绑定类型就是 direct 了
+
+主题交换机的功能是最强大的，因为它包含了fanout 扇出交换机和 direct直连交换机
+
+**交换机枚举类型：**
+```java
+package com.rabbitmq.client;
+
+/**
+ * Enum for built-in exchange types.
+ */
+public enum BuiltinExchangeType {
+
+    DIRECT("direct"), FANOUT("fanout"), TOPIC("topic"), HEADERS("headers");
+
+    private final String type;
+
+    BuiltinExchangeType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+}
+```

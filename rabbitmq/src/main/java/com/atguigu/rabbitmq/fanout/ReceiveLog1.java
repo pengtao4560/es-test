@@ -2,6 +2,7 @@ package com.atguigu.rabbitmq.fanout;
 
 import com.atguigu.rabbitmq.util.RabbitmqUtil;
 import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.CancelCallback;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DeliverCallback;
@@ -19,7 +20,7 @@ public class ReceiveLog1 {
     public static void main(String[] args) throws IOException, TimeoutException {
         Channel channel = RabbitmqUtil.getChannel();
         // 声明一个交换机
-        channel.exchangeDeclare(EXCHANGENAME, "fanout");
+        channel.exchangeDeclare(EXCHANGENAME, BuiltinExchangeType.FANOUT);
         // 声明一个 临时队列
         /**
          * 生成一个临时队列，队列的名称是随机的
