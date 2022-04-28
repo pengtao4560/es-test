@@ -372,13 +372,13 @@ public class StreamAPITest {
      */
     public static List<Employee> getEmployeeList() {
         List<Employee> userList = new ArrayList<Employee>();
-        userList.add(new Employee(1, "小王", "男", 32, "研发部", BigDecimal.valueOf(11600), Status.BUSY));
-        userList.add(new Employee(2, "小王", "男", 33, "财务部", BigDecimal.valueOf(11600), Status.FREE));
-        userList.add(new Employee(3, "小张", "男", 30, "财务部", BigDecimal.valueOf(11800), Status.BUSY));
-        userList.add(new Employee(4, "小李", "女", 20, "人事部", BigDecimal.valueOf(11700), Status.VOCATION));
-        userList.add(new Employee(5, "小吴", "男", 38, "研发部", BigDecimal.valueOf(11500), Status.BUSY));
-        userList.add(new Employee(6, "小崔", "女", 25, "财务部", BigDecimal.valueOf(11200), Status.VOCATION));
-        userList.add(new Employee(7, "小崔", "女", 25, "财务部", BigDecimal.valueOf(11200), Status.FREE));
+        userList.add(new Employee(1, "小王", "男", 32, "研发部", BigDecimal.valueOf(11600), Employee.Status.BUSY));
+        userList.add(new Employee(2, "小王", "男", 33, "财务部", BigDecimal.valueOf(11600), Employee.Status.FREE));
+        userList.add(new Employee(3, "小张", "男", 30, "财务部", BigDecimal.valueOf(11800), Employee.Status.BUSY));
+        userList.add(new Employee(4, "小李", "女", 20, "人事部", BigDecimal.valueOf(11700), Employee.Status.VOCATION));
+        userList.add(new Employee(5, "小吴", "男", 38, "研发部", BigDecimal.valueOf(11500), Employee.Status.BUSY));
+        userList.add(new Employee(6, "小崔", "女", 25, "财务部", BigDecimal.valueOf(11200), Employee.Status.VOCATION));
+        userList.add(new Employee(7, "小崔", "女", 25, "财务部", BigDecimal.valueOf(11200), Employee.Status.FREE));
         return userList;
     }
 }

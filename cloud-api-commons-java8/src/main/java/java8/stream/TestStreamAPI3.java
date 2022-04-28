@@ -112,7 +112,7 @@ public class TestStreamAPI3 {
     //多级分组
     @Test
     public void test6(){
-        Map<Status, Map<String, List<Employee>>> map = EMPLOYEE_LIST.stream()
+        Map<Employee.Status, Map<String, List<Employee>>> map = EMPLOYEE_LIST.stream()
                 .collect(Collectors.groupingBy(Employee::getStatus, Collectors.groupingBy((e) -> {
                     if(e.getAge() >= 60)
                         return "老年";

@@ -54,8 +54,8 @@ public class Employee {
         this.salary = salary;
         this.status = status;
     }
-}
-/** 状态枚举 */
-enum Status {
-    FREE, BUSY, VOCATION;
+    /** 状态枚举 */
+    public static enum Status {
+        FREE, BUSY, VOCATION;
+    }
 }
