@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 死信队列 消费者1
@@ -47,7 +48,7 @@ public class Consumer01 {
         // 设置死信RoutingKey
         arguments.put("x-dead-letter-routing-key", "lisi");
         // 设置正常队列的长度的限制
-        arguments.put("x-max-length", 6);
+        // arguments.put("x-max-length", 6);
 
         // 声明普通队列
         channel.queueDelete(NORMAL_QUEUE);
@@ -68,12 +69,22 @@ public class Consumer01 {
 
         DeliverCallback deliverCallback =  (consumerTag, message) -> {
             String messageStr = new String(message.getBody(), "UTF-8");
-            log.info("Consumer01 接收到消息 {}", messageStr);
+            if (Objects.equals("info5", messageStr)) {
+                log.info("Consumer01 拒绝接收消息 {} 此消息被拒绝", messageStr);
+                channel.basicReject(message.getEnvelope().getDeliveryTag(), false); //requeue 消息是否重新放回原队列
+            } else {
+
+                log.info("Consumer01 接收到消息 {}", messageStr);
+                channel.basicAck(message.getEnvelope().getDeliveryTag(), false);
+            }
         };
 
         CancelCallback cancelCallback = (consumerTag) -> {
 
         };
-        channel.basicConsume(NORMAL_QUEUE, true, deliverCallback, cancelCallback);
+        // 自动应答
+        // channel.basicConsume(NORMAL_QUEUE, true, deliverCallback, cancelCallback);
+        //开启手动应答
+        channel.basicConsume(NORMAL_QUEUE, false, deliverCallback, cancelCallback);
     }
 }
