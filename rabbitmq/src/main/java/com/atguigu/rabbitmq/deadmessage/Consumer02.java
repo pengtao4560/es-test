@@ -12,19 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Consumer02 {
 
-    //普通交换机名称
-    private static final String NORMAL_EXCHANGE = "normal_exchange";
-    //死信交换机名称
-    private static final String DEAD_EXCHANGE = "dead_exchange";
-
-    //普通队列的名称
-    public static final String NORMAL_QUEUE = "normal_queue";
     //死信队列的名称
     public static final String DEAD_QUEUE = "dead_queue";
 
     public static void main(String[] argv) throws Exception {
 
         Channel channel = RabbitmqUtil.getChannel();
+        log.info("Consumer02 等待接受消息。。。。。");
 
         DeliverCallback deliverCallback =  (consumerTag, message) -> {
             String messageStr = new String(message.getBody(), "UTF-8");
@@ -34,6 +28,6 @@ public class Consumer02 {
         CancelCallback cancelCallback = (consumerTag) -> {
         };
 
-        channel.basicConsume(NORMAL_QUEUE, true, deliverCallback, cancelCallback);
+        channel.basicConsume(DEAD_QUEUE, true, deliverCallback, cancelCallback);
     }
 }

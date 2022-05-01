@@ -26,28 +26,34 @@ public class Consumer01 {
     //死信队列的名称
     public static final String DEAD_QUEUE = "dead_queue";
 
-    public static void main(String[] argv) throws Exception {
+    public static void main(String[] args) throws Exception {
 
         Channel channel = RabbitmqUtil.getChannel();
 
         // 声明死信交换机和普通交换机 类型为 direct
-        channel.exchangeDeclare(NORMAL_EXCHANGE, BuiltinExchangeType.DIRECT, false);
-        channel.exchangeDeclare(DEAD_EXCHANGE, BuiltinExchangeType.DIRECT, false);
+        channel.exchangeDelete(NORMAL_EXCHANGE);
+        channel.exchangeDeclare(NORMAL_EXCHANGE, BuiltinExchangeType.DIRECT);
+        channel.exchangeDelete(DEAD_EXCHANGE);
+        channel.exchangeDeclare(DEAD_EXCHANGE, BuiltinExchangeType.DIRECT);
+
         // exclusive 独占。  独占队列，仅限于此连接
         Map<String, Object> arguments = new HashMap<>();
         // 过期时间     10000ms = 10s
-        arguments.put("x-message-ttl", 10000);
+        // arguments.put("x-message-ttl", 10000); // 一般在发消息的时候设置，比较灵活，在这里设置的话就固定死了。
         // 正常队列设置 死信交换机是谁
         // x-dead-letter-exchange 是固定字符串
-
         arguments.put("x-dead-letter-exchange", DEAD_EXCHANGE);
+
         // 设置死信RoutingKey
         arguments.put("x-dead-letter-routing-key", "lisi");
-
+        // 设置正常队列的长度的限制
+        // arguments.put("x-max-length", 6);
 
         // 声明普通队列
-        channel.queueDeclare(NORMAL_QUEUE, false, false, false, arguments);
+        channel.queueDelete(NORMAL_QUEUE);
+        channel.queueDeclare(NORMAL_QUEUE, false, false, false, arguments); //普通队列设置参数实现普通消息成为死信之后转发到死信队列
         // 声明死信队列
+        channel.queueDelete(DEAD_QUEUE);
         channel.queueDeclare(DEAD_QUEUE, false, false, false, null);
 
         //--------------------------------------
@@ -58,7 +64,7 @@ public class Consumer01 {
         // 绑定死信交换机与队列
         channel.queueBind(DEAD_QUEUE, DEAD_EXCHANGE, routingKey2);
         // 绑定死信的交换机与死信的队列
-        log.info("等待接受消息。。。。。");
+        log.info("Consumer01 等待接受消息。。。。。");
 
         DeliverCallback deliverCallback =  (consumerTag, message) -> {
             String messageStr = new String(message.getBody(), "UTF-8");
