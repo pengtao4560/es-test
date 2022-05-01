@@ -1519,3 +1519,184 @@ public enum BuiltinExchangeType {
     }
 }
 ```
+
+#### 主题交换机实战 demo
+
+c1,c2, p
+
+启动生产者c1:
+
+```java
+package com.atguigu.rabbitmq.topic;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.BuiltinExchangeType;
+import com.rabbitmq.client.CancelCallback;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.DeliverCallback;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 主题模式demo 消费者C1
+ * 主题交换机 及相关队列
+ * 消费者C1
+ */
+@Slf4j
+public class ReceiveLogsTopic01 {
+    /** 交换机的名字 */
+    public static final String EXCHANGE_NAME = "topic_logs";
+
+    // 接收消息
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Channel channel = RabbitmqUtil.getChannel();
+
+        // 声明交换机
+        channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.TOPIC);
+        // 声明队列
+        String queueName = "Q1";
+
+        channel.queueDeclare(queueName, false, false, false, null);
+
+        String routingKey1 = "*.orange.*";
+        channel.queueBind(queueName, EXCHANGE_NAME, routingKey1);
+        System.out.println("消费者C1 等待接受消息");
+
+        DeliverCallback deliverCallback =  (consumerTag,  message) -> {
+            log.info("------------");
+            log.info(new String(message.getBody(), "UTF-8"));
+            // envelope 封套（包装信息） Encapsulates a group of parameters used for AMQP's Basic methods 封装一组用于AMQP的基本方法的参数
+            log.info("接收队列：{} 绑定键 {}", queueName, message.getEnvelope().getRoutingKey());
+            log.info("-------------");
+
+        };
+        CancelCallback cancelCallback = (consumerTag) ->{};
+
+        channel.basicConsume(queueName, true, deliverCallback, cancelCallback);
+    }
+}
+
+```
+启动生产者c2
+```java
+package com.atguigu.rabbitmq.topic;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.BuiltinExchangeType;
+import com.rabbitmq.client.CancelCallback;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.DeliverCallback;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 主题模式demo 消费者C1
+ * 主题交换机 及相关队列
+ * 消费者C2
+ */
+@Slf4j
+public class ReceiveLogsTopic02 {
+    /** 交换机的名字 */
+    public static final String EXCHANGE_NAME = "topic_logs";
+
+    // 接收消息
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Channel channel = RabbitmqUtil.getChannel();
+
+        // 声明交换机
+        channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.TOPIC);
+        // 声明队列
+        String queueName = "Q2";
+
+        channel.queueDeclare(queueName, false, false, false, null);
+
+        String routingKey2 = "*.*.rabbit";
+        String routingKey3 = "lazy.#";
+        channel.queueBind(queueName, EXCHANGE_NAME, routingKey2);
+        channel.queueBind(queueName, EXCHANGE_NAME, routingKey3);
+        System.out.println("消费者C2 等待接受消息");
+
+        DeliverCallback deliverCallback =  (consumerTag,  message) -> {
+            log.info("-------------");
+            log.info(new String(message.getBody(), "UTF-8"));
+            // envelope 封套（包装信息） Encapsulates a group of parameters used for AMQP's Basic methods 封装一组用于AMQP的基本方法的参数
+            log.info("接收队列：{} 绑定键 {}", queueName, message.getEnvelope().getRoutingKey());
+            log.info("---------------");
+        };
+        CancelCallback cancelCallback = (consumerTag) ->{};
+
+        channel.basicConsume(queueName, true, deliverCallback, cancelCallback);
+    }
+}
+
+```
+启动生产者
+```java
+package com.atguigu.rabbitmq.topic;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.Channel;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 主题模式demo- 生产者
+ */
+@Slf4j
+public class EmitLogTopic {
+    /** 交换机的名字 */
+    public static final String EXCHANGE_NAME = "topic_logs";
+
+    public static void main(String[] args) throws IOException, TimeoutException {
+        Channel channel = RabbitmqUtil.getChannel();
+
+        HashMap<String, String> bindKeyMap = new HashMap<>();
+        bindKeyMap.put("quick.orange.rabbit", "被队列 Q1Q2 接收到");
+        bindKeyMap.put("lazy.orange.elephant", "被队列 Q1Q2 接收到");
+        bindKeyMap.put("quick.orange.fox", "被队列 Q1 接收到");
+        bindKeyMap.put("lazy.brown.fox", "被队列 Q2 接收到");
+        bindKeyMap.put(" lazy.pink.rabbit", "虽然满足两个绑定但只被队列 Q2 接收一次");
+        bindKeyMap.put("quick.brown.fox", "不匹配任何绑定不会被任何队列接收到会被丢弃");
+        bindKeyMap.put("quick.orange.male.rabbit", "是四个单词不匹配任何绑定会被丢弃");
+        bindKeyMap.put("lazy.orange.male.rabbit", "是四个单词但匹配 Q2");
+
+        for (Map.Entry<String, String> bindingStringEntry : bindKeyMap.entrySet()) {
+            String routingKey = bindingStringEntry.getKey();
+            String message = bindingStringEntry.getValue();
+            channel.basicPublish(EXCHANGE_NAME, routingKey, null,
+                    message.getBytes(StandardCharsets.UTF_8));
+            log.info("生产者发出消息");
+        }
+    }
+}
+
+```
+
+## 6.死信队列
+
+
+### 6.1.死信的概念
+
+先从概念解释上搞清楚这个定义，死信，顾名思义就是无法被消费的消息，字面意思可以这样理解，一般来说，producer 将消息投递到 broker 或者直接到queue 里了，
+consumer 从 queue 取出消息进行消费，但**某些时候由于特定的原因导致 queue 中的某些消息无法被消费**，这样的消息如果没有后续的处理，就变成了死信，
+有死信自然就有了死信队列。
+
+应用场景:**为了保证订单业务的消息数据不丢失，需要使用到 RabbitMQ 的死信队列机制，当消息消费发生异常时，将消息投入死信队列中.
+还有比如说: 用户在商城下单成功并点击去支付后在指定时间未支付时自动失效**
+
+### 6.2.死信的来源
+
+1. 消息 TTL 过期
+2. 队列达到最大长度(队列满了，无法再添加数据到 mq 中) 
+3. 消息被拒绝(basic.reject 或 basic.nack)并且 requeue=false(不放回队列中)
+
+![死信代码架构图.png](死信代码架构图.png)
