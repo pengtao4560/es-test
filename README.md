@@ -235,6 +235,13 @@ user_access_token: 用户 授权凭证，使用该access token，应用将代表
 [AnotherRedisDesktopManager redis可视化管理工具 github下载](https://github.com/qishibo/AnotherRedisDesktopManager/releases)
 ##### [AnotherRedisDesktopManager redis可视化管理工具 gitee下载](https://gitee.com/qishibo/AnotherRedisDesktopManager/releases)
 
+##### 代替xshell 的 github 开源软件：tabby
+[](https://github.com/Eugeny/tabby)
+[下载](https://github.com/Eugeny/tabby/tags)
+点击download，点击对应系统的版本。
+win版本： tabby-1.0.176-setup-x64.exe
+[tabby win版本 2022年4月22日最新版本 直接下载](https://github.com/Eugeny/tabby/releases/download/v1.0.176/tabby-1.0.176-setup-x64.exe)
+[tabby win版本 2022年4月22日最新版本 直接下载](https://github.com/Eugeny/tabby/releases/download/v1.0.176/tabby-1.0.176-macos-x86_64.zip)
 ##### 数据库 客户端 DBeaver：
 
 DBeaver 是一个基于 Java 开发，免费开源的通用数据库管理和开发工具，使用非常友好的 ASL 协议。可以通过官方网站或者 Github 进行下载。
@@ -282,7 +289,7 @@ DBeaver 是一个基于 Java 开发，免费开源的通用数据库管理和开
 [谷歌浏览器插件 国内网站之一](https://chrome.zzzmh.cn/info?token=fjbknnledpckpbjcglogolokonffggpc)
 
 [谷歌浏览器插件 国内网站之一](https://www.chrome666.com/)
-
+[谷歌浏览器插件 简悦 沉浸式阅读](https://chrome.zzzmh.cn/info?token=ijllcpnolfcooahcekpamkbidhejabll)
 [谷歌浏览器广告拦截插件之一](https://chrome.zzzmh.cn/info?token=cjpalhdlnbpafiamejdnhcphjbkeiagm)
 [FireShot 网页截屏](https://chrome.zzzmh.cn/#/search) 后搜索关键词 fireShot 或 直接点击
 [](https://chrome.zzzmh.cn/info?token=mcbpblocgmgfnpjjppndjkmgjaogfceg)
@@ -292,12 +299,14 @@ DBeaver 是一个基于 Java 开发，免费开源的通用数据库管理和开
 ## 收藏文章
 
 [数据库设计工具 chiner](https://mp.weixin.qq.com/s/Q6AnaEfZHMJCefnx9YqjhQ)
-
+[hutool 官网](https://hutool.cn/)
+[hutool github](https://github.com/dromara/hutool)
 [hutool java工具包-说明文档](https://www.bookstack.cn/read/hutool/a4579b97cf741bcd.md)
+[hutool java工具包-说明文档](https://www.bookstack.cn/read/hutool-5.6.0-zh/9ac4d3d03444603a.md)
 
 [mysql创建索引](https://www.cnblogs.com/sweet521/p/6203360.html)
-    2022年4月7日 多表left join 查询 因为其中一张表(23000+条数据)创建了一个索引。查询速度从 4秒多变为1秒多
-    另一张表 创建了一个索引 从1秒多比变为了 0.2秒多
+    2022年4月7日 有一条sql语句用了 多表left join 查询  因为其中一张表(23000+条数据)创建了一个索引。查询速度从 4秒多变为1秒多
+    其中的另一张表 创建了一个索引 查询速度从1秒多比变为了 0.2秒多
 
 
 创建索引
@@ -393,10 +402,15 @@ show index from tblname;
 
 #### mapstract
 [mapstract 实体类映射](https://www.cnblogs.com/mmzs/p/12735212.html)
-简单的实体类映射可以用 以下三个类的工具方法：
+#####   简单的实体类映射
+
+可以用 以下三个类的工具方法：
+
     org.springframework.beans.BeanUtils
     org.apache.commons.beanutils.BeanUtils;
     cn.hutool.core.bean.BeanUtil;
+
+需要引入的依赖：
 
 ```xml
    <dependencies>
@@ -414,11 +428,12 @@ show index from tblname;
     </dependencies>
 ```
 
-mapstract 介绍：
+##### mapstract 介绍：
 [mapstruct Github 地址](https://github.com/mapstruct/mapstruct/)
+
 [mapstruct 使用例子](https://github.com/mapstruct/mapstruct-examples)
 
-依赖：
+需要引入的依赖：
 ```xml
 <dependencies>
     <dependency>
@@ -497,3 +512,107 @@ TODO 希望把springaop 研究透彻一点。 做一个demo
 commit栏中 Amend(修改) 右边的 设置齿轮点开，取消勾选对应的即可
 ![](图片/IDEA git commit去掉analyze code.png)
 
+IDEA 序列化提示
+
+![img_1.png](图片/IDEA序列化提示设置.png)
+
+## 项目x-springboot 
+
+[x-springboot项目](https://github.com/pengtao4560/X-SpringBoot)
+
+本地已配好。
+数据库 x-springboot
+win nginx 启动路径：
+台式机 ： E:\nginx-windows\nginx-1.20.2
+
+[pandoc word pdf markdown(.md) 文档互相转换](https://www.pandoc.org/installing.html)
+本机笔记本安装路径：
+
+C:\Program Files\Pandoc
+
+## 项目： SpringBoot_v2项目非前后端分离
+介绍：
+SpringBoot_v2项目是努力打造springboot框架的极致细腻的脚手架 。
+包括一套漂亮的前台。无其他杂七杂八的功能，原生纯净。
+[github 地址](https://github.com/fuce1314/Springboot_v2)
+[minio ](https://github.com/minio/minio)
+md文档有详细的 win/linux/macos 步骤
+[登陆](http://localhost:8060/admin)
+
+[minio windows 下载路径](https://dl.min.io/server/minio/release/windows-amd64/minio.exe
+)
+下载后，cmd打开。执行：
+    使用D盘作为存储库：（可使用其他的目录或子目录）
+
+    minio.exe server D:\
+
+[minor 登陆页面](http://127.0.0.1:9000/login)
+
+修改配置文件application.yml 中端口为8060，启动项目，项目启动后访问
+[springboot-v2](http://localhost:8060/admin)
+
+####  数据库设计通常分为哪几步?
+
+**需求分析** : 分析用户的需求，包括数据、功能和性能需求。
+
+**概念结构设计** : 主要采用 E-R 模型进行设计，包括画 E-R 图。
+
+**逻辑结构设计** : 通过将 E-R 图转换成表，实现从 E-R 模型到关系模型的转换。
+
+**物理结构设计** : 主要是为所设计的数据库选择合适的存储结构和存取路径。
+
+类别
+category_offsite 0
+category_offsite 0
+
+本地就医 native_health_seeking
+就医
+
+引导医院 guide_hospital
+native_hospital
+约诊时间
+预约就诊
+medical 医学的
+appointment
+acquired
+引导医院
+
+挂号
+
+陪诊
+病情
+illness
+领取
+病情简述
+简述
+简单描述 description
+
+
+
+诊前确认 confirmedBeForeMedical
+身份确认 identity verification
+身份确认原因 ReasonForIdentification
+病情描述 illnessDescription
+结算方式 settleType
+结算金额 settleSumPay
+涉及大病金额 Amount involved in serious illness
+是否有转诊需求 isreferralneed
+意向医院 Intention to hospitalOfIntent
+是否已进行 政策宣导
+其他信息描述
+
+回访
+满意度 satisfaction
+callback
+陪诊人员
+accompanying_person_satisfaction
+
+
+标记
+
+
+开发经验：
+sql能实现的条件查询 获取list，不要去全查出来 list，再使用java逻辑判断 筛选
+而是使用sql 条件查询
+
+DEBUG汇总：

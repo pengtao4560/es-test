@@ -13,8 +13,13 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Payment implements Serializable
+public class Payment implements Serializable, Cloneable
 {
     private Long id;
     private String serial;
+
+    @Override
+    protected Payment clone() throws CloneNotSupportedException {
+        return (Payment) super.clone();
+    }
 }
