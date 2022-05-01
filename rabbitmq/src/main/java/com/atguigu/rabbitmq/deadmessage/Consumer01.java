@@ -33,7 +33,6 @@ public class Consumer01 {
         // 声明死信交换机和普通交换机 类型为 direct
         channel.exchangeDeclare(NORMAL_EXCHANGE, BuiltinExchangeType.DIRECT, false);
         channel.exchangeDeclare(DEAD_EXCHANGE, BuiltinExchangeType.DIRECT, false);
-        // 声明普通队列
         // exclusive 独占。  独占队列，仅限于此连接
         Map<String, Object> arguments = new HashMap<>();
         // 过期时间     10000ms = 10s
@@ -45,19 +44,21 @@ public class Consumer01 {
         // 设置死信RoutingKey
         arguments.put("x-dead-letter-routing-key", "lisi");
 
+
+        // 声明普通队列
+        channel.queueDeclare(NORMAL_QUEUE, false, false, false, arguments);
+        // 声明死信队列
+        channel.queueDeclare(DEAD_QUEUE, false, false, false, null);
+
         //--------------------------------------
         // 绑定普通交换机与队列
         String routingKey = "zhangsan";
         String routingKey2 = "lisi";
         channel.queueBind(NORMAL_QUEUE, NORMAL_EXCHANGE, routingKey);
-
         // 绑定死信交换机与队列
         channel.queueBind(DEAD_QUEUE, DEAD_EXCHANGE, routingKey2);
         // 绑定死信的交换机与死信的队列
         log.info("等待接受消息。。。。。");
-        channel.queueDeclare(NORMAL_QUEUE, false, false, false, null);
-        // 声明死信队列
-        channel.queueDeclare(DEAD_QUEUE, false, false, false, null);
 
         DeliverCallback deliverCallback =  (consumerTag, message) -> {
             String messageStr = new String(message.getBody(), "UTF-8");
