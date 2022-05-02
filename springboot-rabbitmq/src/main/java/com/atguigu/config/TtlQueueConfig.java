@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 /**
  * TTL time to live 队列  配置文件类
+ * @see /代码架构图.png
  */
 @Configuration
 public class TtlQueueConfig {
@@ -50,7 +51,7 @@ public class TtlQueueConfig {
         arguements.put("x-dead-letter-exchange", Y_DEAD_LETTER_EXCHANGE);
         // 设置死信 RoutingKey
         arguements.put("x-dead-letter-routing-key", "YD");
-        arguements.put("x-message-ttl", 10000);
+        arguements.put("x-message-ttl", 5000);
         return QueueBuilder.durable(QUEUE_A).withArguments(arguements).build();
     }
 
@@ -64,18 +65,20 @@ public class TtlQueueConfig {
         arguements.put("x-dead-letter-exchange", Y_DEAD_LETTER_EXCHANGE);
         // 设置死信 RoutingKey
         arguements.put("x-dead-letter-routing-key", "YD");
-        arguements.put("x-message-ttl", 40000);
+        arguements.put("x-message-ttl", 10000);
         return QueueBuilder.durable(QUEUE_B).withArguments(arguements).build();
     }
 
     /**
-     *  声明死信队列 queueB, TTL 为 40s
+     *  声明死信队列 queueD, TTL 为 40s
      * */
     @Bean("queueD")
     public Queue queueD() {
         return QueueBuilder.durable(DEAD_LETTER_QUEUE).build();
     }
 
+    // 2 个交换机，3个队列 以及绑定关系
+    /*绑定*/
     @Bean
     public Binding queueABindingX(
             @Qualifier("queueA") Queue queueA,
@@ -85,9 +88,10 @@ public class TtlQueueConfig {
         return BindingBuilder.bind(queueA)
                 .to(xExchange).with(routingKey);
     }
+
     @Bean
     public Binding queueBBindingX(
-            @Qualifier("queueA") Queue queueB,
+            @Qualifier("queueB") Queue queueB,
             @Qualifier("xExchange") DirectExchange xExchange
                                   ) {
         String routingKey = "XB";
@@ -96,9 +100,9 @@ public class TtlQueueConfig {
     }
 
     @Bean
-    public Binding queueYBindingX(
-            @Qualifier("queueA") Queue queueD,
-            @Qualifier("xExchange") DirectExchange yExchange
+    public Binding queueDBindingY(
+            @Qualifier("queueD") Queue queueD,
+            @Qualifier("yExchange") DirectExchange yExchange
                                   ) {
         String routingKey = "YD";
         return BindingBuilder.bind(queueD)

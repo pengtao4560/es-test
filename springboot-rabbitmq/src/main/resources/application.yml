@@ -1,0 +1,13 @@
+server:
+  port: 8672
+
+spring:
+  rabbitmq:
+    host: 192.168.220.128
+    port: 5672
+    username: admin
+    password: admin
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
