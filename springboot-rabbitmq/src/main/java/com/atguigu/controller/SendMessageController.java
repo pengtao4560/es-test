@@ -1,6 +1,7 @@
 package com.atguigu.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,17 +12,24 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Date;
 
 /**
- * 发送延迟消息
- * @see <a href="http://localhost:8672/ttl/sendMsg/xixixi">luo.com</a>
+ * 发送延迟消息 生产者
+ *
+ *
  */
 @RestController
-@RequestMapping("/ttl")
+@RequestMapping("/ttl/")
 @Slf4j
 public class SendMessageController {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    /**
+     * 开始发送消息
+     * @see <a href="http://localhost:8672/ttl/sendMsg/xixixi">luo.com</a>
+     * @param message
+     * @return
+     */
     @GetMapping("/sendMsg/{message}")
     public String sendMsg(@PathVariable String message) {
         log.info("当前时间：{},发送一条信息给两个 TTL 队列:{}", new Date(), message);
@@ -33,5 +41,25 @@ public class SendMessageController {
     @GetMapping("/111")
     public String sendMsg2(String message) {
         return "发送成功";
+    }
+
+    /**
+     * 开始发消息 TTL
+     * @param message 发送的消息
+     * @param ttlTime 延时时长
+     * @see MessagePostProcessor
+     * @see <a href="http://localhost:8672/ttl/sendExpirationMsg/nihao1/20000">测试延时消息url</a>
+     * @see <a href="http://localhost:8672/ttl/sendExpirationMsg/nihao2/2000">测试延时消息url</a>
+     */
+    @GetMapping("/sendExpirationMsg/{message}/{ttlTime}")
+    public void sendMsg(@PathVariable("message") String message,
+                        @PathVariable("ttlTime") String ttlTime) {
+        log.info("当前时间：{}，发送一条时长 {} 毫秒TTL信息 {}给队列QC", new Date().toString(), ttlTime, message);
+
+        rabbitTemplate.convertAndSend("X", "XC", message, (msg) -> {
+            // 发送消息的时候，设置延迟时长
+            msg.getMessageProperties().setExpiration(ttlTime);
+            return msg;
+        });
     }
 }

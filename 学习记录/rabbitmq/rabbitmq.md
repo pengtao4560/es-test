@@ -1716,6 +1716,56 @@ P54 死信队列demo - 队列达到队列达到最大长度(队列满了，无�
         arguments.put("x-max-length", 6);
 ```
 生产者去除时间限制
+## 7.5.队列 TTL
+##### 延迟队列
+
+见项目 springboot-rabbitmq
+[springboot-rabbitmq项目 架构图](图片/代码架构图.png)
+
+#### 延迟队列优化
+
+优化原因
+
+    不过，如果这样使用的话，岂不是每增加一个新的时间需求，就要新增一个队列，
+    这里只有 10S 和 40S 两个时间选项，如果需要一个小时后处理，那么就需要增加TTL 为一个小时的队列，
+    如果是预定会议室然后提前通知这样的场景， 岂不是要增加无数个队列才能满足需求？
+
+优化后架构图
+
+![优化后架构图](图片/延迟队列优化后架构图.png)
+
+延迟的时间 当生产者发消息时 再指定
+
+演示结果：
+
+    2022-05-02 14:33:14.978  INFO 16100 --- [nio-8672-exec-6] c.a.controller.SendMessageController     : 当前时间：Mon May 02 14:33:14 CST 2022，发送一条时长 20000 毫秒TTL信息 nihao1给队列QC
+    2022-05-02 14:33:16.138  INFO 16100 --- [nio-8672-exec-7] c.a.controller.SendMessageController     : 当前时间：Mon May 02 14:33:16 CST 2022，发送一条时长 2000 毫秒TTL信息 nihao2给队列QC
+    2022-05-02 14:33:34.985  INFO 16100 --- [ntContainer#0-1] c.a.consumer.DeadLetterQueueConsumer     : 当前时间： Mon May 02 14:33:34 CST 2022 ,收到死信队列的消息： nihao1
+    2022-05-02 14:33:34.986  INFO 16100 --- [ntContainer#0-1] c.a.consumer.DeadLetterQueueConsumer     : 当前时间： Mon May 02 14:33:34 CST 2022 ,收到死信队列的消息： nihao2
+
+看起来似乎没什么问题，但是在最开始的时候，就介绍过如果使用在消息属性上设置 TTL 的方式，消息可能并不会按时“死亡“，
+因为 **RabbitMQ 只会检查第一个消息是否过期，如果过期则丢到死信队列**，
+**如果第一个消息的延时时长很长，而第二个消息的延时时长很短，第二个消息并不会优先得到执行**。
+
+
+#### 7.7.Rabbitmq 插件实现延迟队列
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 5.1-5.4 学习 
 let me get one more
