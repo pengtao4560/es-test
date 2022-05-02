@@ -1801,15 +1801,244 @@ systemctl restart rabbitmq-server.service
 ```
 
 
+## 8.发布确认高级
+
+在生产环境中由于一些不明原因，导致 rabbitmq 重启，在 RabbitMQ 重启期间生产者消息投递失败， 
+导致消息丢失，需要手动处理和恢复。于是，我们开始思考，如何才能进行 RabbitMQ 的消息可靠投递呢？ 
+特别是在这样比较极端的情况，RabbitMQ 集群不可用的时候，无法投递的消息该如何处理呢:
+
+![确认机制方案.png](确认机制方案.png)
+
+#### 代码架构图
+
+![发布确认机制demo代码架构图.png](发布确认机制demo代码架构图.png)
+
+
+模拟 极端情况。 生产者发送消息失败
+```java
+        // 模拟发送失败情况 交换机不存在
+        rabbitTemplate.convertAndSend(CONFIRM_EXCHANGE_NAME + UUID.randomUUID(), routingKey, message + routingKey, correlationData1);
+```
+2022-05-02 21:24:25.694  INFO 22424 --- [nectionFactory2] com.atguigu.config.MyCallBack            : 交换机还未收到了ID为 1 的消息, 由于原因： channel error; protocol method:
+#method<channel.close>(reply-code=404, reply-text=NOT_FOUND - no exchange 'confirm.exchange6d843396-7f34-4f61-b276-5669c9e17328' in vhost '/', class-id=60, method-id=40)
+
+消息可以被返回来。进行业务存储处理，稍后再处理。这样消息就不会丢失了。
+
+模拟 极端情况2. 队列消费消息失败
+```java
+  // 模拟发送失败情况： 队列不正确（routing key 不存在）
+        CorrelationData correlationData2 = new CorrelationData("2");
+        routingKey = "key2";
+```
+    2022-05-02 21:29:03.742  INFO 13156 --- [nectionFactory3] com.atguigu.config.MyCallBack            : 交换机已经收到了ID为 2 的消息
+    2022-05-02 21:29:03.743  INFO 13156 --- [nio-8672-exec-1] c.atguigu.controller.ProducerController  : 发送消息内容:dajiahao1
+    2022-05-02 21:29:03.755  INFO 13156 --- [nectionFactory3] com.atguigu.config.MyCallBack            : 交换机已经收到了ID为 1 的消息
+    2022-05-02 21:29:03.755  INFO 13156 --- [ntContainer#0-1] com.atguigu.consumer.Consumer            : 接收到的队列confirm.queue消息：dajiahao1
+    2022-05-02 21:29:03.757  INFO 13156 --- [nectionFactory3] com.atguigu.config.MyCallBack            : 交换机已经收到了ID为  的消息
+
+完整代码：
+配置类
+```java
+package com.atguigu.config;
+
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * 配置类 发布确认 （高级）
+ */
+@Configuration
+public class ConfirmConfig {
+    /**
+     * 交换机
+     */
+    public static final String CONFIRM_EXCHANGE_NAME = "confirm.exchange";
+    /**
+     * 队列
+     */
+    public static final String CONFIRM_QUEUE_NAME = "confirm.queue";
+    /**
+     * routingKey
+     */
+    public static final String CONFIRM_ROUTING_KEY = "key1";
+
+    /**
+     * 声明交换机 Exchange
+     */
+    @Bean("confirmExchange")
+    public DirectExchange confirmExchange() {
+        return new DirectExchange(CONFIRM_EXCHANGE_NAME);
+    }
+
+    /**
+     * 声明确认队列
+     */
+    @Bean("confirmQueue")
+    public Queue confirmQueue() {
+        return QueueBuilder.durable(CONFIRM_QUEUE_NAME).build();
+    }
+
+    /**
+     * 声明确认队列绑定关系
+     */
+    @Bean
+    public Binding queueBinding(@Qualifier("confirmQueue") Queue queue,
+                                @Qualifier("confirmExchange") DirectExchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(CONFIRM_ROUTING_KEY);
+    }
+}
+
+```
+
+消费者：
+```java
+/**
+ * 接收消息
+ */
+@Component
+@Slf4j
+public class Consumer {
+    @RabbitListener(queues = ConfirmConfig.CONFIRM_QUEUE_NAME)
+    public void receiveConfirmMessage(Message message) {
+        String msg = new String(message.getBody());
+        log.info("接收到的队列confirm.queue消息：{}", msg);
+    }
+}
+```
+回调配置：
+```java
+package com.atguigu.config;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.Objects;
+
+/**
+ * @see RabbitTemplate.ConfirmCallback
+ */
+@Component
+@Slf4j
+public class MyCallBack implements RabbitTemplate.ConfirmCallback {
+
+    //
+    @Autowired
+    private  RabbitTemplate rabbitTemplate;
+
+    @PostConstruct // 在其他注解都执行完成后 进行执行
+    public void init() {
+        // 注入
+        rabbitTemplate.setConfirmCallback(this);
+    }
+
+    /**
+     * 交换机确认会掉方法
+     * @param correlationData 中保存回调消息的ID及相关信息
+     * @param ack 交换机收到消息 true / 交换机未收到消息 false
+     * @param cause 交换机收到消息 null/ 交换机未收到消息 失败的原因
+     */
+    @Override
+    public void confirm(CorrelationData correlationData, boolean ack, String cause) {
+
+        String id = Objects.isNull(correlationData) ? "" : correlationData.getId();
+        if (ack) {
+            log.info("交换机已经收到了ID为 {} 的消息", id);
+        } else {
+            log.info("交换机还未收到了ID为 {} 的消息, 由于原因： {}", id, cause);
+        }
+    }
+}
+
+
+```
+生产者：
+```java
+package com.atguigu.config;
+
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.CustomExchange;
+import org.springframework.amqp.core.Queue;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * 延迟队列配置（rabbitmq之基于插件的延迟队列-配置类）
+ */
+@Configuration
+public class DelayedQueueConfig {
+    /**
+     * 队列
+     */
+    public static final String DELAYED_QUEUE_NAME = "delayed.queue";
+    /**
+     * 交换机
+     */
+    public static final String DELAYED_EXCHANGE = "delayed.exchange";
+
+    /**
+     * routingKey
+     */
+    public static final String DELAYED_ROUTINGKEY = "delayed.routingkey";
 
 
 
+    /**
+     * 声明交换机
+     * @see CustomExchange#CustomExchange(java.lang.String, java.lang.String, boolean, boolean, java.util.Map);
+     * 参数1. 交换机名称
+     * 参数2. 交换机类型
+     * 参数3. 是否需要持久化
+     * 参数4. 是否需要自动删除
+     * 参数5. 其他参数map
+     */
 
+    @Bean("delayedExchange")
+    public CustomExchange delayedExchange() {
+        Map<String, Object> arguements = new HashMap<>();
+        // arguements.put("x-delayed-type", BuiltinExchangeType.DIRECT);
+        // 此处必须写字符串， 无法写枚举类型。否则 交换机和队列无法初始化 到 rabbitmq中
+        arguements.put("x-delayed-type", "direct");
 
+        return new CustomExchange(DELAYED_EXCHANGE, "x-delayed-message", true, false, arguements);
+    }
 
+    @Bean("delayedQueue")
+    public Queue delayedQueue() {
+        return new Queue(DELAYED_QUEUE_NAME);
+    }
 
+    /**
+     * 绑定
+     */
+    @Bean
+    public Binding delayedQueueBindingToDelayedExchange(
+            @Qualifier("delayedQueue") Queue delayedQueue,
+            @Qualifier("delayedExchange") CustomExchange delayedExchange
+    ) {
+        return BindingBuilder.bind(delayedQueue)
+                .to(delayedExchange)
+                .with(DELAYED_ROUTINGKEY)
+                .noargs();
+    }
 
+}
 
+```
 
 
 5.1-5.4 学习 
