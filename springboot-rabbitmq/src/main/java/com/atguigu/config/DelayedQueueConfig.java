@@ -1,6 +1,5 @@
 package com.atguigu.config;
 
-import com.rabbitmq.client.BuiltinExchangeType;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.CustomExchange;
@@ -10,19 +9,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 延迟队列配置（rabbitmq之基于插件的延迟队列-配置类）
  */
 @Configuration
 public class DelayedQueueConfig {
-
     /**
-     * 交换机
+     * 队列
      */
     public static final String DELAYED_QUEUE_NAME = "delayed.queue";
     /**
-     * 队列
+     * 交换机
      */
     public static final String DELAYED_EXCHANGE = "delayed.exchange";
 
@@ -31,10 +30,7 @@ public class DelayedQueueConfig {
      */
     public static final String DELAYED_ROUTINGKEY = "delayed.routingkey";
 
-    @Bean
-    public Queue delayedQueue() {
-        return new Queue(DELAYED_QUEUE_NAME);
-    }
+
 
     /**
      * 声明交换机
@@ -46,12 +42,19 @@ public class DelayedQueueConfig {
      * 参数5. 其他参数map
      */
 
-    @Bean
+    @Bean("delayedExchange")
     public CustomExchange delayedExchange() {
-        HashMap<String, Object> arguements = new HashMap<>();
-        arguements.put("x-delayed-type", BuiltinExchangeType.DIRECT);
+        Map<String, Object> arguements = new HashMap<>();
+        // arguements.put("x-delayed-type", BuiltinExchangeType.DIRECT);
+        // 此处必须写字符串， 无法写枚举类型。否则 交换机和队列无法初始化 到 rabbitmq中
+        arguements.put("x-delayed-type", "direct");
 
-        return new CustomExchange(DELAYED_QUEUE_NAME, "x-delayed-message", true, false, arguements);
+        return new CustomExchange(DELAYED_EXCHANGE, "x-delayed-message", true, false, arguements);
+    }
+
+    @Bean("delayedQueue")
+    public Queue delayedQueue() {
+        return new Queue(DELAYED_QUEUE_NAME);
     }
 
     /**
@@ -61,10 +64,11 @@ public class DelayedQueueConfig {
     public Binding delayedQueueBindingToDelayedExchange(
             @Qualifier("delayedQueue") Queue delayedQueue,
             @Qualifier("delayedExchange") CustomExchange delayedExchange
-                                                        ) {
+    ) {
         return BindingBuilder.bind(delayedQueue)
                 .to(delayedExchange)
                 .with(DELAYED_ROUTINGKEY)
                 .noargs();
     }
+
 }

@@ -67,15 +67,17 @@ public class SendMessageController {
     /**
      * 开始发消息基于插件的消息及延迟的时间
      * rabbitmq之基于插件的延迟队列-生产者
+     * @see <a href="http://localhost:8672/ttl/sendDelayMsg/comeonbaby1/20000">开始发消息基于插件的消息及延迟的时间</p>
+     * @see <a href="http://localhost:8672/ttl/sendDelayMsg/comeonbaby2/2000">开始发消息基于插件的消息及延迟的时间2</a>
      */
 
-    @GetMapping("/sendDelayMsg/(message}/(delayTime}")
+    @GetMapping("/sendDelayMsg/{message}/{delayTime}")
     public void sendMsg(@PathVariable String message, @PathVariable Integer delayTime) {
-        log.info("当前时间：{}，发送一条时长毫秒信息给延迟队列delayed.queue: {}",
+        log.info("当前时间：{}，发送一条时长 {} 毫秒信息给延迟队列 delayed.queue: {}",
                 new Date().toString(), delayTime, message);
-        rabbitTemplate.convertAndSend(DelayedQueueConfig.DELAYED_QUEUE_NAME,
-                // 发送消息的时候延迟时长单位：ms
+        rabbitTemplate.convertAndSend(DelayedQueueConfig.DELAYED_EXCHANGE,
                 DelayedQueueConfig.DELAYED_ROUTINGKEY, message, msg -> {
+                    // 发送消息的时候延迟时长单位：ms
                     msg.getMessageProperties().setDelay(delayTime);
                     return msg;
                 });
