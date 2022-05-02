@@ -1,5 +1,6 @@
 package com.atguigu.controller;
 
+import com.atguigu.config.DelayedQueueConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -13,8 +14,6 @@ import java.util.Date;
 
 /**
  * 发送延迟消息 生产者
- *
- *
  */
 @RestController
 @RequestMapping("/ttl/")
@@ -26,9 +25,10 @@ public class SendMessageController {
 
     /**
      * 开始发送消息
-     * @see <a href="http://localhost:8672/ttl/sendMsg/xixixi">luo.com</a>
+     *
      * @param message
      * @return
+     * @see <a href="http://localhost:8672/ttl/sendMsg/xixixi">luo.com</a>
      */
     @GetMapping("/sendMsg/{message}")
     public String sendMsg(@PathVariable String message) {
@@ -45,6 +45,7 @@ public class SendMessageController {
 
     /**
      * 开始发消息 TTL
+     *
      * @param message 发送的消息
      * @param ttlTime 延时时长
      * @see MessagePostProcessor
@@ -61,5 +62,22 @@ public class SendMessageController {
             msg.getMessageProperties().setExpiration(ttlTime);
             return msg;
         });
+    }
+
+    /**
+     * 开始发消息基于插件的消息及延迟的时间
+     * rabbitmq之基于插件的延迟队列-生产者
+     */
+
+    @GetMapping("/sendDelayMsg/(message}/(delayTime}")
+    public void sendMsg(@PathVariable String message, @PathVariable Integer delayTime) {
+        log.info("当前时间：{}，发送一条时长毫秒信息给延迟队列delayed.queue: {}",
+                new Date().toString(), delayTime, message);
+        rabbitTemplate.convertAndSend(DelayedQueueConfig.DELAYED_QUEUE_NAME,
+                // 发送消息的时候延迟时长单位：ms
+                DelayedQueueConfig.DELAYED_ROUTINGKEY, message, msg -> {
+                    msg.getMessageProperties().setDelay(delayTime);
+                    return msg;
+                });
     }
 }

@@ -1751,9 +1751,54 @@ P54 死信队列demo - 队列达到队列达到最大长度(队列满了，无�
 #### 7.7.Rabbitmq 插件实现延迟队列
 
 
+ [官网上下载rabiitmt_delayed_message_exchange](https://www.rabbitmq.com/community-plugins.html)，下载rabbitmq_delayed_message_exchange 插件
+，然后解压放置到 RabbitMQ 的插件目录。进入 RabbitMQ 的安装目录下的 plgins 目录，执行下面命令让该插件生效，然后重启 RabbitMQ
 
+    [root@rabbitmq plugins]# pwd
+    /usr/lib/rabbitmq/lib/rabbitmq_server-3.9.13/plugins
+    [root@rabbitmq plugins]# rabbitmq-plugins enable rabbitmq_delayed_message_exchange
+    Enabling plugins on node rabbit@rabbitmq:
+    rabbitmq_delayed_message_exchange
+    The following plugins have been configured:
+    rabbitmq_delayed_message_exchange
+    rabbitmq_management
+    rabbitmq_management_agent
+    rabbitmq_web_dispatch
+    Applying plugin configuration to rabbit@rabbitmq...
+    The following plugins have been enabled:
+    rabbitmq_delayed_message_exchange
+    
+    started 1 plugins.
+插件安装成功：
+重启rabbitmq服务：
+systemctl restart rabbitmq-server.service
 
+    [root@rabbitmq plugins]# systemctl restart rabbitmq-server.service
+    [root@rabbitmq plugins]#
 
+![rabbitmq延迟队列插件安装成功.png](图片/rabbitmq延迟队列插件安装成功.png)
+
+表示插件安装好了
+
+![基于插件演示队列代码架构图.png](基于插件演示队列代码架构图.png)
+
+```java
+    /**
+     * 开始发消息基于插件的消息及延迟的时间
+     */
+
+    @GetMapping("/sendDelayMsg/(message}/(delayTime}")
+    public void sendMsg(@PathVariable String message, @PathVariable Integer delayTime) {
+        log.info("当前时间：{}，发送一条时长毫秒信息给延迟队列delayed.queue: {}",
+                new Date().toString(), delayTime, message);
+        rabbitTemplate.convertAndSend(DelayedQueueConfig.DELAYED_QUEUE_NAME,
+                // 发送消息的时候延迟时长单位：ms
+                DelayedQueueConfig.DELAYED_ROUTINGKEY, message, msg -> {
+                    msg.getMessageProperties().setDelay(delayTime);
+                    return msg;
+                });
+    }
+```
 
 
 
