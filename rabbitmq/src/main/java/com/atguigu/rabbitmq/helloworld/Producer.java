@@ -22,7 +22,7 @@ import java.util.concurrent.TimeoutException;
 public class Producer {
 
 
-    public static final String QUEUE_NAME = "HELLO";
+    public static final String QUEUE_NAME = "mirrior_queue";
 //    @Value("${rabbitmq.host}")
 //    private static String host;
 //    @Value("${rabbitmq.userName}")

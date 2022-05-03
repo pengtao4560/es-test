@@ -21,7 +21,7 @@ public class RabbitmqUtil {
         // 创建一个连接工厂
         ConnectionFactory connectionFactory = new ConnectionFactory();
         // 工厂IP 连接RABBITMOQ 队列
-        String host = "192.168.220.128";
+        String host = "192.168.220.129";
         String userName = "admin";
         String password = "admin";
         connectionFactory.setHost(host);
