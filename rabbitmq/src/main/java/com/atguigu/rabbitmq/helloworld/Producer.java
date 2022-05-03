@@ -1,6 +1,7 @@
 package com.atguigu.rabbitmq.helloworld;
 
 import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -8,6 +9,8 @@ import org.junit.Test;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -47,25 +50,40 @@ public class Producer {
             // 创建链接
             Connection connection = connectionFactory.newConnection();
             Channel channel = connection.createChannel();
-            // 生成一个队列
-      /*
-      @param queue the name of the queue 队列名称
 
-      @param durable true if we are declaring a durable queue (the queue will survive a server restart)
-      队列里面的消息是否持久化（磁盘）默认情况消息存储在内存中
+              /*
+              生成一个队列
+              @param queue the name of the queue 队列名称
 
-      @param exclusive true if we are declaring an exclusive queue (restricted to this connection)
-      该队列是否只供一个消费者进行消费是否进行消息共享，tru可以多个消费者消费fa1se:只能一个消费者消费
+              @param durable true if we are declaring a durable queue (the queue will survive a server restart)
+              队列里面的消息是否持久化（磁盘）默认情况消息存储在内存中
 
-      @param autoDelete true if we are declaring an autodelete queue (server will delete it when no longer in use)
-      是否自动删除最后一个消费者段开连接以后，该队列是否自动删除  true表示自动删除 false 表示不自动删除
+              @param exclusive true if we are declaring an exclusive queue (restricted to this connection)
+              该队列是否只供一个消费者进行消费是否进行消息共享，tru可以多个消费者消费fa1se:只能一个消费者消费
 
-      @param arguments other properties (construction arguments) for the queue
-     其他參數
-     * */
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+              @param autoDelete true if we are declaring an autodelete queue (server will delete it when no longer in use)
+              是否自动删除最后一个消费者段开连接以后，该队列是否自动删除  true表示自动删除 false 表示不自动删除
+
+              @param arguments other properties (construction arguments) for the queue
+             其他參數
+             * */
+            Map<String, Object> arguments = new HashMap<>();
+            // 官方允许是0-255之间此处设置10允许优化级范围为0-10不要设置过大浪费CPU与内存
+            arguments.put("x-max-priority", 10);
+
+            channel.queueDeclare(QUEUE_NAME, true, false, false, arguments);
             //  发消息
-            String message = "hello world";
+            for (int i = 1; i < 11; i++) {
+                String message = "hello world";
+                message = message + i;
+                if (i == 5) {
+                    AMQP.BasicProperties properties = new AMQP.BasicProperties().builder().priority(10).build();
+                    channel.basicPublish("", QUEUE_NAME, properties, message.getBytes());
+                } else {
+                    channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
+
+                }
+            }
             /*
             Publish a message. Publishing to a non-existent exchange will result in a channel-level protocol exception, which closes the channel.
             Invocations of Channel#basicPublish will eventually block if a resource-driven alarm  is in effect.
@@ -78,7 +96,6 @@ public class Producer {
             Throws:
             IOException – if an error is encountered
             * */
-            channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
             // 防火墙的端口记得放行并reload  5672、15672
             System.out.println("消息发送完毕");
         } catch (IOException e) {

@@ -2068,6 +2068,287 @@ public class DelayedQueueConfig {
 
 注意：改exchange 信息了之后需要 删除之后重新创建
 
+## RabttitMQ  幂等性、优先级队列
+### RabttitMQ  幂等性
+
+####9.1.1.概念
+用户对于同一操作发起的一次请求或者多次请求的结果是一致的，不会因为多次点击而产生了副作用。举个最简单的例子，**那就是支付**，用户购买商品后支付，支付扣款成功，但是**返回结果的时候网络异常**， 
+此时钱已经扣了，用户再次点击按钮，此时会进行第二次扣款，返回结果成功，用户查询余额发现多扣钱了，流水记录也变成了两条。
+在以前的单应用系统中，我们只需要把数据操作放入事务中即可，发生错误立即回滚，但是再响应客户端的时候也有可能出现网络中断或者异常等等
+简单来说就是 买了一个东西，扣了两次钱
+
+####9.1.2.消息重复消费
+
+消费者在消费 MQ 中的消息时，MQ 已把消息发送给消费者，消费者在给MQ 返回 ack 应答时网络中断， 故 MQ 未收到确认信息，该条消息会重新发给其他的消费者，或者在网络重连后再次发送给该消费者，
+但实际上该消费者已成功消费了该条消息，造成消费者消费了重复的消息。
+
+####9.1.3.解决思路
+
+MQ 消费者的幂等性的解决**一般使用全局 ID** 或者**写个唯一标识**比如时间戳 或者 UUID 或者订单消费者消费 MQ 中的消息也可利用 MQ 的该 id 来判断，或者可按自己的规则生成一个全局唯一 id，
+**每次消费消息时用该 id 先判断该消息是否已消费过**。
+
+####9.1.4.消费端的幂等性保障
+
+在海量订单生成的业务高峰期，生产端有可能就会重复发生了消息，这时候消费端就要实现幂等性， 这就意味着我们的消息永远不会被消费多次，即使我们收到了一样的消息。
+**业界主流的幂等性有两种操作:a. 唯一 ID+指纹码机制,利用数据库主键去重 b.利用 redis 的原子性去实现**
+
+####9.1.5.唯一ID+指纹码机制
+
+指纹码:**我们的一些规则或者时间戳加别的服务给到的唯一信息码,它并不一定是我们系统生成的，基本都是由我们的业务规则拼接而来，但是一定要保证唯一性**，
+然后就利用查询语句进行判断这个 id 是否存在数据库中,
+**优势就是实现简单就一个拼接，然后查询判断是否重复；劣势就是在高并发时，如果是单个数据库就会有写入性能瓶颈当然也可以采用分库分表提升性能，但也不是我们最推荐的方式**。
+
+####9.1.6.Redis 原子性 （推荐解决方案）
+**利用 redis 执行 setnx 命令，天然具有幂等性。从而实现不重复消费**
+
+
+### 9.2.优先级队列
+
+#### 9.2.1.使用场景
+
+在我们系统中有一个**订单催付**的场景，我们的客户在天猫下的订单,淘宝会及时将订单推送给我们，如果在用户设定的时间内未付款那么就会**给用户推送一条短信提醒**，
+但是，对天猫来说， 天猫商家需要分大客户和小客户，比如像苹果，小米这样大商家一年起码能给天猫创造很大的利润，所以理应当然，他们的订单必须得到优先处理 ，
+~~而曾经我们的后端系统是使用 redis 来存放的定时轮询，大家都知道 redis 只能用 List 做一个简简单单的消息队列，并不能实现一个优先级的场景~~
+所以**订单量大的情况采用 RabbitMQ 进行改造和优化,如果发现是大客户的订单给一个相对比较高的优先级**， 否则就是默认优先级。
+
+![rabbitmq优先级队列示意图.png](rabbitmq优先级队列示意图.png)
+
+先进先出。 先排队。排完队之后优先级越大的越早执行。
+
+ 7/3,9/4,3/7,6/5   被重新排队后：
+
+ 7/3,9/4,6/5,3/7
+
+图示中 3/7 的 7代表优先级。 第一个被消费的会是 3/7
+####9.2.2.如何添加
+a.控制台页面添加
+
+![rabbitmq页面增加队列时设置优先级.png](rabbitmq页面增加队列时设置优先级.png)
+b.队列中代码添加优先级
+
+    Map<String, Object> params = new HashMap(); params.put("x-max-priority", 10);
+    channel.queueDeclare("hello", true, false, false, params);
+
+c.消息中代码添加优先级
+
+    AMQP.BasicProperties properties = new AMQP.BasicProperties().builder().priority(5).build();
+
+d.注意事项
+    要让队列实现优先级需要做的事情有如下事情:队列需要设置为优先级队列，消息需要设置消息的优先级，消费者需要等待消息已经发送到队列中才去消费因为，
+    这样才有机会对消息进行排序
+
+优先级队列demo演示：
+生产者（使用原 helloworld demo）
+
+```java
+package com.atguigu.rabbitmq.helloworld;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import org.junit.Test;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * @author pt
+ * @createdate 2022/3/20 0020
+ * @desc 生产者-发消息
+ */
+@Component
+public class Producer {
+
+
+    public static final String QUEUE_NAME = "HELLO";
+//    @Value("${rabbitmq.host}")
+//    private static String host;
+//    @Value("${rabbitmq.userName}")
+//    private static String userName;
+//    @Value("${rabbitmq.password}")
+//    private static String password;
+
+    /**
+     * @see com.rabbitmq.client.Channel#queueDeclare(java.lang.String, boolean, boolean, boolean, java.util.Map)
+     */
+    @Test
+    public void test1() {
+
+
+    }
+
+    public static void main(String[] args) {
+        mockSetMessage();
+    }
+
+    public static void mockSetMessage() {
+        ConnectionFactory connectionFactory = RabbitmqUtil.getConnectionFactory();
+
+        try {
+            // 创建链接
+            Connection connection = connectionFactory.newConnection();
+            Channel channel = connection.createChannel();
+
+              /*
+              生成一个队列
+              @param queue the name of the queue 队列名称
+
+              @param durable true if we are declaring a durable queue (the queue will survive a server restart)
+              队列里面的消息是否持久化（磁盘）默认情况消息存储在内存中
+
+              @param exclusive true if we are declaring an exclusive queue (restricted to this connection)
+              该队列是否只供一个消费者进行消费是否进行消息共享，tru可以多个消费者消费fa1se:只能一个消费者消费
+
+              @param autoDelete true if we are declaring an autodelete queue (server will delete it when no longer in use)
+              是否自动删除最后一个消费者段开连接以后，该队列是否自动删除  true表示自动删除 false 表示不自动删除
+
+              @param arguments other properties (construction arguments) for the queue
+             其他參數
+             * */
+            Map<String, Object> arguments = new HashMap<>();
+            // 官方允许是0-255之间此处设置10允许优化级范围为0-10不要设置过大浪费CPU与内存
+            arguments.put("x-max-priority", 10);
+
+            channel.queueDeclare(QUEUE_NAME, true, false, false, arguments);
+            //  发消息
+            for (int i = 1; i < 11; i++) {
+                String message = "hello world";
+                message = message + i;
+                if (i == 5) {
+                    AMQP.BasicProperties properties = new AMQP.BasicProperties().builder().priority(10).build();
+                    channel.basicPublish("", QUEUE_NAME, properties, message.getBytes());
+                } else {
+                    channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
+
+                }
+            }
+            /*
+            Publish a message. Publishing to a non-existent exchange will result in a channel-level protocol exception, which closes the channel.
+            Invocations of Channel#basicPublish will eventually block if a resource-driven alarm  is in effect.
+            发送一个消息
+            Params:
+            exchange – the exchange to publish the message to  发送到哪个交换机
+            routingKey – the routing key 路由的key是哪一个 （当前demo 是队列的名称）
+            props – other properties for the message - routing headers etc 其他参数信息 （当前demo）
+            body – the message body 发送消息的消息体
+            Throws:
+            IOException – if an error is encountered
+            * */
+            // 防火墙的端口记得放行并reload  5672、15672
+            System.out.println("消息发送完毕");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+}
+
+```
+消费者：
+```java
+package com.atguigu.rabbitmq.helloworld;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.CancelCallback;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.DeliverCallback;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * @author pt
+ * @createdate 2022/3/20 0020
+ * @desc 消费者 接收消息的
+ */
+public class Consumer {
+    // 队列的名称
+
+    public static final String QUEUE_NAME = "HELLO";
+
+    // 接收消息
+    public static void main(String[] args) throws IOException, TimeoutException {
+
+        ConnectionFactory connectionFactory = RabbitmqUtil.getConnectionFactory();
+
+        Connection connection = connectionFactory.newConnection();
+        Channel channel = connection.createChannel();
+
+        // 声明接收消息
+        DeliverCallback deliverCallback = (consumerTag, message) -> {
+            byte[] body = message.getBody();
+            System.out.println(new String(body));
+        };
+        // 声明取消消息
+        CancelCallback cancelCallback = consumerTag -> {
+            System.out.println("消费消息被中断");
+        };
+
+        /**
+         * 消费者消费消息
+         1.消费哪个队列
+         2.消费成功之后是否要自动
+         3.消费者未成功消费的回调
+         4.消费者取消消费的回调
+         5.应答true代表的自动应答false代表手动应答
+         */
+
+
+        String s = channel.basicConsume(QUEUE_NAME, true, deliverCallback, cancelCallback);
+
+    }
+}
+
+
+
+
+
+
+
+```
+
+先启动生产者之后。再启动消费者。不然先启动消费者的话 消息一下就被消费完，无法体现优先级
+
+###9.3.惰性队列
+
+**正常队列和惰性 队列的区别：消息保存在内存中还是在磁盘上
+正常情况：消息是保存在内存中 消费相对惰性队列快
+惰性队列：消息是保存在磁盘中 消费相对普通队列慢**
+
+#### 9.3.1.使用场景
+
+RabbitMQ 从 3.6.0 版本开始引入了惰性队列的概念。惰性队列会尽可能的将消息存入磁盘中，而在消费者消费到相应的消息时才会被加载到内存中，
+它的一个重要的设计目标是能够支持更长的队列，即支持更多的消息存储。**当消费者由于各种各样的原因(比如消费者下线、宕机亦或者是由于维护而关闭等)**而致使长时间内
+不能消费消息造成**消息堆积**时，惰性队列就很有必要了。
+
+**默认情况下，当生产者将消息发送到 RabbitMQ 的时候，队列中的消息会尽可能的存储在内存之中， 这样可以更加快速的将消息发送给消费者。即使是持久化的消息，**
+在被写入磁盘的同时也会在内存中驻留一份备份。当 RabbitMQ 需要释放内存的时候，会将内存中的消息换页至磁盘中，这个操作会耗费较长的时间，也会阻塞队列的操作，
+进而无法接收新的消息。虽然 RabbitMQ 的开发者们一直在升级相关的算法， 但是效果始终不太理想，尤其是在消息量特别大的时候。
+
+#### 9.3.2.两种模式 (正常模式和惰性队列模式)
+
+队列具备两种模式：**default 和 lazy**。默认的为 default 模式，在 3.6.0 之前的版本无需做任何变更。lazy 模式即为惰性队列的模式，
+可以通过调用 channel.queueDeclare 方法的时候在参数中设置，也可以通过Policy 的方式设置，如果一个队列同时使用这两种方式设置的话，
+那么 Policy 的方式具备更高的优先级。如果要通过声明的方式改变已有队列的模式的话，那么只能先删除队列，然后再重新声明一个新的。
+在队列声明的时候可以通过“**x-queue-mode”参数来设置队列的模式，取值为“default”和“lazy”**。下面示例中演示了一个惰性队列的声明细节：
+
+    Map<String, Object> args = new HashMap<String, Object>(); 
+    args.put("x-queue-mode", "lazy"); 
+    channel.queueDeclare("myqueue", false, false, false, args);
+
+#### 9.3.3.内存开销对比
+![内存开销对比.png](内存开销对比.png)
+
 
 5.1-5.4 学习 
 let me get one more
