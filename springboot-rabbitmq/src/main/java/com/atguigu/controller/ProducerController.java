@@ -53,7 +53,7 @@ public class ProducerController {
         rabbitTemplate.convertAndSend(CONFIRM_EXCHANGE_NAME, routingKey, message + routingKey, correlationData2);
 
         rabbitTemplate.convertAndSend(ConfirmConfig.CONFIRM_EXCHANGE_NAME,
-                ConfirmConfig.CONFIRM_ROUTING_KEY, message);
+                ConfirmConfig.CONFIRM_ROUTING_KEY + UUID.randomUUID(), message);
 
         log.info("发送消息内容:{}", message);
     }
