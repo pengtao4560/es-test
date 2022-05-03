@@ -643,6 +643,8 @@ firewall-cmd --permanent --add-port=39000/tcp
 firewall-cmd --permanent --add-port=40000/tcp
 firewall-cmd --permanent --add-port=15672/tcp
 firewall-cmd --permanent --add-port=5672/tcp
+firewall-cmd --permanent --add-port=4369/tcp
+firewall-cmd --permanent --add-port=25672/tcp
 
     # 移除端口
     firewall-cmd --permanent --remove-port=8080/tcp
