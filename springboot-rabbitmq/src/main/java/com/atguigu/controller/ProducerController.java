@@ -33,7 +33,7 @@ public class ProducerController {
     }*/
 
     /**
-     * @see <a href="http://localhost:8672/confirm/sendMessage/dajiahao1"></a>
+     * @see <a href="http://localhost:8672/confirm/sendMessage/helloworld"></a>
      * @param message
      */
     @GetMapping("/sendMessage/{message}")
