@@ -13,8 +13,9 @@ spring:
 #发布消息成功到交换器后会触发回调方法
 #⚫SIMPLE
     publisher-confirm-type: correlated
-
+# 备份交换机
     publisher-returns: true
+# mandatory 参数与备份交换机可以一起使用的时候，如果两者同时开启，消息究竟何去何从？谁优先级高，经过上面结果显示答案是备份交换机优先级高。
 
   mvc:
     pathmatch:

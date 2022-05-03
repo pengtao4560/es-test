@@ -23,38 +23,43 @@ public class ProducerController {
     public static final String CONFIRM_EXCHANGE_NAME = "confirm.exchange";
     @Autowired
     private RabbitTemplate rabbitTemplate;
-/*    @Autowired
-    private MyCallBack myCallBack;
-
-    //依赖注入 rabbitTemplate 之后再设置它的回调对象
-    @PostConstruct
-    public void init(){
-        rabbitTemplate.setConfirmCallback(myCallBack);
-    }*/
 
     /**
-     * @see <a href="http://localhost:8672/confirm/sendMessage/helloworld"></a>
+     * @see <a href="http://localhost:8672/confirm/sendMessage/ok"></a>
+     * @see <a href="http://localhost:8672/confirm/sendMessage/noExchange"></a>
+     * @see <a href="http://localhost:8672/confirm/sendMessage/routingError"></a>
      * @param message
      */
     @GetMapping("/sendMessage/{message}")
-    public void sendMessage(@PathVariable String message){
+    public String sendMessage(@PathVariable String message){
+        String result = "其他情况";
         //指定消息 id 为 1
         CorrelationData correlationData1 = new CorrelationData("1");
         String routingKey = "key1";
-        // 模拟正确 生产者
-        rabbitTemplate.convertAndSend(CONFIRM_EXCHANGE_NAME, routingKey, message + routingKey, correlationData1);
-        // 模拟发送失败情况 交换机不存在
-        rabbitTemplate.convertAndSend(CONFIRM_EXCHANGE_NAME + UUID.randomUUID(), routingKey, message + routingKey, correlationData1);
+        // ---------模拟正确 生产者------------
+        if ("ok".equalsIgnoreCase(message)) {
+            log.info("---------模拟正确 生产者------------");
+            rabbitTemplate.convertAndSend(CONFIRM_EXCHANGE_NAME, routingKey, message + routingKey, correlationData1);
+            result = "模拟正确 生产者";
+        }
+        if ("noExchange".equalsIgnoreCase(message)) {
+            log.info("---------模拟发送失败情况 交换机不存在 no exchange ------------");
+            rabbitTemplate.convertAndSend(CONFIRM_EXCHANGE_NAME + UUID.randomUUID(), routingKey, message + routingKey, correlationData1);
+            result = "模拟发送失败情况 交换机不存在";
+        }
+
 
         // 模拟发送失败情况： 队列不正确（routing key 不存在）
-        CorrelationData correlationData2 = new CorrelationData("2");
-        routingKey = "key2";
 
-        rabbitTemplate.convertAndSend(CONFIRM_EXCHANGE_NAME, routingKey, message + routingKey, correlationData2);
-
-        rabbitTemplate.convertAndSend(ConfirmConfig.CONFIRM_EXCHANGE_NAME,
-                ConfirmConfig.CONFIRM_ROUTING_KEY + UUID.randomUUID(), message);
-
+        if ("routingError".equalsIgnoreCase(message)) {
+            log.info("---------模拟发送失败情况： 1. 队列不正确（routing key 不存在） 2. 报警------------");
+            rabbitTemplate.convertAndSend(ConfirmConfig.CONFIRM_EXCHANGE_NAME,
+                    ConfirmConfig.CONFIRM_ROUTING_KEY + UUID.randomUUID(), message);
+            result = "1. 模拟发送失败情况： 队列不正确（routing key 不存在）需要将：ConfirmConfig中该行注释放开 // return new DirectExchange(CONFIRM_EXCHANGE_NAME);" +
+                    "\n 2. 模拟无法投递的消息发送给备份交换机 报警消费者 ";
+        }
+        // mandatory 参数与备份交换机可以一起使用的时候，如果两者同时开启，消息究竟何去何从？谁优先级高，经过上面结果显示答案是备份交换机优先级高。
         log.info("发送消息内容:{}", message);
+        return result;
     }
 }

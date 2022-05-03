@@ -2066,6 +2066,7 @@ public class DelayedQueueConfig {
 7. 报警队列
 8. 报警消费者
 
+注意：改exchange 信息了之后需要 删除之后重新创建
 
 
 5.1-5.4 学习 
@@ -2086,3 +2087,5 @@ javaGuide,
     21:00-21:30
 
 23:59睡觉
+
+
