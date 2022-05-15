@@ -10,18 +10,17 @@ MQ(message queue)，从字面意思上看，本质是个队列，FIFO 先入先�
 ### 1.1.2为什么要用MQ
 ##### 1.流量消峰
 
-    举个例子，如果订单系统最多能处理一万次订单，这个处理能力应付正常时段的下单时绰绰有余，正
-    常时段我们下单一秒后就能返回结果。但是在高峰期，如果有两万次下单操作系统是处理不了的，只能限
-    制订单超过一万后不允许用户下单。
+举个例子，如果订单系统最多能处理一万次订单，这个处理能力应付正常时段的下单时绰绰有余，正常时段我们下单一秒后就能返回结果。
+但是在高峰期，如果有两万次下单操作系统是处理不了的，只能限制订单超过一万后不允许用户下单。
 
 **使用消息队列做缓冲，我们可以取消这个限制，把一秒内下的订单分散成一段时间来处理，这时有些用户可能在下单十几秒后才能收到下单成功的操作，
 但是比不能下单的体验要好。**
 
 ##### 2.应用解耦
 
-    以电商应用为例，应用中有订单系统、库存系统、物流系统、支付系统。用户创建订单后，如果耦合调用库存系统、物流系统、支付系统，任何一个子系统出了故障，
-    都会造成下单操作异常。当转变成基于消息队列的方式后，系统间调用的问题会减少很多，比如物流系统因为发生故障，需要几分钟来修复。在这几分钟的时间里，
-    物流系统要处理的内存被缓存在消息队列中，用户的下单操作可以正常完成。当物流系统恢复后，继续处理订单信息即可，中单用户感受不到物流系统的故障，提升系统的可用性。
+以电商应用为例，应用中有订单系统、库存系统、物流系统、支付系统。用户创建订单后，如果耦合调用库存系统、物流系统、支付系统，任何一个子系统出了故障，
+都会造成下单操作异常。当转变成基于消息队列的方式后，系统间调用的问题会减少很多，比如物流系统因为发生故障，需要几分钟来修复。在这几分钟的时间里，
+物流系统要处理的内存被缓存在消息队列中，用户的下单操作可以正常完成。当物流系统恢复后，继续处理订单信息即可，中单用户感受不到物流系统的故障，提升系统的可用性。
 
 ![](图片/消息队列-应用解耦.png)
 
@@ -123,6 +122,12 @@ RabbitMQ 是一个消息中间件：它接受并转发消息。你可以把它�
 
 
 ### 1.2.3 RabttiMQ 六大模式(六大核心部分)
+#### 简单模式
+#### 工作模式
+#### 发布订阅模式
+#### 路由模式
+#### 主题模式
+#### 发布确认模式
 
 ![](图片/rabbitmq六大模式.png)
 
@@ -132,7 +137,7 @@ RabbitMQ 是一个消息中间件：它接受并转发消息。你可以把它�
 
 ### 1.2.4 RabbitMQ各个名词介绍：
 
-##### Broker
+##### Broker (RabbitMQ Server 就是 Message Broker)
 接收和分发消息的应用，RabbitMQ Server 就是 Message Broker
 
 Virtual host：出于多租户和安全因素设计的，把 AMQP 的基本组件划分到一个虚拟的分组中，类似
@@ -147,9 +152,9 @@ publisher／consumer 和 broker 之间的 TCP 连接
 
 Connection 的开销将是巨大的，效率也较低。Channel 是在 connection 内部建立的逻辑连接，如果应用程序支持多线程，
 通常每个 thread 创建单独的 channel 进行通讯，AMQP method 包含了 channel id 帮助客户端和 message broker 识别 channel，
-所以 channel 之间是完全隔离的。Channel 作为轻量级的Connection 极大减少了操作系统建立 TCP connection 的开销
+所以 channel 之间是完全隔离的。**Channel 作为轻量级的Connection 极大减少了操作系统建立 TCP connection 的开销**
 
-#####Exchange
+##### Exchange
 message 到达 broker 的第一站，根据分发规则，匹配查询表中的 routing key，分发消息到 queue 中去。常用的类型有：
 **direct (point-to-point), topic (publish-subscribe) and fanout(multicast)**
 
@@ -157,7 +162,8 @@ message 到达 broker 的第一站，根据分发规则，匹配查询表中的 
 消息最终被送到这里（队列 Queue）等待 consumer 取走
 
 ##### Binding
-exchange 和 queue 之间的虚拟连接，binding 中可以包含 routing key，Binding 信息被保存到 exchange 中的查询表中，用于 message 的分发依据
+exchange 和 queue 之间的虚拟连接，binding 中可以包含 routing key，Binding 信息被保存到 exchange 中的查询表中，
+用于 message 的分发依据
 
 ### 1.2.5.安装
 
@@ -226,14 +232,174 @@ rabbitmq-plugins enable rabbitmq_management
 
 ## 2.1 maven依赖
 ## 2.2 消息生产者
+```java
+package com.atguigu.rabbitmq;
+
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import org.junit.Test;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * @author pt
+ * @createdate 2022/3/20 0020
+ * @desc 生产者-发消息
+ */
+@Component
+public class Producer {
+
+
+    public static final String QUEUE_NAME = "HELLO";
+//    @Value("${rabbitmq.host}")
+//    private static String host;
+//    @Value("${rabbitmq.userName}")
+//    private static String userName;
+//    @Value("${rabbitmq.password}")
+//    private static String password;
+
+    /**
+     * @see com.rabbitmq.client.Channel#queueDeclare(java.lang.String, boolean, boolean, boolean, java.util.Map)
+     */
+    public static void main(String[] args) {
+        mockSetMessage();
+    }
+
+    public static void mockSetMessage() {
+        // 创建一个连接工厂
+        ConnectionFactory connectionFactory = new ConnectionFactory();
+        // 工厂IP 连接RABBITMOQ 队列
+        String host = "192.168.220.128";
+        String userName = "admin";
+        String password = "admin";
+        connectionFactory.setHost(host);
+        connectionFactory.setPort(5672);
+        connectionFactory.setUsername(userName);
+        connectionFactory.setPassword(password);
+        connectionFactory.setHandshakeTimeout(30000);
+        ConnectionFactory connectionFactory = RabbitmqUtil.getConnectionFactory();
+
+        try {
+            // 创建链接
+            Connection connection = connectionFactory.newConnection();
+            Channel channel = connection.createChannel();
+            // 生成一个队列
+      /*
+      @param queue the name of the queue 队列名称
+
+      @param durable true if we are declaring a durable queue (the queue will survive a server restart)
+      队列里面的消息是否持久化（磁盘）默认情况消息存储在内存中
+
+      @param exclusive true if we are declaring an exclusive queue (restricted to this connection)
+      该队列是否只供一个消费者进行消费是否进行消息共享，tru可以多个消费者消费fa1se:只能一个消费者消费
+
+      @param autoDelete true if we are declaring an autodelete queue (server will delete it when no longer in use)
+      是否自动删除最后一个消费者段开连接以后，该队列是否自动删除  true表示自动删除 false 表示不自动删除
+
+      @param arguments other properties (construction arguments) for the queue
+     其他參數
+     * */
+            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+            //  发消息
+            String message = "hello world";
+            /*
+            Publish a message. Publishing to a non-existent exchange will result in a channel-level protocol exception, which closes the channel.
+            Invocations of Channel#basicPublish will eventually block if a resource-driven alarm  is in effect.
+
+            Params:
+            exchange – the exchange to publish the message to  发送到哪个交换机
+            routingKey – the routing key 路由的key （当前demo 是队列的名称）
+            props – other properties for the message - routing headers etc 其他参数信息 （当前demo）
+            body – the message body
+            Throws:
+            IOException – if an error is encountered
+            * */
+            channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
+            // 防火墙的端口记得放行并reload  5672、15672
+            System.out.println("消息发送完毕");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+}
+
+
+```
 ## 2.3 消息消费者
+```java
+package com.atguigu.rabbitmq.helloworld;
+
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.CancelCallback;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.DeliverCallback;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * @author pt
+ * @createdate 2022/3/20 0020
+ * @desc 消费者 接收消息的
+ */
+public class Consumer {
+    // 队列的名称
+
+    public static final String QUEUE_NAME = "HELLO";
+
+    // 接收消息
+    public static void main(String[] args) throws IOException, TimeoutException {
+
+        ConnectionFactory connectionFactory = RabbitmqUtil.getConnectionFactory();
+
+        Connection connection = connectionFactory.newConnection();
+        Channel channel = connection.createChannel();
+
+        // 声明接收消息
+        DeliverCallback deliverCallback = (consumerTag, message) -> {
+            byte[] body = message.getBody();
+            System.out.println(new String(body));
+        };
+        // 声明取消消息
+        CancelCallback cancelCallback = consumerTag -> {
+            System.out.println("消费消息被中断");
+        };
+
+        /**
+         * 消费者消费消息
+         1.消费哪个队列
+         2.消费成功之后是否要自动
+         3.消费者未成功消费的回调
+         4.消费者取消消费的回调
+         5.应答true代表的自动应答false代表手动应答
+         */
+
+
+        String s = channel.basicConsume(QUEUE_NAME, true, deliverCallback, cancelCallback);
+
+    }
+}
+
+
+```
+
 
 
 # 3. Work Queues
-工作队列(又称任务队列)的主要思想是避免立即执行资源密集型任务，而不得不等待它完成。 相反我们安排任务在之后执行。我们把任务封装为消息并将其发送到队列。
-在后台运行的工作进程将弹出任务并最终执行作业。当有多个工作线程时，这些工作线程将一起处理这些任务。
+工作队列(又称任务队列)的主要思想是避免立即执行资源密集型任务，而不得不等待它完成。 相反我们安排任务在之后执行。
+我们把任务封装为消息并将其发送到队列。在后台运行的工作进程将弹出任务并最终执行作业。当有多个工作线程时，
+这些工作线程将一起处理这些任务。
 
-##### 轮训分发消息
+## 3.1 轮训分发消息
 在这个案例中我们会启动两个工作线程，一个消息发送线程，我们来看看他们两个工作线程是如何工作的。
 
 注意事项：
@@ -241,13 +407,31 @@ rabbitmq-plugins enable rabbitmq_management
 
 ![](图片/rabbitmq-work queues.png)
 
-
+### 启动两个工作线程
 启动第一个线程
 ```java
 /**
  * @see com.atguigu.rabbitmq.workerqueue.Worker01;
  */
+/**
+ * @author pt
+ * @createdate 2022/3/20 0020
+ * @desc 这是一个工作线程。相当于之前消费者
+ */
+public class Worker01 {
+
+    public static void main(String[] args) throws IOException, TimeoutException {
+
+        Channel channel = RabbitmqUtil.getChannel();
+
+        // 消息的接收
+        System.out.println("C2等待接受消息......");
+        String s = channel.basicConsume(RabbitmqConstant.QUEUE_NAME, true, RabbitmqUtil.getSimpleDeliverCallback(), RabbitmqUtil.getSimpleCancelCallback());
+
+    }
+}
 ```
+
 
 IDEA edit configurations
 
@@ -255,35 +439,88 @@ IDEA edit configurations
 
 然后 启动一个生产者大量发消息。 worker01 和 另一个工作线程worker01  轮询接受
 rabbitmq工作队列模式演示：
+### 启动生产者
+```java
+package com.atguigu.rabbitmq.workerqueue;
 
+import com.atguigu.rabbitmq.constant.RabbitmqConstant;
+import com.atguigu.rabbitmq.util.RabbitmqUtil;
+import com.rabbitmq.client.Channel;
+
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * 生产者 发送大量的消息
+ *
+ */
+public class ProducerTask01 {
+
+    // 队列名称
+    public static void main(String[] args) throws IOException, TimeoutException {
+
+        Channel channel = RabbitmqUtil.getChannel();
+        // 队列的声明
+        // 需要持久化
+        boolean durable = true;
+        channel.queueDeclare(RabbitmqConstant.QUEUE_NAME, true, false, false, null);
+        // 本次从控制台当中接受信息(控制台来发送消息)
+
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNext()) {
+            String message = scanner.next();
+            /*
+            发送一个消费
+            param
+            1.发送到哪个交换机 ""
+            2.路由的Key值是哪个本次是队列的名称 RabbitmqConstant.QUEUE_NAME
+            3.其它参数信息 null
+            4.发送消息的消息体 message.getBytes()
+            * */
+            channel.basicPublish("", RabbitmqConstant.QUEUE_NAME, null, message.getBytes());
+        }
+    }
+}
+
+
+```
+### 结果战士
 ![](图片/rabbitmq-工作队列模式demo演示-轮询.png)
 
-### 消息应答
-3.2.1. 概念
-消费者完成一个任务可能需要一段时间，如果其中一个消费者处理一个长的任务并仅只完成了部分突然它挂掉了，会发生什么情况。RabbitMQ 一旦向消费者传递了
-一条消息， 便立即将该消息标记为删除。在这种情况下，突然有个消费者挂掉了，我们将丢失正在处理的消息。以及后续 发送给该消费这的消息，因为它无法接收到。
-为了保证消息在发送过程中不丢失，rabbitmq 引入消息应答机制，
+## 3.2 消息应答
+
+### 3.2.1.  消息应答概念
+消费者完成一个任务可能需要一段时间，如果其中一个消费者处理一个长的任务并仅只完成了部分突然它挂掉了，会发生什么情况。
+RabbitMQ 一旦向消费者传递了一条消息， 便立即将该消息标记为删除。在这种情况下，突然有个消费者挂掉了，我们将丢失正在处理的消息。
+以及后续 发送给该消费这的消息，因为它无法接收到。 为了保证消息在发送过程中不丢失，rabbitmq 引入消息应答机制，
 **消息应答就是:消费者在接收到消息并且处理该消息之后，告诉 rabbitmq 它已经处理了，rabbitmq 可以把该消息删除了。**
 
-3.2.2. 自动应答
-消息发送后立即被认为已经传送成功，这种模式需要在**高吞吐量和数据传输安全性方面做权衡**,因为这种模式如果消息在接收到之前，消费者那边出现连接或者
-channel 关闭，那么消息就丢失了,当然另一方面这种模式消费者那边可以传递过载的消息，没有对传递的消息数量进行限制，
+### 3.2.2. 消息自动应答
+消息发送后立即被认为已经传送成功，这种模式需要在**高吞吐量和数据传输安全性方面做权衡**,因为这种模式如果消息在接收到之前，
+消费者那边出现连接或者channel 关闭，那么消息就丢失了,当然另一方面这种模式消费者那边可以传递过载的消息，没有对传递的消息数量进行限制，
 当然这样有可能使得消费者这边由于接收太多还来不及处理的消息，导致这些消息的积压，最终使得内存耗尽，最终这些消费者线程被操作系统杀死，
 **所以自动应答这种模式仅适用在消费者可以高效并以某种速率能够处理这些消息的情况下使用**
 
-3.2.3. (手动应答)消息应答的方法
+### 3.2.3. 消息应答的方法
 
 A.Channel.basicAck(用于**肯定确认**)
+
 RabbitMQ 已知道该消息并且成功的处理消息，可以将其丢弃了
-B.Channel.basicNack(用于否定确认) C.Channel.basicReject(用于否定确认) 与 Channel.basicNack 相比少一个参数不处理该消息了直接拒绝，
+B.Channel.basicNack(用于否定确认)
+C.Channel.basicReject(用于否定确认) 与 Channel.basicNack 相比少一个参数不处理该消息了直接拒绝，
 可以将其丢弃了
 
-#### Multiple 的解释
+### 3.2.4 Multiple 的解释
+**手动应答的好处是可以批量应答并且减少网络拥堵**
+multiple 的 true 和 false 代表不同意思 true 代表批量应答 channel 上未应答的消息
+比如说 channel 上有传送 tag 的消息 5,6,7,8 当前 tag 是 8 那么此时 5-8 的这些还未应答的消息都会被确认收到消息应答
+false 同上面相比 只会应答 tag=8 的消息 5,6,7 这三个消息依然不会被确认收到消息应答
 
 ```java
 /**
  * @see com.rabbitmq.client.Channel#basicAck
- * 
+ *
  */
 
 public interface Channel extends ShutdownNotifier, AutoCloseable {
@@ -302,17 +539,13 @@ public interface Channel extends ShutdownNotifier, AutoCloseable {
     void basicAck(long deliveryTag, boolean multiple) throws IOException;
 }
 ```
-手动应答的好处是可以批量应答并且减少网络拥堵
-multiple 的 true 和 false 代表不同意思 true 代表批量应答 channel 上未应答的消息
-比如说 channel 上有传送 tag 的消息 5,6,7,8 当前 tag 是 8 那么此时 5-8 的这些还未应答的消息都会被确认收到消息应答
-false 同上面相比 只会应答 tag=8 的消息 5,6,7 这三个消息依然不会被确认收到消息应答
 
 ![](图片/rabbitmq批量应答图示.png)
 
 开发时建议是建议不开启批量应答。  否则 5,6,7 的处理过程中可能会有处理失败的情况下。会有消息丢失的可能
 
 
-#### 3.2.5 消息的自动重新入队
+### 3.2.5 消息的自动重新入队
 
 如果消费者由于某些原因失去连接(其通道已关闭，连接已关闭或 TCP 连接丢失)，导致消息未发送 ACK 确认，RabbitMQ 将了解到消息未完全处理，
 并将对其重新排队。如果此时其他消费者可以处理，它将很快将其重新分发给另一个消费者。这样，即使某个消费者偶尔死亡，也可以确保不会丢失任何消息。
@@ -322,9 +555,10 @@ false 同上面相比 只会应答 tag=8 的消息 5,6,7 这三个消息依然�
 
 
 P25 
-#### 消息手动应答
+### 3.2.6 消息手动应答
 消息在手动应答时是不丢失、放回队列中重新消费
 手动 manualack
+代码位于 com.atguigu.manulack 包
 
 ```java
 package com.atguigu.rabbitmq.manualack;
@@ -473,10 +707,19 @@ public class Work04 {
 并被 消费者1 消费。
 结论：
 
-在发送者发送消息 dd，发出消息之后的把 C2 消费者停掉，按理说该 C2 来处理该消息，但是由于它处理时间较长，在还未处理完，
-也就是说 C2 还没有执行 ack 代码的时候，C2 被停掉了，此时会看到消息被 C1 接收到了，说明消息 dd 被重新入队，然后分配给能处理消息的 C1 处理了
+在发送者发送消息 dd，发出消息之后的把 C2 消费者停掉，按理说该 C2 来处理该消息，但是由于它处理时间较长，
+在还未处理完， 也就是说 C2 还没有执行 ack 代码的时候，C2 被停掉了，此时会看到消息被 C1 接收到了，
+说明消息 dd 被重新入队，然后分配给能处理消息的 C1 处理了
 
-#### rabbitmq 队列持久化：
+## 3.3 rabbitmq 持久化
+
+### 3.3.1 RabbitMQ 持久化概念
+刚刚我们已经看到了如何处理任务不丢失的情况，但是如何保障当 RabbitMQ 服务停掉以后消息生产者发送过来的消息不丢失。
+默认情况下 RabbitMQ 退出或由于某种原因崩溃时，它忽视队列和消息， 除非告知它不要这样做。
+确保消息不会丢失需要做两件事：我们需要将队列和消息都标记为持久化
+
+### 3.3.2 队列持久化：
+
 ```java
 package com.atguigu.rabbitmq.manualack;
 
@@ -535,7 +778,7 @@ web界面删除队列
 
 ![](图片/rabbitmq删除队列.png)
 
-#### rabbitmq 消息持久化
+#### 3.3.3 rabbitmq 消息持久化
 
 要想让消息实现持久化需要在消息生产者修改代码，MessageProperties.PERSISTENT_TEXT_PLAIN 添加这个属性。
 

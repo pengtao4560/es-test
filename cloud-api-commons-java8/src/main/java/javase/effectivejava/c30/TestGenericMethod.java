@@ -3,6 +3,7 @@ package javase.effectivejava.c30;
 import org.junit.Test;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -17,8 +18,10 @@ import java.util.function.UnaryOperator;
 public class TestGenericMethod {
 
     public static void main(String[] args) {
-        Set<String> guys = Set.of("Tom", "Dick", "Harry");
-        Set<String> stooges = Set.of("Larry", "Moe", "Curly");
+        Set<String> guys = // Set.of("Tom", "Dick", "Harry");
+                Collections.emptySet();
+        Set<String> stooges = // Set.of("Larry", "Moe", "Curly");
+                Collections.emptySet();
         Set<String> aflCio = union(guys, stooges);
         System.out.println(aflCio); // [Moe, Tom, Harry, Larry, Curly, Dick]
     }
