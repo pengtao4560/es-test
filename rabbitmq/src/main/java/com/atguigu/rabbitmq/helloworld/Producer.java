@@ -5,7 +5,6 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import org.junit.Test;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -33,11 +32,6 @@ public class Producer {
     /**
      * @see com.rabbitmq.client.Channel#queueDeclare(java.lang.String, boolean, boolean, boolean, java.util.Map)
      */
-    @Test
-    public void test1() {
-
-
-    }
 
     public static void main(String[] args) {
         mockSetMessage();

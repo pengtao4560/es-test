@@ -36,3 +36,24 @@ Caused by: com.rabbitmq.client.ShutdownSignalException: channel error; protocol 
 
 
 ![配置镜像队列成功.png](配置镜像队列成功.png)
+
+
+###10.3.Haproxy+Keepalive 实现高可用负载均衡
+
+#### 10.3.1.整体架构图
+
+![rabbitmq整体架构图.png](rabbitmq整体架构图.png)
+
+#### 10.3.2.Haproxy 实现负载均衡
+
+HAProxy 提供高可用性、负载均衡及基于TCPHTTP 应用的代理，**支持虚拟主机，它是免费、快速并且可靠的一种解决方案**，包括 **Twitter,Reddit,StackOverflow,
+GitHub 在内的多家知名互联网公司在使用**。HAProxy 实现了一种事件驱动、单一进程模型，此模型支持非常大的井发连接数。
+
+扩展:[nginx,lvs,haproxy 之间的区别](http://www.ha97.com/5646.html)
+
+#### 10.3.4.Keepalived 实现双机(主备)热备
+
+试想如果前面配置的 HAProxy 主机突然宕机或者网卡失效，那么虽然 RbbitMQ 集群没有任何故障，但是对于外界的客户端来说所有的连接都会被断开结果将是灾难性的。
+为了确保负载均衡服务的可靠性同样显得十分重要，这里就要**引入 Keepalived 它能够通过自身健康检查、资源接管功能做高可用(双机热备)，实现故障转移**.
+
+

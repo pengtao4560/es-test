@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.IntSummaryStatistics;
 import java.util.List;
@@ -22,7 +23,8 @@ import java.util.stream.Collectors;
 public class StreamAPITest {
 
     public static void main(String[] args) {
-        List<Integer> integerList = List.of(1, 2, 3);
+        // List<Integer> integerList = List.of(1, 2, 3);
+        List<Integer> integerList = Collections.emptyList();
         for (Integer integer : integerList) {
 
         }

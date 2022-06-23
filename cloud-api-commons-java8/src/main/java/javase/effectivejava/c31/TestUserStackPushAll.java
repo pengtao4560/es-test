@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
@@ -19,7 +20,7 @@ import java.util.concurrent.ScheduledFuture;
 public class TestUserStackPushAll {
 
     MyNewStack<Number> numberMyNewStack = new MyNewStack<>();
-    Iterable<Integer> integers = new ArrayList<>() {
+    Iterable<Integer> integers = new ArrayList<Integer>() {
         {
             add(11);
             add(12);
@@ -41,7 +42,7 @@ public class TestUserStackPushAll {
 
     @Test
     public void testPopAll() {
-        Collection<Object> objects = new ArrayList<>() {
+        Collection<Object> objects = new ArrayList<Object>() {
             {
                 add(11);
                 add("pengtao");
@@ -56,8 +57,11 @@ public class TestUserStackPushAll {
 
     @Test
     public void testUnion() {
-        Set<Integer> integers = Set.of(1, 3, 5);
-        Set<Double> doubles = Set.of(2.0, 4.0, 6.0);
+        Set<Integer> integers = // Set.of(1, 3, 5);
+                Collections.emptySet();
+        Set<Double> doubles = //  Set.of(2.0, 4.0, 6.0);
+        Collections.emptySet();
+
         Set<Number> numbers = TestGenericMethod.union(integers, doubles);
     }
 
