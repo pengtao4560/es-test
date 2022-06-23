@@ -65,7 +65,7 @@ graphical.target图形界面，类似以前的level5
     main ls
     help cd
 
-#### pwd指令：Print the name of the current working directory. 显示当前目录的绝对路径
+#### pwd指令：Print the name of thhe current working directory. 显示当前目录的绝对路径
 
 #### ls指令：ls - list directory contents
     ls -l

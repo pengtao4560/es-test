@@ -1,5 +1,5 @@
 
-Eureka集群远离：互相注册，相互守望
+Eureka集群原理：互相注册，相互守望
 
 
 P23 eureka actuator微服务信息完善
