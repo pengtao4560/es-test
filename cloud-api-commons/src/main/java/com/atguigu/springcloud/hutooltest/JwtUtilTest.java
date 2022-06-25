@@ -4,7 +4,7 @@ import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.signers.JWTSigner;
 import com.atguigu.springcloud.utils.JwtUtil;
 import org.assertj.core.api.Assertions;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
