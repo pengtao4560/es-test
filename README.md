@@ -1,6 +1,9 @@
 学习 哔哩哔哩尚硅谷 springcloud课程、java8新特性、nginx、linux
 redis、mongo、消息队列、mysql进阶
 
+# TODO  ELK(ElasticSearch+Logstash+Kibana展示)  DOCKER  K8S 
+Pod 副本
+
 **理论+代码+小总结**
 
 ## 单词备忘
@@ -10,6 +13,8 @@ mutex // object on which to synchronize
 sync
 acquire
 Re entrant Lock(可重入锁、又叫递归锁)
+ingress 入口
+
 ## markdown文件
 
 ##### markdown文件表情

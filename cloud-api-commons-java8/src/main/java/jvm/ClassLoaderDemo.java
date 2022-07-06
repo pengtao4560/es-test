@@ -22,7 +22,7 @@ public class ClassLoaderDemo {
         System.out.println("----------------");
         System.out.println(myClassLoader); // sun.misc.Launcher$AppClassLoader@14dad5dc
         System.out.println(myClassLoader.getParent()); //sun.misc.Launcher$ExtClassLoader@4517d9a3
-        System.out.println(myClassLoader.getParent().getParent()); // null
+        System.out.println(myClassLoader.getParent().getParent()); // null  因为 BootStrapClassLoader是 C++语言写的，所以打印的是null
 
         System.out.println("============");
         System.out.println(classLoader);
