@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>springboot-spring源码</artifactId>
+    <artifactId>springboot-springSourceCode</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
