@@ -1094,6 +1094,16 @@ SqlSession关闭之后，一级缓存中的数据会写入二级缓存**
       list表示分页数据
       5表示当前导航分页的数量
 
+如果是springboot项目 
+
+```xml
+<!-- https://mvnrepository.com/artifact/com.github.pagehelper/pagehelper-spring-boot-starter -->
+<dependency>
+    <groupId>com.github.pagehelper</groupId>
+    <artifactId>pagehelper-spring-boot-starter</artifactId>
+    <version>1.4.1</version>
+</dependency>
+```
 
 
 
