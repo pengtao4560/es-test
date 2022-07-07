@@ -231,6 +231,17 @@ rabbitmq-plugins enable rabbitmq_management
 在下图中，“ P”是我们的生产者，“ C”是我们的消费者。中间的框是一个队列-RabbitMQ 代表使用者保留的消息缓冲区
 
 ## 2.1 maven依赖
+```xml
+		<!--RabbitMQ 依赖-->
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-amqp -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-amqp</artifactId>
+        <!--    版本自选-->
+        <version>2.7.1</version>
+    </dependency>
+```
+
 ## 2.2 消息生产者
 ```java
 package com.atguigu.rabbitmq;
@@ -405,7 +416,7 @@ public class Consumer {
 注意事项：
 **一个消息只能被处理一次，不可以处理多次。  避免消息被重复消费**
 
-![](图片/rabbitmq-work queues.png)
+![](图片/rabbitmq-work-queues.png)
 
 ### 启动两个工作线程
 启动第一个线程
