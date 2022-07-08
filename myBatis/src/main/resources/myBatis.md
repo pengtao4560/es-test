@@ -3,16 +3,18 @@
 简介
 #### MyBatis历史
 
-MyBatis最初是Apache的一个开源项目iBatis, 2010年6月这个项目由Apache Software Foundation迁移到了Google Code。随着开发团队转投Google Code旗下，iBatis3.x正式更名为MyBatis。代码于2013年11月迁移到Github。
-iBatis一词来源于“internet'和“abatis"的组合，是一个基于Java的持久层框架。iBatis提供的持久层框架包括SQL Maps和Data Access Objects (DAO)。
+MyBatis最初是Apache的一个开源项目iBatis, 2010年6月这个项目由Apache Software Foundation迁移到了Google Code。
+随着开发团队转投Google Code旗下，iBatis3.x正式更名为MyBatis。代码于2013年11月迁移到Github。
+iBatis一词来源于“internet'和“abatis"的组合，是一个基于Java的持久层框架。iBatis提供的持久层框架
+包括SQL Maps和Data Access Objects (DAO)。
 
-#### MyBatis特性
+#### 什么是Mybatis？MyBatis特性
 
-1) MyBatis是支持定制化SQL、存储过程以及高级映射的优秀的持久层框架
-2) MyBatis避免了几乎所有的JDBC代码和手动设置参数以及获取结果集
-3) MyBatis可以使用简单的XML或注解用于配置和原始映射，将接口和Java的POJO (Plain Old JavaObjects，
+1) MyBatis是一个半自动的ORM(Object Relation Mapping 对象关系映射）框架
+2) MyBatis是支持定制化SQL、存储过程以及高级映射的优秀的持久层框架
+3) MyBatis避免了几乎所有的JDBC代码和手动设置参数以及获取结果集
+4) MyBatis可以使用简单的XML或注解用于配置和原始映射，将接口和Java的POJO (Plain Old JavaObjects，
    普通的Java对象）映射成数据库中的记录
-4) MyBatis是一个半自动的ORM(Object Relation Mapping 对象关系映射）框架
 
 #### MyBatis下载
    [MyBatis下载地址](https://github.com/mybatis/mybatis-3)
@@ -21,7 +23,7 @@ iBatis一词来源于“internet'和“abatis"的组合，是一个基于Java的
 
 轻量级，性能出色
 SQL 和 Java 编码分开，功能边界清晰。Java代码专注业务、SQL语句专注数据
-开发效率稍逊于HIbernate，但是完全能够接受
+开发效率稍逊于Hibernate，但是完全能够接受
 
 
 #### 创建MyBatis的核心配置文件
@@ -53,7 +55,8 @@ char类型不设置长度默认是1.适合 性别等字段
 
 1、映射文件的命名规则:
 表所对应的实体类的类名+Mapper.xml
-例如:表t_user，映射的实体类为User，所对应的映射文件为UserMapper.xml因此一个映射文件对应一个实体类，对应—张表的操作
+例如:表t_user，映射的实体类为User，所对应的映射文件为UserMapper.xml因此一个映射文件对应一个实体类，
+对应—张表的操作
 MyBatis映射文件用于编写SQL，访问以及操作表中的数据
 MyBatis映射文件存放的位置是src/main/resources/mappers目录下
 
@@ -460,14 +463,16 @@ File | Settings | Editor | File and Code Templates
 
 
 
-#### 六 yBatis 的各种查询功能
+#### 六 MyBatis 的各种查询功能
 
    MyBatis的各种查询功能：
+
    1、若查询出的数据只有一条
       a>可以通过实体类对象接收
       b>可以通过list集合接收
       c>可以通过map集合接收
    结果：{password=123456, sex=男, id=3, age=23, email=12345@qq.com, username=admin}
+
    2、若查询出的数据有多条
       a>可以通过实体类类型的list集合接收
       b>可以通过map类型的list集合接收
@@ -476,7 +481,7 @@ File | Settings | Editor | File and Code Templates
   
    MyBatis中设置了默认的类型别名
    java.lang.Integer-->int,integer
-   int-->_int,_integer
+   int-->_int,integer
    Map-->map
    String-->string
 
@@ -674,9 +679,11 @@ public class Emp {
 
 ##### 分步查询的优点：
 可以实现延迟加载，但是必须在核心配置文件中设置全局配置信息：
+
 lazyLoadingEnabled：延迟加载的全局开关。当开启时，所有关联对象都会延迟加载
-aggressiveLazyLoading：当开启时，任何方法的调用都会加载该对象的所有属性。 否则，每个
-属性会按需加载
+
+aggressiveLazyLoading：当开启时，任何方法的调用都会加载该对象的所有属性。 否则，每个属性会按需加载
+
 此时就可以实现按需加载，获取的数据是什么，就只会执行相应的sql。此时可通过association和
 collection中的fetchType属性设置当前的分步查询是否使用延迟加载，fetchType="lazy(延迟加
 载)|eager(立即加载)"
