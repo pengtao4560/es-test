@@ -557,7 +557,7 @@ du -ach --max-depth=1 /opt
     ps -aux|grep sshd
     ps -ef|grep java
 
-![](linux进程ps含义.png)
+![](image/linux进程ps含义.png)
     [root@pengtao ~]# ps -ax|grep sshd:pengtao
     Warning: bad syntax, perhaps a bogus '-'? See /usr/share/doc/procps-3.2.8/FAQ
     4151 pts/3    S+     0:00 grep sshd:pengtao
