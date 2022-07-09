@@ -10,7 +10,10 @@
 mongoDb + redis + oracle +
 使用EasyExcel实现批量签约和PCI签约模块的Excel上传，下载功能。完成批量签约的
 
-
+相关技术：前后端分离项目，使用SpringCloud微服务框架，eureka/openFeign/Config等模块完成项目开发，使用mybatis持久层框架，
+mysql关系型数据库以及mongoDB、redis非关系型数据库，
+使用EasyExcel完成项目相关签约数据导入导出,使用JWT控制权限，使用SwaggerUI、postman与前端完成联调任务，前端使用Vue完成开发。
+通过DevOps流水线完成项目部署管理，使用gitLab
 
 日照金保系统
 金保工程是利用先进的信息技术，以中央、省、市三级网络为依托，涵盖县、乡等基层机构，

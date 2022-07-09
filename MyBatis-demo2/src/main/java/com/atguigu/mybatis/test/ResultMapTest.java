@@ -40,7 +40,6 @@ public class ResultMapTest {
      * a>collection
      * b>分步查询
      */
-
     @Test
     public void testGetEmpAndDeptByStep(){
         SqlSession sqlSession = SqlSessionUtils.getSqlSession();
