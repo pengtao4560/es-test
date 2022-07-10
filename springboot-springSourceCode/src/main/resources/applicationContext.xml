@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- init-method：指定初始化的方法
+         destroy-method：指定销毁的方法 -->
+    <bean id="student" class="beanLifeCycle.Student" init-method="initStudent" destroy-method="destroyStudent">
+        <property name="name" value="彭涛"></property>
+    </bean>
+</beans>

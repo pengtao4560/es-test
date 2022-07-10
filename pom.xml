@@ -43,8 +43,7 @@
         <module>springboot-redis</module>
         <module>springboot-redis-secondkill</module>
         <module>rabbitmq</module>
-        <module>springboot-spring源码</module>
-
+        <module>springboot-springSourceCode</module>
     </modules>
 
     <!-- 统一管理jar包版本 -->
