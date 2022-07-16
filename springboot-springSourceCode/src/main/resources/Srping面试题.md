@@ -1,4 +1,4 @@
-# 1.什么是spring?
+# 1.什么是spring? 开发框架
 我们一般说 Spring 指的是 Spring Framework、Spring框架, 它是一款开源的轻量级 Java 开发框架，目的是提高开发人员的开发效率以及系统的可维护性。
 它是很多模块的集合，使用这些模块可以很方便地协助我们进行开发。
 比如说 Spring 提供的核心功能主要是 IoC 控制反转（Inverse of Control） 和 AOP 面向切面编程(Aspect-Oriented Programming)、
@@ -172,8 +172,14 @@ IoC让相互协作的组件保持松散的耦合，而AOP编程允许你把遍�
 - 如果有和加载这个 Bean 的 Spring 容器相关的 `BeanPostProcessor` 对象，执行`postProcessAfterInitialization()` 方法
 - 当要销毁 Bean 的时候，如果 Bean 实现了 `DisposableBean` 接口，执行 `destroy()` 方法。
 - 当要销毁 Bean 的时候，如果 Bean 在配置文件中的定义包含 destroy-method 属性，执行指定的销毁方法。
-- 
+
 ![SpringBean生命周期.png](SpringBean生命周期.png)
+
+```java
+/**
+ * @see beanLifeCycle.CycleTest
+ */
+```
 
 > 改题的的内容整理自：<https://yemengying.com/2016/07/14/spring-bean-life-cycle/> ，
 > 除了这篇文章，再推荐一篇很不错的文章 ：<https://www.cnblogs.com/zrtqsk/p/3735273.html> 。

@@ -6,7 +6,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * 测试类
+ * Bean 生命周期 demo 测试类
  * @author LinJie
  *
  */

@@ -18,7 +18,7 @@ public class MBGTest {
     @Test
     public void testMBG(){
         try {
-            InputStream is = Resources.getResourceAsStream("mybatis-config.xml");
+            InputStream is = Resources.getResourceAsStream("mybatis/mybatis-config.xml");
             SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(is);
             SqlSession sqlSession = sqlSessionFactory.openSession(true);
             EmpMapper mapper = sqlSession.getMapper(EmpMapper.class);

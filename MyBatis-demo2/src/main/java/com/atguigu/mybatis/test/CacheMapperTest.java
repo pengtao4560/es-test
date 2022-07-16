@@ -53,7 +53,7 @@ public class CacheMapperTest {
         // SqlSession sqlSession = SqlSessionUtils.getSqlSession();
 
         try {
-            InputStream is = Resources.getResourceAsStream("mybatis-config.xml");
+            InputStream is = Resources.getResourceAsStream("mybatis/mybatis-config.xml");
             SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(is);
             SqlSession sqlSession1 = sqlSessionFactory.openSession(true);
             SqlSession sqlSession2 = sqlSessionFactory.openSession(true);

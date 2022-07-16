@@ -12,8 +12,8 @@ iBatis一词来源于“internet'和“abatis"的组合，是一个基于Java的
 
 1) MyBatis是一个半自动的ORM(Object Relation Mapping 对象关系映射）框架
 2) MyBatis是支持定制化SQL、存储过程以及高级映射的优秀的持久层框架
-3) MyBatis避免了几乎所有的JDBC代码和手动设置参数以及获取结果集
-4) MyBatis可以使用简单的XML或注解用于配置和原始映射，将接口和Java的POJO (Plain Old JavaObjects，
+3) MyBatis避免了几乎所有的JDBC代码、手动设置参数、结果集的检索
+4) MyBatis使用简单的XML或注解用于配置和原始映射，将接口和Java的POJO (Plain Old JavaObjects，
    普通的Java对象）映射成数据库中的记录
 
 #### MyBatis下载
