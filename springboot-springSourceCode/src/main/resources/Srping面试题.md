@@ -238,8 +238,30 @@ HandlerExecutionChain，this.getHandler() 方法的处理使用到了责任链�
 # 15.说说Spring 中 ApplicationContext 和 BeanFactory 的区别
 
 # 16、Spring 框架中的单例 Bean 是线程安全的么？
+大部分的 Spring Bean 并没有可变的状态，所以在某种程度上说 Spring 的单例 Bean 是线程安全的。如果你的 Bean 有多种状态的话，
+就需要自行保证线程安全。最浅显的解决办法，就是将多态 Bean 的作用域（Scope）由 Singleton 变更为 Prototype
 
-# 17.Spring 是怎么解决循环依赖的？
+# 17.Spring 是怎么解决循环依赖的？ 三级缓存、提前曝光
+
+![img.png](Spring循环依赖问题.png)
+整个流程大致如下：
+1. 首先 A 完成初始化第一步并将自己提前曝光出来（通过 ObjectFactory 将自己提前曝光），在
+   初始化的时候，发现自己依赖对象 B，此时就会去尝试 get(B)，这个时候发现 B 还没有被创建出来；
+2. 然后 B 就走创建流程，在 B 初始化的时候，同样发现自己依赖 C，C 也没有被创建出来；
+3. 这个时候 C 又开始初始化进程，但是在初始化的过程中发现自己依赖 A，于是尝试 get(A)。这个时候由于 A 已经添加至缓存中
+  （一般都是添加至三级缓存 singletonFactories），通过 ObjectFactory 提前曝光，所以可以通过 ObjectFactory#getObject() 方法来 
+   拿到 A 对象。C 拿 到 A 对象后顺利完成初始化，然后将自己添加到一级缓存中；
+4. 回到 B，B 也可以拿到 C 对象，完成初始化，A 可以顺利拿到 B 完成初始化。到这里整个链路
+   就已经完成了初始化过程了。
+   关键字：三级缓存，提前曝光
+
+```java
+/**
+ * @see org.springframework.beans.factory.ObjectFactory
+ * 
+ */
+```
+
 
 # 20.Spring 事务实现方式
 编程式事务管理：这意味着你可以通过编程的方式管理事务，这种方式带来了很大的灵活性，但很难维护。

@@ -85,5 +85,8 @@ WHERE employees.`department_id` = departments.department_id;
 UNION ALL操作符返回两个查询的结果集的并集。对于两个结果集的重复部分，不去重**
 
 注意：执行UNION ALL语句时所需要的资源比UNION语句少。如果明确知道合并数据后的结果数据不存在重复数据，或者不需要去除重复的数据，
-则尽量使用UNION ALL语句，以提高数据查询的效
-率。
+则尽量使用UNION ALL语句，以提高数据查询的效率。
+
+# BENCHMARK()用于测试表达式的执行效率
+SELECT BENCHMARK(100000,MD5('mysql'))
+FROM DUAL;

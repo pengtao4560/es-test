@@ -7,8 +7,7 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
- * @author LinJie
- * @Description:一个学生类(Bean)，能体现其生命周期的Bean
+ * 一个学生类(Bean)，能体现其生命周期的Bean
  */
 public class Student implements BeanNameAware, BeanFactoryAware, InitializingBean {
     private String name;
@@ -53,7 +52,7 @@ public class Student implements BeanNameAware, BeanFactoryAware, InitializingBea
     //传递Bean的ID。
     @Override
     public void setBeanName(String name) {
-        System.out.println("调用BeanNameAware的setBeanName()..." );
+        System.out.println("BeanNameAware的setBeanName()..." );
     }
 
     @Override
