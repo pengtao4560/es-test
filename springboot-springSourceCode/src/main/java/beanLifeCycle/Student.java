@@ -4,12 +4,13 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
  * 一个学生类(Bean)，能体现其生命周期的Bean
  */
-public class Student implements BeanNameAware, BeanFactoryAware, InitializingBean {
+public class Student implements BeanNameAware, BeanFactoryAware, InitializingBean, DisposableBean {
     private String name;
 
     //无参构造方法
@@ -63,7 +64,12 @@ public class Student implements BeanNameAware, BeanFactoryAware, InitializingBea
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        System.out.println("InitializingBean接口 的 afterPropertiesSet()..." );
+        System.out.println("InitializingBean 接口 的 afterPropertiesSet()..." );
 
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        System.out.println("DisposableBean 接口 的 destroy()..." );
     }
 }

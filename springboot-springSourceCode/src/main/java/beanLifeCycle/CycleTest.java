@@ -22,19 +22,19 @@ public class CycleTest {
         ((AbstractApplicationContext) context).close();
     }
     /*
-     * 七月 10, 2022 9:24:25 上午 org.springframework.context.support.AbstractApplicationContext prepareRefresh
-     * 信息: Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@c46bcd4: startup date [Sun Jul 10 09:24:25 CST 2022]; root of context hierarchy
-     * 设置对象属性setName()..
-     * 调用BeanNameAware的setBeanName()...
-     * Student这个Bean：初始化
-     * Student这个Bean：使用
-     * Student [name = 彭涛]
-     * 七月 10, 2022 9:24:25 上午 org.springframework.context.support.AbstractApplicationContext doClose
-     * 信息: Closing org.springframework.context.support.ClassPathXmlApplicationContext@c46bcd4: startup date [Sun Jul 10 09:24:25 CST 2022]; root of context hierarchy
-     * Student这个Bean：销毁
-     * Disconnected from the target VM, address: 'javadebug', transport: 'shared memory'
-     *
-     * Process finished with exit code 0
+    七月 18, 2022 4:10:20 上午 org.springframework.context.support.AbstractApplicationContext prepareRefresh
+    信息: Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@4141d797: startup date [Mon Jul 18 04:10:20 CST 2022]; root of context hierarchy
+    设置对象属性setName()..
+    BeanNameAware的setBeanName()...
+    BeanFactoryAware 的 setBeanFactory()...
+    InitializingBean 接口 的 afterPropertiesSet()...
+    Student这个Bean：初始化
+    Student这个Bean：使用
+    Student [name = 彭涛]
+    七月 18, 2022 4:10:21 上午 org.springframework.context.support.AbstractApplicationContext doClose
+    信息: Closing org.springframework.context.support.ClassPathXmlApplicationContext@4141d797: startup date [Mon Jul 18 04:10:20 CST 2022]; root of context hierarchy
+    DisposableBean 接口 的 destroy()...
+    Student这个Bean：销毁
      */
 }
 

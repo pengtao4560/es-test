@@ -2,13 +2,13 @@
 我们一般说 Spring 指的是 Spring Framework、Spring框架, 它是一款开源的轻量级 Java 开发框架，目的是提高开发人员的开发效率以及系统的可维护性。
 它是很多模块的集合，使用这些模块可以很方便地协助我们进行开发。
 比如说 Spring 提供的核心功能主要是 IoC 控制反转（Inverse of Control） 和 AOP 面向切面编程(Aspect-Oriented Programming)、
-可以很方便地对数据库进行访问、可以很方便地集成第三方组件（电子邮件，任务，调度，缓存等等）、对单元测试支持比较好、支持 RESTful Java 应用程序的开发。
+可以很方便地对数据库进行访问、可以很方便地集成第三方组件（**电子邮件，任务，调度，缓存等等**）、对单元测试支持比较好、支持 RESTful Java 应用程序的开发。
 
 Spring 最核心的思想就是不重新造轮子，开箱即用！
 
 Spring 主要由以下几个模块组成：
 Spring Core：核心类库，提供IOC服务；
-Spring Context：提供框架式的Bean访问方式，以及企业级功能（JNDI、定时任务等）；
+Spring Context：提供**框架式的Bean访问方式**，以及企业级功能（JNDI、定时任务等）；
 Spring AOP：AOP服务；
 Spring DAO：对JDBC的抽象，简化了数据访问异常的处理；
 Spring ORM：对现有的ORM框架的支持；
@@ -19,8 +19,8 @@ Spring MVC：提供面向Web应用的Model-View-Controller实现。
 说Spring有以下特点：
 **轻量**：Spring 是轻量的，基本的版本大约2MB。
 **IOC控制反转**：Spring通过控制反转实现了松散耦合，对象们给出它们的依赖，而不是创建或查找依赖的对象们。
-**面向切面编程(AOP)**：Spring支持面向切面的编程，并且把 业务逻辑 和 系统服务 分开。
-**容器**：Spring 包含并管理应用中对象的生命周期和配置。
+**面向切面编程(AOP)**：Spring支持面向切面的编程，并且**把 业务逻辑 和 系统服务 分开。**
+**容器**：Spring **包含并管理应用中对象的生命周期和配置**。
 **MVC框架**：Spring的WEB框架是个精心设计的框架，是Web框架的一个很好的替代品。
 **事务管理**：Spring 提供一个持续的事务管理接口，可以扩展到 本地事务、全局事务（JTA）。可以通过@Transational 注解快速使用
 **异常处理**：Spring 提供方便的API把具体技术相关的异常（比如由JDBC，Hibernate or JDO抛出的）转化为一致的unchecked 异常。
@@ -44,14 +44,16 @@ Spring MVC：提供面向Web应用的Model-View-Controller实现。
 M-Model 模型（完成业务逻辑：有javaBean构成，service+dao+entity）
 V-View 视图（做界面的展示 jsp，html……）
 C-Controller 控制器（接收请求—>调用模型—>根据结果派发页面）
-SpringMVC 是~~spring的一个后续产品，其实就是spring在原有基础上，又提供了web应用的MVC模块，可以简单的把springMVC理解为是spring的一个模块（类似AOP，IOC这样的模块），
-网络上经常会说springMVC和spring无缝集成，其实springMVC就~~是spring的一个子模块，所以根本不需要同spring进行整合。
-SpringMVC的组件有：
+SpringMVC 是是spring的一个子模块，所以根本不需要同spring进行整合。
+~~spring的一个后续产品，其实就是spring在原有基础上，又提供了web应用的MVC模块，可以简单的把springMVC理解为是spring的一个模块（类似AOP，IOC这样的模块），
+网络上经常会说springMVC和spring无缝集成，其实springMVC就~~
+
+SpringMVC的**组件**有：
 **前端控制器（DispatcherServlet）**：接收请求，响应结果，~~相当于电脑的CPU。~~
 **处理器映射器（HandlerMapping）**：根据URL去查找处理器
 **处理器（Handler）**：（需要程序员去写代码处理逻辑的）
 **处理器适配器（HandlerAdapter）**：会把处理器包装成适配器，这样就可以支持多种类型的处理器，类比笔记本的适配器（适配器模式的应用）
-**视图解析器（ViewResovler）**：进行视图解析，多返回的字符串，进行处理，可以解析成对应的页面
+**视图解析器（ViewResovler）**：进行视图解析，对返回的字符串，进行处理，可以解析成对应的页面
 再回答 SpringMVC的工作原理
 
 # 7.1.SpringMVC 工作原理了解吗?
@@ -74,53 +76,72 @@ SpringMVC的组件有：
 
 # 7.2 SpringMVC 组件?
 以下组件通常使用框架提供实现：
-**DispatcherServlet**：作为前端控制器，整个流程控制的中心，控制其它组件执行，统一调度，降低组件之间的耦合性，提高每个组件的扩展性。
+~~**DispatcherServlet**：作为前端控制器，整个流程控制的中心，控制其它组件执行，统一调度，降低组件之间的耦合性，提高每个组件的扩展性。
 **HandlerMapping**：通过扩展处理器映射器实现不同的映射方式，例如：配置文件方式，实现接口方式，注解方式等。
 **HandlAdapter**：通过扩展处理器适配器，支持更多类型的处理器。
 **处理器（Handler）**：（需要程序员去写代码处理逻辑的）
-**ViewResolver**：通过扩展视图解析器，支持更多类型的视图解析，例如：jsp、freemarker、pdf、 excel等。
+**ViewResolver**：通过扩展视图解析器，支持更多类型的视图解析，例如：jsp、freemarker、pdf、 excel等。~~
 
 总结：
-前端控制器（DispatcherServlet）：接收请求，响应结果，相当于电脑的CPU。
-处理器映射器（HandlerMapping）：根据URL去查找处理器。
-处理器（Handler）：需要程序员去写代码处理逻辑的。
-处理器适配器（HandlerAdapter）：会把处理器包装成适配器，这样就可以支持多种类型的处理
-器，类比笔记本的适配器（适配器模式的应用）。
-视图解析器（ViewResovler）：进行视图解析，多返回的字符串，进行处理，可以解析成对应的页
+**前端控制器（DispatcherServlet）**：接收请求，响应结果，相当于电脑的CPU。
+**处理器映射器（HandlerMapping）**：根据URL去查找处理器。
+**处理器（Handler）**：需要程序员去写代码处理逻辑的。
+**处理器适配器（HandlerAdapter）**：会把处理器包装成适配器，这样就可以支持多种类型的处理器，类比笔记本的适配器（适配器模式的应用）。
+**视图解析器（ViewResovler）**：进行视图解析，多返回的字符串，进行处理，可以解析成对应的页
 面。
 
 # 7.SpringMVC常用的注解有哪些？
 
-@RequestMapping：用于处理请求 url 映射的注解，可用于类或方法上。用于类上，则表示类中的所有响应请求的方法都是以该地址作为父路径。
+@RequestMapping：用于**处理请求 url 映射的注解**，可用于类或方法上。用于类上，则表示类中的所有响应请求的方法都是以该地址作为父路径。
 @RequestBody：注解实现接收http请求的json数据，将json转换为java对象。
 @ResponseBody：注解实现将controller 方法返回对象转化为json对象响应给客户。
 
 # 8.谈谈你对Spring的AOP理解
 
-AOP(Aspect-Oriented Programming:面向切面编程)能够将那些**与业务无关，很多业务模块所共同调用的逻辑或责任**（例如事务处理、日志管理、权限控制等）
-封装起来，便于减少系统的重复代码，降低模块间的耦合度，并有利于未来的可拓展性和可维护性。
+AOP(Aspect-Oriented Programming:面向切面编程)能够将那些与业务无关，很多业务模块所共同调用的**逻辑或责任例如事务处理、日志管理、权限控制等**
+封装起来，**便于减少系统的重复代码，降低模块间的耦合度，并有利于未来的可拓展性和可维护性**。
 
-Spring AOP 就是基于动态代理的，
+Spring AOP 就是基于**动态代理**的，
 如果要代理的对象，实现了某个接口，那么 Spring AOP 会使用 **JDK Proxy**，去创建代理对象，
-如果要代理的对象没有实现接口，这时候 Spring AOP 会使用 **Cglib** 生成一个被代理对象的子类来作为代理，如下图所示：
+如果要代理的对象没有实现接口，这时候 Spring AOP 会使用 **Cglib** 生成一个**被代理对象的子类来作为代理**，如下图所示：
 ![](SpringAOP原理图.png)
 
 # 9.Spring AOP和AspectJ AOP有什么区别？
-Spring AOP是属于运行时增强，而AspectJ是编译时增强。Spring AOP基于代理（Proxying），而AspectJ基于字节码操作（Bytecode Manipulation）。
+**Spring AOP是属于运行时增强，而AspectJ是编译时增强**。
+Spring AOP**基于代理**（Proxying），而AspectJ**基于字节码操作**（Bytecode Manipulation）。
 Spring AOP已经集成了AspectJ，AspectJ应该算得上是Java生态系统中最完整的AOP框架了。
 AspectJ相比于Spring AOP功能更加强大，但是Spring AOP相对来说更简单。
 如果我们的切面比较少，那么两者性能差异不大。但是，当切面太多的话，最好选择AspectJ，它比SpringAOP快很多。
 
 # 9.1 在Spring AOP 中，关注点和横切关注的区别是什么？
-关注点是应用中一个模块的行为，一个关注点可能会被定义成一个我们想实现的一个功能。 横切关注点是一个关注点，此关注点是整个应用都会使用的功能，
-并影响整个应用，比如日志，安全和数据传输，几乎应用的每个模块都需要的功能。因此这些都属于横切关注点。
-# 9.2 那什么是连接点呢？
-连接点代表一个应用程序的某个位置，在这个位置我们可以插入一个AOP切面，它实际上是个应用程序执行Spring AOP的位置。
-# 9.3 切入点是什么？
-切入点是一个或一组连接点，通知将在这些位置执行。可以通过表达式或匹配的方式指明切入点
+关注点是应用中一个模块的行为，一个关注点可能会被定义成一个我们想实现的一个功能。 
+**横切关注点是一个关注点，此关注点是整个应用都会使用的功能，
+并影响整个应用，比如日志，安全和数据传输，几乎应用的每个模块都需要的功能。因此这些都属于横切关注点**。
+# 9.2 那什么是连接点呢？ JoinPoint 应用程序执行Spring AOP的位置
+连接点代表一个应用程序的某个位置，在这个位置我们可以插入一个AOP切面，它实际上是个**应用程序执行Spring AOP的位置。**
+# 9.3 切入点是什么？ 
+切入点是一个或一组连接点，通知将在这些位置执行。可以通过表达式或匹配的方式指明切入点。**切入点表达式 通过表达式的方式定位一个或多个具体的连接点**。
+定义通知被应用的位置（在哪些连接点）
 
-# 9.44 Spring AOP 的通知是什么？有哪些类型呢？
-Spring AOP的通知是 **在方法执行前或执行后要做的动作**，实际上是程序执行时要通过SpringAOP框架触发的代码段。
+@Poincut
+```java
+/**
+ * @see com.atguigu.springcloud.aop.AccessLogAOP
+ * @Describe 自定义日志切面类
+ */
+@Aspect
+@Component
+@Slf4j
+public class AccessLogAOP {
+    @Pointcut(value = "@within(com.atguigu.springcloud.aop.AccessLog) || @annotation(com.atguigu.springcloud.aop.AccessLog)")
+    public void logAspect() {
+    
+    }
+}
+```
+
+# 9.4 Spring AOP 的通知是什么？有哪些类型呢？通知也可以理解为增强，在方法执行前或执行后要做的动作
+Spring AOP的通知可以理解为增强，是 **在方法执行前或执行后要做的动作**，实际上是程序执行时要通过SpringAOP框架触发的代码段。
 
 Spring切面可以应用五种类型的通知：
 before：前置通知，在一个方法执行前被调用。
@@ -138,7 +159,7 @@ IoC 的思想就是将原本在程序中手动创建对象的控制权，交由 
 - **控制** ：指的是创建对象的权力，也就是实例化对象、管理对象的权利
 - **反转** ：控制权交给外部环境，在这里也就是Spring 框架、Spring的IoC 容器
 
-将对象之间的相互依赖关系交给 IoC 容器来管理，并由 IoC 容器完成对象的注入。这样可以很大程度上简化应用的开发，把应用从复杂的依赖关系中解放出来。
+将对象之间的相互依赖关系交给 IoC 容器来管理，**并由 IoC 容器完成对象的注入**。这样可以很大程度上简化应用的开发，把应用从复杂的依赖关系中解放出来。
 IoC 容器就像是一个工厂一样，当我们需要创建一个对象的时候，只需要配置好配置文件/注解即可，完全不用考虑对象是如何被创建出来的。
 在 Spring 中， IoC 容器是 Spring 用来实现 IoC 的载体， IoC 容器实际上就是个 Map（key，value），Map 中存放的是各种对象。
 
@@ -236,33 +257,95 @@ EventListener。
 HandlerExecutionChain，this.getHandler() 方法的处理使用到了责任链模式。
 
 # 15.说说Spring 中 ApplicationContext 和 BeanFactory 的区别
+BeanFactory：
+BeanFactory是spring中最底层的接口，定义了IOC的基本功能，包含了各种Bean的定义、加载、实例化、依赖注入和生命周期管理。但无法支持spring插件，例如：AOP、Web应用等功能。
+
+ApplicationContext
+ApplicationContext是BeanFactory的子类，因为BeanFactory无法满足不断更新的spring的需求，于是ApplicationContext就基本上代替了BeanFactory的工作，以一种更面向框架的工作方式以及对上下文进行分层和实现继承，并在这个基础上对功能进行扩展：
+<1>MessageSource, 提供国际化的消息访问
+<2>资源访问（如URL和文件）
+<3>事件传递
+<4>Bean的自动装配
+<5>各种不同应用层的Context实现
+
+区别总结
+1) BeanFactroy采用的是延迟加载形式来注入Bean的，即只有在使用到某个Bean时(调用getBean())，才对该Bean进行加载实例化，
+  这样，我们就不能发现一些存在的Spring的配置问题。而**ApplicationContext则相反，它是在容器启动时，一次性创建了所有的Bean。这样，在容器启动时，我们就可以发现Spring中存在的配置错误**。
+2) 如果使用ApplicationContext，配置的bean是singleton，那么不管你有没有或想不想用它，它都会被实例化。好处是可以预先加载，坏处是浪费内存。
+3) 当使用BeanFactory实例化对象时，配置的bean不会马上被实例化，而是等到你使用该bean的时候（getBean）才会被实例化。好处是节约内存，坏处是速度比较慢。
+4) 没有特殊要求的情况下，应该使用ApplicationContext完成。因为BeanFactory能完成的事情，ApplicationContext都能完成，并且提供了更多接近现在开发的功能。
+5) BeanFactory和ApplicationContext都支持BeanPostProcessor、BeanFactoryPostProcessor的使用，但两者之间的区别是：BeanFactory需要手动注册，而ApplicationContext则是自动注册
+
+    post 在...之后
+    Processor 处理器
+[Spring 中 ApplicationContext 和 BeanFactory 的区别](https://blog.csdn.net/m0_67014537/article/details/125219708)
 
 # 16、Spring 框架中的单例 Bean 是线程安全的么？
 大部分的 Spring Bean 并没有可变的状态，所以在某种程度上说 Spring 的单例 Bean 是线程安全的。如果你的 Bean 有多种状态的话，
 就需要自行保证线程安全。最浅显的解决办法，就是将多态 Bean 的作用域（Scope）由 Singleton 变更为 Prototype
 
 # 17.Spring 是怎么解决循环依赖的？ 三级缓存、提前曝光
+在默认单例Bean注册表 DefaultSingletonBeanRegistry 这个类中：
+Spring首先从一级援存singletonObjects中获取对象，如果获取不到并且对象正在创建中，就再从二级缓存earlySingletonObjects中获
+取，如果还是获取不到且允许singletonFactoriesi通过getObject()获取，就从三级缓存singletonFactory中获取，如果获取到了就从
+singletonFactories三级缓存中移除掉，并放入ear小ySingletonObjects中，其实也就是从三级缓存移到了二级援存中
 
 ![img.png](Spring循环依赖问题.png)
+
 整个流程大致如下：
-1. 首先 A 完成初始化第一步并将自己提前曝光出来（通过 ObjectFactory 将自己提前曝光），在
-   初始化的时候，发现自己依赖对象 B，此时就会去尝试 get(B)，这个时候发现 B 还没有被创建出来；
+1. 首先 A 完成初始化第一步并将自己提前曝光出来（通过 ObjectFactory 将自己提前曝光），在初始化的时候，发现自己依赖对象 B，此时就会去尝试 get(B)，这个时候发现 B 还没有被创建出来；
 2. 然后 B 就走创建流程，在 B 初始化的时候，同样发现自己依赖 C，C 也没有被创建出来；
 3. 这个时候 C 又开始初始化进程，但是在初始化的过程中发现自己依赖 A，于是尝试 get(A)。这个时候由于 A 已经添加至缓存中
   （一般都是添加至三级缓存 singletonFactories），通过 ObjectFactory 提前曝光，所以可以通过 ObjectFactory#getObject() 方法来 
    拿到 A 对象。C 拿 到 A 对象后顺利完成初始化，然后将自己添加到一级缓存中；
-4. 回到 B，B 也可以拿到 C 对象，完成初始化，A 可以顺利拿到 B 完成初始化。到这里整个链路
-   就已经完成了初始化过程了。
+4. 回到 B，B 也可以拿到 C 对象，完成初始化，A 可以顺利拿到 B 完成初始化。到这里整个链路就已经完成了初始化过程了。
    关键字：三级缓存，提前曝光
 
 ```java
 /**
  * @see org.springframework.beans.factory.ObjectFactory
+ * @see org.springframework.beans.factory.support.DefaultSingletonBeanRegistry
  * 
  */
+/** Cache of singleton objects: bean name to bean instance. 一级缓存*/
+    private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
+
+/** Cache of singleton factories: bean name to ObjectFactory. 三级缓存 */
+    private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
+
+/** Cache of early singleton objects: bean name to bean instance. 二级缓存 */
+    private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);
+
 ```
+[Spring 源码关键点之一：三级缓存](https://www.cnblogs.com/xujq/p/16283608.html)
 
+# 19.说说事务的隔离级别
+未提交读(Read Uncommitted)：允许脏读，也就是可能读取到其他会话中未提交事务修改的数据
+提交读(Read Committed)：只能读取到已经提交的数据。Oracle等多数数据库默认都是该级别 (不重复读)
+可重复读(Repeated Read)：在同一个事务内的查询都是事务开始时刻一致的，Mysql的InnoDB默认级别。在SQL标准中，该隔离级别消除了不可重复读，
+    但是还存在幻读（多个事务同时修改同一条记录，事务之间不知道彼此存在，当事务提交之后，后面的事务修改的数据将会覆盖前事务，前一个事务就像发生幻觉一样）
+可串行化(Serializable)：完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞。
 
-# 20.Spring 事务实现方式
+不可重复读和幻读的区别主要是：解决不可重复读需要锁定了当前满足条件的记录，而解决幻读需要锁定当前满足条件的记录及相近的记录。比如查询某个商品的信息，
+可重复读事务隔离级别可以保证当前商品信息被锁定，解决不可重复读；但是如果统计商品个数，中途有记录插入，可重复读事务隔离级别就不能保证两个事务统计的个数相同
+
+# 19.说说事务的传播级别 
+```java
+/**
+ * @see org.springframework.transaction.annotation.Propagation 传播类
+ */
+```
+Spring事务定义了7种传播机制：
+1. PROPAGATION_REQUIRED:默认的Spring事物传播级别，若当前存在事务，则加入该事务，若不存在事务，则新建一个事务。
+2. PAOPAGATION_REQUIRE_NEW:若当前没有事务，则新建一个事务。若当前存在事务，则新建
+   一个事务，新老事务相互独立。外部事务抛出异常回滚不会影响内部事务的正常提交。
+3. PROPAGATION_NESTED:如果当前存在事务，则嵌套在当前事务中执行。如果当前没有事务，则新建一个事务，类似于REQUIRE_NEW。 
+4. PROPAGATION_SUPPORTS:支持当前事务，若当前不存在事务，以非事务的方式执行。
+5. PROPAGATION_NOT_SUPPORTED:以非事务的方式执行，若当前存在事务，则把当前事务挂起。
+6. PROPAGATION_MANDATORY:强制事务执行，若当前不存在事务，则抛出异常. 
+7. PROPAGATION_NEVER:以非事务的方式执行，如果当前存在事务，则抛出异常。
+   Spring事务传播级别一般不需要定义，默认就是 PROPAGATION_REQUIRED，除非在嵌套事务的情况下需要重点了解。
+8. 
+# 20.Spring 事务实现方式? 编程式事务，声明式事务
 编程式事务管理：这意味着你可以通过编程的方式管理事务，这种方式带来了很大的灵活性，但很难维护。
 声明式事务管理：这种方式意味着你可以将事务管理和业务代码分离。你只需要通过注解或者XML配置管理事务
