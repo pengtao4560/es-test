@@ -85,7 +85,7 @@ SDK （Software Development Kit）
     SDK可能附带了使其不能在不兼容的许可证下开发软件的许可证。例如产品
 [SDK百度百科](https://baike.baidu.com/item/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7%E5%8C%85/10418833?fromtitle=SDK&fromid=7815680&fr=aladdin)
 
-API （Application Programming Interface，应用编程接口）
+API （starter.SpringSourceCodeApplication Programming Interface，应用编程接口）
 
     其实就是操作系统留给应用程序的一个调用接口，
     应用程序通过调用操作系统的API而使操作系统去执行应用程序的命令（动作）。

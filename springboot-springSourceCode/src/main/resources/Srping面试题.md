@@ -1,4 +1,4 @@
-# 1.什么是spring? 开发框架
+# 1.什么是spring? 轻量级开发框架、模块的集合、IOC、AOP、方便访问数据库、集成第三方组件
 我们一般说 Spring 指的是 Spring Framework、Spring框架, 它是一款开源的轻量级 Java 开发框架，目的是提高开发人员的开发效率以及系统的可维护性。
 它是很多模块的集合，使用这些模块可以很方便地协助我们进行开发。
 比如说 Spring 提供的核心功能主要是 IoC 控制反转（Inverse of Control） 和 AOP 面向切面编程(Aspect-Oriented Programming)、
@@ -7,23 +7,24 @@
 Spring 最核心的思想就是不重新造轮子，开箱即用！
 
 Spring 主要由以下几个模块组成：
-Spring Core：核心类库，提供IOC服务；
-Spring Context：提供**框架式的Bean访问方式**，以及企业级功能（JNDI、定时任务等）；
-Spring AOP：AOP服务；
-Spring DAO：对JDBC的抽象，简化了数据访问异常的处理；
-Spring ORM：对现有的ORM框架的支持；
-Spring Web：提供了基本的面向Web的综合特性，例如多方文件上传；
-Spring MVC：提供面向Web应用的Model-View-Controller实现。
+1) Spring Core：核心类库，提供IOC服务；
+2) Spring Context：提供**框架式的Bean访问方式**，以及企业级功能（JNDI、定时任务等）；
+3) Spring AOP：AOP服务；
+4) Spring DAO：对JDBC的抽象，简化了数据访问异常的处理；
+5) Spring ORM：对现有的ORM框架的支持；
+6) Spring Web：提供了基本的面向Web的综合特性，例如多方文件上传；
+7) Spring MVC：提供面向Web应用的Model-View-Controller实现。
 
-# 2.你们项目中为什么使用Spring框架？
+# 2.你们项目中为什么使用Spring框架？ 轻量级/IOC/AOP把业务逻辑和系统服务分开/容器/MVC/事务管理/异常处理
 说Spring有以下特点：
-**轻量**：Spring 是轻量的，基本的版本大约2MB。
-**IOC控制反转**：Spring通过控制反转实现了松散耦合，对象们给出它们的依赖，而不是创建或查找依赖的对象们。
-**面向切面编程(AOP)**：Spring支持面向切面的编程，并且**把 业务逻辑 和 系统服务 分开。**
-**容器**：Spring **包含并管理应用中对象的生命周期和配置**。
-**MVC框架**：Spring的WEB框架是个精心设计的框架，是Web框架的一个很好的替代品。
-**事务管理**：Spring 提供一个持续的事务管理接口，可以扩展到 本地事务、全局事务（JTA）。可以通过@Transational 注解快速使用
-**异常处理**：Spring 提供方便的API把具体技术相关的异常（比如由JDBC，Hibernate or JDO抛出的）转化为一致的unchecked 异常。
+
+1) **轻量**：Spring 是轻量的，基本的版本大约2MB。
+2) **IOC控制反转**：Spring通过控制反转实现了松散耦合，对象们给出它们的依赖，而不是创建或查找依赖的对象们。
+3) **AOP面向切面编程**：Spring支持面向切面的编程，并且**把 业务逻辑 和 系统服务 分开。**
+4) **容器**：Spring **包含并管理应用中对象的生命周期和配置**。
+5) **MVC框架**：Spring的WEB框架是个精心设计的框架，是Web框架的一个很好的替代品。
+6) **事务管理**：Spring 提供一个持续的事务管理接口，可以扩展到 本地事务、全局事务（JTA）。可以通过 @Transational 注解快速使用
+7) **异常处理**：Spring 提供方便的API把具体技术相关的异常（比如由JDBC，Hibernate or JDO抛出的）转化为一致的unchecked 异常。
 
 # 3. Autowired和Resource关键字的区别？
 
@@ -32,15 +33,46 @@ Spring MVC：提供面向Web应用的Model-View-Controller实现。
 - 当一个接口存在多个实现类的情况下，`@Autowired` 和`@Resource`都需要通过名称才能正确匹配到对应的 Bean。
  `Autowired` 可以通过 `@Qualifier` 注解来显示指定名称，`@Resource`可以通过 `name` 属性来显示指定名称。
 
+```
+public @interface Resource {
+    String name() default "";
+```
+
 # 4.依赖注入的方式有几种，各是什么? （TODO如果考到再完善）
 一、构造器注入 将被依赖对象通过构造函数的参数注入给依赖对象，并且在初始化对象的时候注入。
 二、setter方法注入
-三、接口注入 
+三、接口注入
+一、构造器注入 将被依赖对象通过构造函数的参数注入给依赖对象，并且在初始化对象的时候注
+入。
+优点： 对象初始化完成后便可获得可使用的对象。
+缺点： 当需要注入的对象很多时，构造器参数列表将会很长； 不够灵活。若有多种注入方式，每种
+方式只需注入指定几个依赖，那么就需要提供多个重载的构造函数，麻烦。
+public class TestServiceImpl {
+// 下面两种@Resource只要使用一种即可
+@Resource(name="userDao")
+private UserDao userDao; // 用于字段上
+
+@Resource(name="userDao")
+public void setUserDao(UserDao userDao) { // 用于属性的setter方法上
+this.userDao = userDao;
+}
+}
+二、setter方法注入 IoC Service Provider通过调用成员变量提供的setter函数将被依赖对象注入给
+依赖类。
+优点： 灵活。可以选择性地注入需要的对象。
+缺点： 依赖对象初始化完成后由于尚未注入被依赖对象，因此还不能使用。
+三、接口注入 依赖类必须要实现指定的接口，然后实现该接口中的一个函数，该函数就是用于依赖
+注入。该函数的参数就是要注入的对象。
+优点 接口注入中，接口的名字、函数的名字都不重要，只要保证函数的参数是要注入的对象类型即
+可。
+缺点： 侵入行太强，不建议使用。
+PS：什么是侵入行？ 如果类A要使用别人提供的一个功能，若为了使用这功能，需要在自己的类中
+增加额外的代码，这就是侵入性。
 
 # 5.什么是Spring?
 与问题1 重复
  
-# 6.说说你对Spring MVC的理解
+# 6.说说你对Spring MVC的理解? MVC模型,SpringMVC是Spring子模块、SpringMVC组件
 M-Model 模型（完成业务逻辑：有javaBean构成，service+dao+entity）
 V-View 视图（做界面的展示 jsp，html……）
 C-Controller 控制器（接收请求—>调用模型—>根据结果派发页面）

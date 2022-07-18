@@ -13,7 +13,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class CycleTest {
     @Test
     public void testBeanLifeCycle() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext("xml/Student.xml");
         Student student = (Student) context.getBean("student");
         //Bean的使用
         student.play();

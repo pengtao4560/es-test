@@ -1,18 +1,17 @@
+package service;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import service.MessageService;
-import service.MessageService2;
-import service.MessageServiceImpl2;
 
 
 /**
- *
+ * 此项目是不是SpringBoot项目
  */
 public class AppMain {
 
     public static void main(String[] args) {
-        String classPath = "classpath:application.xml";
+        String classPath = "classpath:xml/MessageServiceImpl.xml";
         ApplicationContext context = new ClassPathXmlApplicationContext(classPath);
 
         System.out.println("context 启动成功");
@@ -25,6 +24,7 @@ public class AppMain {
         System.out.println("-----------");
 
         AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(MessageServiceImpl2.class);
+
         MessageService2 messageService2 = annotationConfigApplicationContext.getBean(MessageService2.class);
 
         // 这句将输出: hello world
