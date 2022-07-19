@@ -25,16 +25,25 @@ Mybatis面试题
 
 # 3、#{}和${}的区别是什么？ 预编译/替换 sql注入
 
-井号是预编译处理，${}是字符串替换。
-Mybatis在处理#{}时，会将sql中的 井号大括号 替换为 问号，~~调用 PreparedStatement 的set方法来赋值；~~
-Mybatis在处理${}时，就是把${}替换成变量的值。
-使用#{}可以有效的防止SQL注入，提高系统安全性。 井号和刀乐符使用的原则是，能用井号就不要使用刀乐符
+- 井号是预编译处理，${}是字符串替换。
+- Mybatis在处理#{}时，会将sql中的 井号大括号 替换为 问号，~~调用 PreparedStatement 的set方法来赋值；~~
+- Mybatis在处理${}时，就是把${}替换成变量的值。
+- 使用#{}可以有效的防止SQL注入，提高系统安全性。 井号和刀乐符使用的原则是，能用井号就不要使用刀乐符
 
 # 4、当实体类中的属性名和表中的字段名不一样 ，怎么办 ？ 定义别名/resultMap标签
 第1种： 通过在查询的sql语句中定义字段名的别名，让字段名的别名和实体类的属性名一致。
 
-第2种： 通过 resultMap 标签 来映射字段名和实体类属性名的一一对应的关系。property、column
+第2种： 通过 resultMap 标签 来映射字段名和实体类属性名的一一对应的关系。reulstMap标签中 result标签的属性property、column
 
+```
+    <resultMap id="empResultMap" type="Emp">
+        <id property="eid" column="eid"></id>
+        <result property="empName" column="emp_name"></result>
+        <result property="age" column="age"></result>
+        <result property="gender" column="gender"></result>
+        <result property="email" column="email"></result>
+    </resultMap>
+```
 # 5、Mybatis是如何进行分页的？分页插件的原理是什么？ RowBounds / Interceptor
 
 Mybatis 使用 RowBounds 对象进行分页，它是针对 ResultSet 结果集执行的内存分页，而非物理分页。
@@ -203,9 +212,9 @@ include标签引用 SQL 片段：
 但另外一个表的查询通过select属性配置。
 
 # 10、Mybatis是否支持延迟加载？如果支持，它的实现原理是什么？
-Mybatis仅支持association关联对象和collection关联集合对象的延迟加载，association指的就是一对一或多对一，collection指的就是一对多查询。
-在Mybatis配置文件中，可以配置是否启用延迟加载
-lazyLoadingEnabled=true|false。
+- Mybatis仅支持association关联对象和collection关联集合对象的延迟加载，association指的就是一对一或多对一，collection指的就是一对多查询。
+- 在Mybatis核心配置文件中，可以配置是否启用延迟加载 `lazyLoadingEnabled`=true|false。
+
 它的原理是，**使用CGLIB创建目标对象的代理对象**，当调用目标方法时，进入拦截器方法，比如调用a.getB().getName()，拦截器invoke()方法发现a.getB()
 是null值，那么就会单独发送事先保存好的查询关联B对象的sql，把B查询上来，然后调用a.setB(b)，于是a的对象b属性就有值了，接着完成
 a.getB().getName()方法的调用。这就是延迟加载的基本原理。
@@ -256,14 +265,13 @@ MyBatis 根据当前执行的语句生成 MappedStatement，在 Local Cache 进�
  */
 ```
 #12、JDBC 编程有哪些步骤？驱动、连接、statement、执行、处理结果、释放资源
-1.加载相应的数据库的 JDBC 驱动：
+1. 加载相应的数据库的 JDBC 驱动：
 Class.forName("com.mysql.jdbc.Driver");
-2.建立 JDBC 和数据库之间的 Connection 连接：
-Connection c = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/test?
-characterEncoding=UTF-8", "root", "123456");
-3.创建 Statement 或者 PreparedStatement 接口，执行 SQL 语句。
-4.处理和显示结果。
-5.释放资源。
+2. 建立 JDBC 和数据库之间的 Connection 连接：
+Connection c = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/test? characterEncoding=UTF-8", "root", "123456");
+3. 创建 Statement 或者 PreparedStatement 接口，执行 SQL 语句。
+4. 处理和显示结果。
+5. 释放资源。
 
 #13、MyBatis 中见过什么设计模式？
 
@@ -273,9 +281,9 @@ TODO **设计模式的系统化复习和学习**
 
 #14、MyBatis 中比如 UserMapper.java 是接口，为什么没有实现类还能调用？
 
-使用JDK动态代理 + MapperProxy 类 。本质上调用的是 MapperProxy 的 invoke() 方法。
-MapperProxyFactory是代理工厂类，根据传入的DAO的接口，生成对应实现的动态代理类。
+MapperProxyFactory 映射代理工厂类，根据传入的DAO的接口，生成对应实现的动态代理类。
 每个接口一个动态代理实现类
+使用JDK动态代理 + MapperProxy 类 。本质上调用的是 MapperProxy 的 invoke() 方法。
 ```java
 
 /**
@@ -288,9 +296,9 @@ MapperProxyFactory是代理工厂类，根据传入的DAO的接口，生成对�
 /.
 
 # 20、MyBatis实现一对多有几种方式,怎么操作的？ 联合查询和嵌套查询，嵌套查询又称分步查询 可以实现延迟加载
-有联合查询和嵌套查询。联合查询是几个表联合查询,只查询一次,通过在resultMap里面的collection节点配置一对多的类就可以完成；
+- 有联合查询和嵌套查询。联合查询是几个表联合查询,只查询一次,通过在resultMap里面的collection节点配置一对多的类就可以完成；
 
-嵌套查询(分步查询)是先查一个表,根据这个表里面的 结果的外键id,去再另外一个表里面查询数据, 也是通过配置collection,但另外一个表的查询通过select节点配置。
+- 嵌套查询(分步查询)是先查一个表,根据这个表里面的 结果的外键id,去再另外一个表里面查询数据, 也是通过配置collection,但另外一个表的查询通过select节点配置。
 
 ```java
 /**

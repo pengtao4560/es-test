@@ -39,53 +39,54 @@ public @interface Resource {
 ```
 
 # 4.依赖注入的方式有几种，各是什么? （TODO如果考到再完善）
-一、构造器注入 将被依赖对象通过构造函数的参数注入给依赖对象，并且在初始化对象的时候注入。
-二、setter方法注入
-三、接口注入
-一、构造器注入 将被依赖对象通过构造函数的参数注入给依赖对象，并且在初始化对象的时候注
-入。
-优点： 对象初始化完成后便可获得可使用的对象。
-缺点： 当需要注入的对象很多时，构造器参数列表将会很长； 不够灵活。若有多种注入方式，每种
-方式只需注入指定几个依赖，那么就需要提供多个重载的构造函数，麻烦。
+- 构造器注入 将被依赖对象通过构造函数的参数注入给依赖对象，并且在初始化对象的时候注入。
+- setter方法注入
+- 接口注入
+## 构造器注入：将被依赖对象通过构造函数的参数注入给依赖对象，并且在初始化对象的时候注入。
+- 优点： 对象初始化完成后便可获得可使用的对象。
+- 缺点： 当需要注入的对象很多时，构造器参数列表将会很长； 不够灵活。若有多种注入方式，每种方式只需注入指定几个依赖，那么就需要提供多个重载的构造函数，麻烦。
+```java
 public class TestServiceImpl {
-// 下面两种@Resource只要使用一种即可
-@Resource(name="userDao")
-private UserDao userDao; // 用于字段上
+    // 下面两种@Resource只要使用一种即可
+    @Resource(name = "userDao")
+    private UserDao userDao; // 用于字段上
 
-@Resource(name="userDao")
-public void setUserDao(UserDao userDao) { // 用于属性的setter方法上
-this.userDao = userDao;
+    @Resource(name = "userDao")
+    public void setUserDao(UserDao userDao) { // 用于属性的setter方法上
+        this.userDao = userDao;
+    }
 }
-}
-二、setter方法注入 IoC Service Provider通过调用成员变量提供的setter函数将被依赖对象注入给
-依赖类。
-优点： 灵活。可以选择性地注入需要的对象。
-缺点： 依赖对象初始化完成后由于尚未注入被依赖对象，因此还不能使用。
-三、接口注入 依赖类必须要实现指定的接口，然后实现该接口中的一个函数，该函数就是用于依赖
-注入。该函数的参数就是要注入的对象。
-优点 接口注入中，接口的名字、函数的名字都不重要，只要保证函数的参数是要注入的对象类型即
-可。
-缺点： 侵入行太强，不建议使用。
-PS：什么是侵入行？ 如果类A要使用别人提供的一个功能，若为了使用这功能，需要在自己的类中
-增加额外的代码，这就是侵入性。
+```
+
+## setter方法注入：IoC Service Provider通过调用成员变量提供的setter函数将被依赖对象注入给依赖类。
+- 优点： 灵活。可以选择性地注入需要的对象。
+- 缺点： 依赖对象初始化完成后由于尚未注入被依赖对象，因此还不能使用。
+
+##三、接口注入：依赖类必须要实现指定的接口，然后实现该接口中的一个函数，该函数就是用于依赖注入。该函数的参数就是要注入的对象。
+- 优点： 接口注入中，接口的名字、函数的名字都不重要，只要保证函数的参数是要注入的对象类型即可。
+- 缺点： 侵入行太强，不建议使用。
+
+PS：什么是侵入行？ 如果类A要使用别人提供的一个功能，若为了使用这功能，需要在自己的类中增加额外的代码，这就是侵入性。
 
 # 5.什么是Spring?
 与问题1 重复
  
 # 6.说说你对Spring MVC的理解? MVC模型,SpringMVC是Spring子模块、SpringMVC组件
-M-Model 模型（完成业务逻辑：有javaBean构成，service+dao+entity）
-V-View 视图（做界面的展示 jsp，html……）
-C-Controller 控制器（接收请求—>调用模型—>根据结果派发页面）
-SpringMVC 是是spring的一个子模块，所以根本不需要同spring进行整合。
+- M-Model 模型（完成业务逻辑：有javaBean构成，service+dao+entity）
+- V-View 视图（做界面的展示 jsp，html……）
+- C-Controller 控制器（接收请求—>调用模型—>根据结果派发页面）
+
+SpringMVC 是spring的一个子模块，所以根本不需要同spring进行整合。
 ~~spring的一个后续产品，其实就是spring在原有基础上，又提供了web应用的MVC模块，可以简单的把springMVC理解为是spring的一个模块（类似AOP，IOC这样的模块），
-网络上经常会说springMVC和spring无缝集成，其实springMVC就~~
+网络上经常会说springMVC和spring无缝集成，其实springMVC就是spring的一个子模块，所以根本不需要同spring进行整合~~
 
 SpringMVC的**组件**有：
-**前端控制器（DispatcherServlet）**：接收请求，响应结果，~~相当于电脑的CPU。~~
-**处理器映射器（HandlerMapping）**：根据URL去查找处理器
-**处理器（Handler）**：（需要程序员去写代码处理逻辑的）
-**处理器适配器（HandlerAdapter）**：会把处理器包装成适配器，这样就可以支持多种类型的处理器，类比笔记本的适配器（适配器模式的应用）
-**视图解析器（ViewResovler）**：进行视图解析，对返回的字符串，进行处理，可以解析成对应的页面
+- **前端控制器（DispatcherServlet）**：接收请求，响应结果，~~相当于电脑的CPU。~~
+- **处理器映射器（HandlerMapping）**：根据URL去查找处理器
+- **处理器（Handler）**：（需要程序员去写代码处理逻辑的）
+- **处理器适配器（HandlerAdapter）**：会把处理器包装成适配器，这样就可以支持多种类型的处理器，类比笔记本的适配器（适配器模式的应用）
+- **视图解析器（ViewResovler）**：进行视图解析，对返回的字符串，进行处理，可以解析成对应的页面
+
 再回答 SpringMVC的工作原理
 
 # 7.1.SpringMVC 工作原理了解吗?
@@ -106,7 +107,7 @@ SpringMVC的**组件**有：
 7. 前端控制器`DispaterServlet` 把返回的 `Model` 传给 `View`（视图渲染）。
 8. 把 `View` 返回给请求者（浏览器）
 
-# 7.2 SpringMVC 组件? 接收请求，响应结果的、 根据URL去查找处理器的、处理逻辑的、支持更多处理器的、视图解析和处理的
+# 7.2 SpringMVC 组件? 接收请求并响应结果的、 根据URL去查找处理器的、处理逻辑的、支持更多处理器的、视图解析和处理的
 以下组件通常使用框架提供实现：
 ~~**DispatcherServlet**：作为前端控制器，整个流程控制的中心，控制其它组件执行，统一调度，降低组件之间的耦合性，提高每个组件的扩展性。
 **HandlerMapping**：通过扩展处理器映射器实现不同的映射方式，例如：配置文件方式，实现接口方式，注解方式等。
@@ -115,18 +116,17 @@ SpringMVC的**组件**有：
 **ViewResolver**：通过扩展视图解析器，支持更多类型的视图解析，例如：jsp、freemarker、pdf、 excel等。~~
 
 总结：
-**前端控制器（DispatcherServlet）**：接收请求，响应结果，相当于电脑的CPU。
-**处理器映射器（HandlerMapping）**：根据URL去查找处理器。
-**处理器（Handler）**：需要程序员去写代码处理逻辑的。
-**处理器适配器（HandlerAdapter）**：会把处理器包装成适配器，这样就可以支持多种类型的处理器，类比笔记本的适配器（适配器模式的应用）。
-**视图解析器（ViewResovler）**：进行视图解析，多返回的字符串，进行处理，可以解析成对应的页
-面。
+- **前端控制器（DispatcherServlet）**：接收请求，响应结果，相当于电脑的CPU。
+- **处理器映射器（HandlerMapping）**：根据URL去查找处理器。
+- **处理器（Handler）**：需要程序员去写代码处理逻辑的。
+- **处理器适配器（HandlerAdapter）**：会把处理器包装成适配器，这样就可以支持多种类型的处理器，类比笔记本的适配器（适配器模式的应用）。
+- **视图解析器（ViewResovler）**：进行视图解析，多返回的字符串，进行处理，可以解析成对应的页面。
 
 # 7.SpringMVC常用的注解有哪些？ @RequestMapping处理请求 url 映射的注解 、 @RequestBody、 @ResponseBody
 
-@RequestMapping：用于**处理请求 url 映射的注解**，可用于类或方法上。用于类上，则表示类中的所有响应请求的方法都是以该地址作为父路径。
-@RequestBody：注解实现接收http请求的json数据，将json转换为java对象。
-@ResponseBody：注解实现将controller 方法返回对象转化为json对象响应给客户。
+- @RequestMapping：用于**处理请求 url 映射的注解**，可用于类或方法上。用于类上，则表示类中的所有响应请求的方法都是以该地址作为父路径。
+- @RequestBody：注解实现接收http请求的json数据，将json转换为java对象。
+- @ResponseBody：注解实现将controller 方法返回对象转化为json对象响应给客户。
 
 # 8.谈谈你对Spring的AOP理解？ 与业务无关，很多业务模块所共同调用的**逻辑或责任/ 基于动态代理
 
@@ -136,17 +136,19 @@ AOP(Aspect-Oriented Programming:面向切面编程)能够将那些与业务无�
 Spring AOP 就是基于**动态代理**的，
 如果要代理的对象，实现了某个接口，那么 Spring AOP 会使用 **JDK Proxy**，去创建代理对象，
 如果要代理的对象没有实现接口，这时候 Spring AOP 会使用 **Cglib** 生成一个**被代理对象的子类来作为代理**，如下图所示：
+
 ![](SpringAOP原理图.png)
 
 # 9.Spring AOP和AspectJ AOP有什么区别？ 运行时增强还是编译时增强/基于代理还是基于字节码从操作/功能简单还是功能更加强大/切面较少用哪个
-**Spring AOP是属于运行时增强，而AspectJ是编译时增强**。
-Spring AOP**基于代理**（Proxying），而AspectJ**基于字节码操作**（Bytecode Manipulation）。
-Spring AOP已经集成了AspectJ，AspectJ应该算得上是Java生态系统中最完整的AOP框架了。
-AspectJ相比于Spring AOP功能更加强大，但是Spring AOP相对来说更简单。
-如果我们的切面比较少，那么两者性能差异不大。但是，当切面太多的话，最好选择AspectJ，它比SpringAOP快很多。
+- **Spring AOP是属于运行时增强，而AspectJ是编译时增强**。
+- Spring AOP**基于代理**（Proxying），而AspectJ**基于字节码操作**（Bytecode Manipulation）。
+- Spring AOP已经集成了AspectJ，AspectJ应该算得上是Java生态系统中最完整的AOP框架了。
+- AspectJ相比于Spring AOP功能更加强大，但是Spring AOP相对来说更简单。
+- 如果我们的切面比较少，那么两者性能差异不大。但是，当切面太多的话，最好选择AspectJ，它比SpringAOP快很多。
 
 # 9.1 在Spring AOP 中，关注点和横切关注的区别是什么？
-关注点是应用中一个模块的行为，一个关注点可能会被定义成一个我们想实现的一个功能。 
+关注点是应用中一个模块的行为，一个关注点可能会被定义成一个我们想实现的一个功能。
+
 **横切关注点是一个关注点，此关注点是几乎应用的每个模块都会使用的功能，
 并影响整个应用，比如日志，安全和数据传输，几乎应用的每个模块都需要的功能。因此这些都属于横切关注点**。
 # 9.2 那什么是连接点呢？ @JoinPoint 应用程序执行Spring AOP的位置
@@ -175,11 +177,11 @@ public class AccessLogAOP {
 Spring AOP的通知可以理解为增强，是 **在方法执行前或执行后要做的动作**，实际上是程序执行时要通过SpringAOP框架触发的代码段。
 
 Spring切面可以应用五种类型的通知：
-before：前置通知，在一个方法执行前被调用。
-after: 在方法执行之后调用的通知，无论方法执行是否成功。
-after-returning: 仅当方法成功完成后执行的通知。
-after-throwing: 在方法抛出异常退出时执行的通知。
-around: 在方法执行之前和之后调用的通知
+- before：前置通知，在一个方法执行前被调用。
+- after: 在方法执行之后调用的通知，无论方法执行是否成功。
+- after-returning: 仅当方法成功完成后执行的通知。
+- after-throwing: 在方法抛出异常退出时执行的通知。
+- around: 在方法执行之前和之后调用的通知
 
 
 # 10. 说说你对Spring的IOC是怎么理解的？ 设计思想， 创建对象的控制权交给Spring框架管理 实例化对象的权利交给了Spring框架的IOC容器
@@ -233,8 +235,7 @@ IoC让相互协作的组件保持松散的耦合，而AOP编程允许你把遍�
  */
 ```
 
-> 改题的的内容整理自：<https://yemengying.com/2016/07/14/spring-bean-life-cycle/> ，
-> 除了这篇文章，再推荐一篇很不错的文章 ：<https://www.cnblogs.com/zrtqsk/p/3735273.html> 。
+[spring bean 的生命周期](https://www.cnblogs.com/zrtqsk/p/3735273.html)
 
 # 12.解释Spring支持的几种bean的作用域？singleton/prototype/request/session/global-session
 
@@ -244,7 +245,7 @@ IoC让相互协作的组件保持松散的耦合，而AOP编程允许你把遍�
 - **session** : 每一次来自新 session 的 HTTP 请求都会产生一个新的 bean，该 bean 仅在当前 HTTP session 内有效。
 - **global-session** ： 全局 session 作用域，仅仅在基于 portlet 的 web 应用中才有意义，Spring5 已经没有了。
 Portlet 是能够生成语义代码(例如：HTML)片段的小型 Java Web 插件。它们基于 portlet 容器，可以像 servlet 一样处理 HTTP 请求。
-- 但是，与 servlet 不同，每个 portlet 都有不同的会话。
+但是，与 servlet 不同，每个 portlet 都有不同的会话。
 
 # 13.Spring基于xml注入bean的几种方式?
 （1）Set方法注入；
@@ -259,40 +260,40 @@ Portlet 是能够生成语义代码(例如：HTML)片段的小型 Java Web 插�
 - **包装器设计模式** : 我们的项目需要连接多个数据库，而且不同的客户在每次访问中根据需要会去访问不同的数据库。这种模式让我们可以根据客户的需求能够动态切换不同的数据源。
 - **观察者模式:** Spring 事件驱动模型就是观察者模式很经典的一个应用。
 - **适配器模式** : Spring AOP 的增强或通知(Advice)使用到了适配器模式、spring MVC 中也是用到了适配器模式适配`Controller`。
-- 
+
 不仅要回设计模式，还要知道每个设计模式在Spring中是如何使用的。
 
-**简单工厂模式**：Spring 中的 BeanFactory 就是简单工厂模式的体现。根据传入一个唯一的标识来获得 Bean 对象，但是在传入参数后创建还是传入参数前创建，要根据具体情况来定。
-**工厂模式**：Spring 中的 FactoryBean 就是典型的工厂方法模式，实现了 FactoryBean 接口的 bean 是一类叫做 factory 的 bean。
+- **简单工厂模式**：Spring 中的 BeanFactory 就是简单工厂模式的体现。根据传入一个唯一的标识来获得 Bean 对象，但是在传入参数后创建还是传入参数前创建，要根据具体情况来定。
+- **工厂模式**：Spring 中的 FactoryBean 就是典型的工厂方法模式，实现了 FactoryBean 接口的 bean 是一类叫做 factory 的 bean。
 其特点是，spring 在使用 getBean() 调用获得该 bean 时，会自动调用该 bean 的 getObject() 方法，所以返回的不是 factory 这个 bean，
 而是这个 bean.getOjbect()方法的返回值。
-**单例模式**：在 spring 中用到的单例模式有： scope="singleton" ，注册式单例模式，bean 存放于Map 中。bean name 当做 key，bean 当做 value。
-**原型模式**：在 spring 中用到的原型模式有： scope="prototype" ，每次获取的是通过克隆生成的新实例，对其进行修改时对原有实例对象不造成任何影响。
-**迭代器模式**：在 Spring 中有个 CompositeIterator 实现了 Iterator，Iterable 接口和 Iterator 接口，这两个都是迭代相关的接口。
+- **单例模式**：在 spring 中用到的单例模式有： scope="singleton" ，注册式单例模式，bean 存放于Map 中。bean name 当做 key，bean 当做 value。
+- **原型模式**：在 spring 中用到的原型模式有： scope="prototype" ，每次获取的是通过克隆生成的新实例，对其进行修改时对原有实例对象不造成任何影响。
+- **迭代器模式**：在 Spring 中有个 CompositeIterator 实现了 Iterator，Iterable 接口和 Iterator 接口，这两个都是迭代相关的接口。
 可以这么认为，实现了 Iterable 接口，则表示某个对象是可被迭代的。Iterator 接口相当于是一个迭代器，实现了 Iterator 接口，
 等于具体定义了这个可被迭代的对象时如何进行迭代的。
 
-**代理模式**：Spring 中经典的 AOP，就是使用动态代理实现的，分 JDK 和 CGlib 动态代理。
-**适配器模式**：Spring 中的 AOP 中 AdvisorAdapter 类，它有三个实现：
+- **代理模式**：Spring 中经典的 AOP，就是使用动态代理实现的，分 JDK 和 CGlib 动态代理。
+- **适配器模式**：Spring 中的 AOP 中 AdvisorAdapter 类，它有三个实现：
 MethodBeforAdviceAdapter、AfterReturnningAdviceAdapter、ThrowsAdviceAdapter。Spring会根据不同的 AOP 配置来使用对应的 Advice，
 与策略模式不同的是，一个方法可以同时拥有多个Advice。Spring 存在很多以 Adapter 结尾的，大多数都是适配器模式。
 
-**观察者模式**：Spring 中的 Event 和 Listener。spring 事件：ApplicationEvent，该抽象类继承了
+- **观察者模式**：Spring 中的 Event 和 Listener。spring 事件：ApplicationEvent，该抽象类继承了
 EventObject 类，JDK 建议所有的事件都应该继承自 EventObject。spring 事件监听器：
 ApplicationListener，该接口继承了 EventListener 接口，JDK 建议所有的事件监听器都应该继承
 EventListener。
 
-**模板模式**：Spring 中的 org.springframework.jdbc.core.JdbcTemplate 就是非常经典的模板模式的应用，里面的 execute 方法，把整个算法步骤都定义好了。
+- **模板模式**：Spring 中的 org.springframework.jdbc.core.JdbcTemplate 就是非常经典的模板模式的应用，里面的 execute 方法，把整个算法步骤都定义好了。
 
-**责任链模式**：DispatcherServlet 中的 doDispatch() 方法中获取与请求匹配的处理器
+- **责任链模式**：DispatcherServlet 中的 doDispatch() 方法中获取与请求匹配的处理器
 HandlerExecutionChain，this.getHandler() 方法的处理使用到了责任链模式。
 
 # 15.说说Spring 中 ApplicationContext 和 BeanFactory 的区别 ？ 延迟加载（节约内存但速度较慢）还是容器启动时加载(预先加载但浪费内存)/一般用ApplicationContext/都支持BeanPostProcessor
 BeanFactory：
-BeanFactory是spring中最底层的接口，定义了IOC的基本功能，包含了各种Bean的定义、加载、实例化、依赖注入和生命周期管理。但无法支持spring插件，例如：AOP、Web应用等功能。
+`BeanFactory`是spring中最底层的接口，定义了IOC的基本功能，包含了各种Bean的定义、加载、实例化、依赖注入和生命周期管理。但无法支持spring插件，例如：AOP、Web应用等功能。
 
-ApplicationContext
-ApplicationContext是BeanFactory的子类，因为BeanFactory无法满足不断更新的spring的需求，于是ApplicationContext就基本上代替了BeanFactory的工作，
+ApplicationContext:
+`ApplicationContext`是`BeanFactory`的子类，因为`BeanFactory`无法满足不断更新的spring的需求，于是`ApplicationContext`就基本上代替了`BeanFactory`的工作，
 以一种更面向框架的工作方式以及对上下文进行分层和实现继承，并在这个基础上对功能进行扩展：
 1) MessageSource, 提供国际化的消息访问 
 2) 资源访问（如URL和文件） 
@@ -301,17 +302,18 @@ ApplicationContext是BeanFactory的子类，因为BeanFactory无法满足不断�
 5) 各种不同应用层的Context实现
 
 区别总结
-1) BeanFactroy采用的是延迟加载形式来注入Bean的，即只有在使用到某个Bean时(调用getBean())，才对该Bean进行加载实例化，
-  这样，我们就不能发现一些存在的Spring的配置问题。而**ApplicationContext则相反，它是在容器启动时，一次性创建了所有的Bean。
+1) `BeanFactroy`采用的是延迟加载形式来注入Bean的，即只有在使用到某个Bean时(调用getBean())，才对该Bean进行加载实例化，
+  这样，我们就不能发现一些存在的Spring的配置问题。而**`ApplicationContext`则相反，它是在容器启动时，一次性创建了所有的Bean。
   这样，在容器启动时，我们就可以发现Spring中存在的配置错误**。
-2) 如果使用ApplicationContext，配置的bean是singleton，那么不管你有没有或想不想用它，它都会被实例化。好处是可以预先加载，坏处是浪费内存。
-3) 当使用BeanFactory实例化对象时，配置的bean不会马上被实例化，而是等到你使用该bean的时候（getBean）才会被实例化。好处是节约内存，坏处是速度比较慢。
-4) 没有特殊要求的情况下，应该使用ApplicationContext完成。因为BeanFactory能完成的事情，ApplicationContext都能完成，并且提供了更多接近现在开发的功能。
-5) BeanFactory和ApplicationContext都支持BeanPostProcessor、BeanFactoryPostProcessor的使用，但两者之间的区别是：BeanFactory需要手动注册，
-   而ApplicationContext则是自动注册
+2) 如果使用`ApplicationContext`，配置的bean是singleton，那么不管你有没有或想不想用它，它都会被实例化。好处是可以预先加载，坏处是浪费内存。
+3) 当使用`BeanFactory`实例化对象时，配置的bean不会马上被实例化，而是等到你使用该bean的时候（getBean）才会被实例化。好处是节约内存，坏处是速度比较慢。
+4) 没有特殊要求的情况下，应该使用`ApplicationContext`完成。因为`BeanFactory`能完成的事情，`ApplicationContext`都能完成，并且提供了更多接近现在开发的功能。
+5) `BeanFactory`和`ApplicationContext`都支持`BeanPostProcessor`、`BeanFactoryPostProcessor`的使用，但两者之间的区别是：`BeanFactory`需要手动注册，
+   而`ApplicationContext`则是自动注册
 
     post 在...之后
     Processor 处理器
+
 [Spring 中 ApplicationContext 和 BeanFactory 的区别](https://blog.csdn.net/m0_67014537/article/details/125219708)
 
 # 16、Spring 框架中的单例 Bean 是线程安全的么？ 由于Spring Bean没有可变的状态，所以可以说Spring的单例Bean是线程安全的
@@ -319,18 +321,18 @@ ApplicationContext是BeanFactory的子类，因为BeanFactory无法满足不断�
 就需要自行保证线程安全。最浅显的解决办法，就是将多态 Bean 的作用域（Scope）由 Singleton 变更为 Prototype
 
 # 17.Spring 是怎么解决循环依赖的？ 默认单例Bean注册表 DefaultSingletonBeanRegistry 这个类中。三级缓存、提前曝光
-在默认单例Bean注册表 DefaultSingletonBeanRegistry 这个类中：
-Spring首先从一级援存singletonObjects中获取对象，如果获取不到并且对象正在创建中，就再从二级缓存earlySingletonObjects中获
-取，如果还是获取不到且允许singletonFactories 通过getObject()获取，就从三级缓存singletonFactory中获取，如果获取到了就从
-singletonFactories三级缓存中移除掉，并放入earlySingletonObjects中，其实也就是从三级缓存移到了二级援存中
+在默认单例Bean注册表 `DefaultSingletonBeanRegistry` 这个类中：
+Spring首先从一级援存`singletonObjects`中获取对象，如果获取不到并且对象正在创建中，就再从二级缓存`earlySingletonObjects`中获取，
+如果还是获取不到且允许`singletonFactories` 通过getObject()获取，就从三级缓存`singletonFactory`中获取，如果获取到了就从
+`singletonFactories`三级缓存中移除掉，并放入`earlySingletonObjects`中，其实也就是从三级缓存移到了二级援存中
 
 ![img.png](Spring循环依赖问题.png)
 
 整个流程大致如下：
-1. 首先 A 完成初始化第一步并将自己提前曝光出来（通过 ObjectFactory 将自己提前曝光），在初始化的时候，发现自己依赖对象 B，此时就会去尝试 get(B)，这个时候发现 B 还没有被创建出来；
+1. 首先 A 完成初始化第一步并将自己提前曝光出来（通过 `ObjectFactory` 将自己提前曝光），在初始化的时候，发现自己依赖对象 B，此时就会去尝试 get(B)，这个时候发现 B 还没有被创建出来；
 2. 然后 B 就走创建流程，在 B 初始化的时候，同样发现自己依赖 C，C 也没有被创建出来；
 3. 这个时候 C 又开始初始化进程，但是在初始化的过程中发现自己依赖 A，于是尝试 get(A)。这个时候由于 A 已经添加至缓存中
-  （一般都是添加至三级缓存 singletonFactories），通过 ObjectFactory 提前曝光，所以可以通过 ObjectFactory#getObject() 方法来 
+  （一般都是添加至三级缓存 `singletonFactories`），通过 ObjectFactory 提前曝光，所以可以通过 `ObjectFactory`#getObject() 方法来 
    拿到 A 对象。C 拿 到 A 对象后顺利完成初始化，然后将自己添加到一级缓存中；
 4. 回到 B，B 也可以拿到 C 对象，完成初始化，A 可以顺利拿到 B 完成初始化。到这里整个链路就已经完成了初始化过程了。
    关键字：三级缓存，提前曝光
@@ -354,14 +356,24 @@ singletonFactories三级缓存中移除掉，并放入earlySingletonObjects中�
 [Spring 源码关键点之一：三级缓存](https://www.cnblogs.com/xujq/p/16283608.html)
 
 # 19.说说事务的隔离级别？ 读未提交/读已提交/可重复读/串行化
-读未提交(Read Uncommitted)：允许脏读，也就是可能读取到其他会话中未提交事务修改的数据
-读已提交(Read Committed)：只能读取到已经提交的数据。Oracle等多数数据库默认都是该级别 (不重复读)
-可重复读(Repeated Read)：在同一个事务内的查询都是事务开始时刻一致的，Mysql的InnoDB默认级别。在SQL标准中，**该隔离级别消除了不可重复读**，
+- 读未提交(Read Uncommitted)：允许脏读，也就是可能读取到其他会话中未提交事务修改的数据
+- 读已提交(Read Committed)：只能读取到已经提交的数据。Oracle等多数数据库默认都是该级别 (不可重复读)
+- 可重复读(Repeated Read)：在同一个事务内的查询都是事务开始时刻一致的，Mysql的InnoDB默认级别。在SQL标准中，**该隔离级别消除了不可重复读**，
     **但是还存在幻读**（多个事务同时修改同一条记录，事务之间不知道彼此存在，当事务提交之后，后面的事务修改的数据将会覆盖前事务，前一个事务就像发生幻觉一样）
-串行化(Serializable)：完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞。
+- 串行化(Serializable)：完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞。
 
-不可重复读和幻读的区别主要是：解决不可重复读需要锁定了当前满足条件的记录，而解决幻读需要锁定当前满足条件的记录及相近的记录。比如查询某个商品的信息，
-可重复读事务隔离级别可以保证当前商品信息被锁定，解决不可重复读；但是如果统计商品个数，中途有记录插入，可重复读事务隔离级别就不能保证两个事务统计的个数相同
+不可重复度和幻读的区别是：
+不可重复读的重点是修改:同样的条件, 你读取过的数据, 再次读取出来发现值不一样了
+
+幻读的重点在于新增或者删除：同样的条件, 第1次和第2次读出来的**记录数**不一样
+
+当然, 从总的结果来看, 似乎两者都表现为两次读取的结果不一致.
+
+但如果你从控制的角度来看, 两者的区别就比较大
+
+对于前者, 只需要锁住满足条件的记录
+
+对于后者, 要锁住满足条件及其相近的记录
 
 # 19.说说事务的传播级别？Propagation Spring源码中有一个传播枚举，定义了7种事务的传播机制 Spring事务传播级别一般用默认PROPAGATION_REQUIRED，除非在嵌套事务的情况下需要重点了解。
 
