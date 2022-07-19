@@ -220,7 +220,7 @@ TODO **需要一个延迟加载demo**
 二级缓存需要手动开启，它是全局级别的缓存
 
 Mybatis整体：
-![Mybatis的缓存机制.png.png](Mybatis的缓存机制.png)
+![Mybatis的缓存机制.png](Mybatis的缓存机制.png)
 
 ## 一级缓存localCache
 在应用运行过程中，我们有可能在一次数据库会话中，执行多次查询条件完全相同的 SQL，
@@ -272,15 +272,16 @@ characterEncoding=UTF-8", "root", "123456");
 TODO **设计模式的系统化复习和学习**
 
 #14、MyBatis 中比如 UserMapper.java 是接口，为什么没有实现类还能调用？
-**TODO 为什么我的demo不好用了**
 
 使用JDK动态代理 + MapperProxy 类 。本质上调用的是 MapperProxy 的 invoke() 方法。
-
+MapperProxyFactory是代理工厂类，根据传入的DAO的接口，生成对应实现的动态代理类。
+每个接口一个动态代理实现类
 ```java
 
 /**
  * @see org.apache.ibatis.session.SqlSessionManager.getMapper
  * @see org.apache.ibatis.binding.MapperProxy.invoke
+ * @see org.apache.ibatis.binding.MapperProxyFactory#newInstance(org.apache.ibatis.binding.MapperProxy<T>)
  */
 ```
 [具体参考](https://blog.csdn.net/markerhub/article/details/108924574)
@@ -291,14 +292,32 @@ TODO **设计模式的系统化复习和学习**
 
 嵌套查询(分步查询)是先查一个表,根据这个表里面的 结果的外键id,去再另外一个表里面查询数据, 也是通过配置collection,但另外一个表的查询通过select节点配置。
 
+```java
+/**
+ * @see 
+ */
+```
+
 ```xml
-<resultMap id="deptEmpStep" type="Dept"> <id property="did" column="did"></id>
-   <result property="dname" column="dname"></result> 
-   <collection property="emps" fetchType="eager" select="com.atguigu.MyBatis.mapper.EmpMapper.getEmpListByDid" column="did"> 
-   </collection> 
-</resultMap>
-        <!--Dept getDeptByStep(@Param("did") int did);--> 
-  <select id="getDeptByStep" resultMap="deptEmpStep">
-    select * from t_dept where did = #{did}
-  </select>
+    <resultMap id="deptAndEmpByStepResultMap" type="Dept">
+        <id property="did" column="did"></id>
+        <result property="deptName" column="dept_name"></result>
+        <!-- collection： 处理一对多的映射关系
+             ofType: 表示该属性所对应的集合中存储数据的类型-->
+        <!--    collection的 property 是 Dept实体类 的 empList 属性  ofType放的是 empList 属性的泛型 Emp
+                column 分步查询的条件 根据部门id查询员工表
+          -->
+        <collection property="empList" select="com.atguigu.mybatis.mapper.EmpMapper.getDeptAndEmpByStepTwo" column="did"
+        fetchType="eager">
+
+        </collection>
+    </resultMap>
+    <select id="getDeptAndEmpByStepOne" resultMap="deptAndEmpByStepResultMap">
+        select
+            *
+        from
+            t_dept
+        where
+            did = #{did}
+    </select>
 ```
