@@ -45,6 +45,7 @@
         <module>rabbitmq</module>
         <module>springboot-springSourceCode</module>
         <module>mysql</module>
+        <module>es-test</module>
     </modules>
 
     <!-- 统一管理jar包版本 -->

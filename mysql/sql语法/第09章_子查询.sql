@@ -12,19 +12,25 @@ FROM employees
 WHERE salary > 11000;
 
 #方式2：自连接
-SELECT e2.last_name,e2.salary
-FROM employees e1,employees e2
-WHERE e2.`salary` > e1.`salary` #多表的连接条件
-AND e1.last_name = 'Abel';
+SELECT
+	e2.last_name,
+	e2.salary
+FROM
+	employees e1,
+	employees e2
+WHERE
+	e2.`salary` > e1.`salary` #多表的连接条件
+
+	AND e1.last_name = 'Abel';
 
 #方式3：子查询
-SELECT last_name,salary
-FROM employees
-WHERE salary > (
-		SELECT salary
-		FROM employees
-		WHERE last_name = 'Abel'
-		);
+SELECT
+	last_name,
+	salary
+FROM
+	employees
+WHERE
+	salary > ( SELECT salary FROM employees WHERE last_name = 'Abel' );
 
 #2. 称谓的规范：外查询（或主查询）、内查询（或子查询）
 
@@ -46,7 +52,7 @@ WHERE  (
 	FROM employees
 	WHERE last_name = 'Abel'
 		) < salary;
-		
+
 /*
 3. 子查询的分类
 角度1：从内查询返回的结果的条目数
@@ -54,16 +60,16 @@ WHERE  (
 
 角度2：内查询是否被执行多次
 	相关子查询  vs  不相关子查询
-	
+
  比如：相关子查询的需求：查询工资大于本部门平均工资的员工信息。
        不相关子查询的需求：查询工资大于本公司平均工资的员工信息。
- 
+
 */
 
 #子查询的编写技巧（或步骤）：① 从里往外写  ② 从外往里写
 
 #4. 单行子查询
-#4.1 单行操作符： =  !=  >   >=  <  <= 
+#4.1 单行操作符： =  !=  >   >=  <  <=
 #题目：查询工资大于149号员工工资的员工的信息
 
 SELECT employee_id,last_name,salary
@@ -147,13 +153,14 @@ SELECT employee_id,last_name,CASE department_id WHEN (SELECT department_id FROM 
 FROM employees;
 
 #4.2 子查询中的空值问题
-SELECT last_name, job_id
-FROM   employees
-WHERE  job_id =
-                (SELECT job_id
-                 FROM   employees
-                 WHERE  last_name = 'Haas');
-                 
+SELECT
+	last_name,
+	job_id
+FROM
+	employees
+WHERE
+	job_id = ( SELECT job_id FROM employees WHERE last_name = 'Haas' );
+
 #4.3 非法使用子查询
 #错误：Subquery returns more than 1 row
 SELECT employee_id, last_name
@@ -161,7 +168,7 @@ FROM   employees
 WHERE  salary =
                 (SELECT   MIN(salary)
                  FROM     employees
-                 GROUP BY department_id);         
+                 GROUP BY department_id);
 
 #5.多行子查询
 #5.1 多行子查询的操作符： IN  ANY ALL SOME(同ANY)
@@ -173,8 +180,8 @@ FROM   employees
 WHERE  salary IN
                 (SELECT   MIN(salary)
                  FROM     employees
-                 GROUP BY department_id); 
-                 
+                 GROUP BY department_id);
+
 # ANY / ALL:
 #题目：返回其它job_id中比job_id为‘IT_PROG’部门任一工资低的员工的员工号、
 #姓名、job_id 以及salary
@@ -198,7 +205,7 @@ AND salary < ALL (
 		FROM employees
 		WHERE job_id = 'IT_PROG'
 		);
-		
+
 #题目：查询平均工资最低的部门id
 #MySQL中聚合函数是不能嵌套使用的。
 #方式1：
@@ -218,11 +225,11 @@ HAVING AVG(salary) = (
 SELECT department_id
 FROM employees
 GROUP BY department_id
-HAVING AVG(salary) <= ALL(	
+HAVING AVG(salary) <= ALL(
 			SELECT AVG(salary) avg_sal
 			FROM employees
 			GROUP BY department_id
-			) 
+			)
 #5.3 空值问题
 SELECT last_name
 FROM employees
@@ -230,17 +237,17 @@ WHERE employee_id NOT IN (
 			SELECT manager_id
 			FROM employees
 			);
-			
+
 #6. 相关子查询
 #回顾：查询员工中工资大于公司平均工资的员工的last_name,salary和其department_id
-#6.1 
+#6.1
 SELECT last_name,salary,department_id
 FROM employees
 WHERE salary > (
 		SELECT AVG(salary)
 		FROM employees
 		);
-		
+
 #题目：查询员工中工资大于本部门平均工资的员工的last_name,salary和其department_id
 #方式1：使用相关子查询
 SELECT last_name,salary,department_id
@@ -274,7 +281,7 @@ ORDER BY (
 #结论：在SELECT中，除了GROUP BY 和 LIMIT之外，其他位置都可以声明子查询！
 /*
 SELECT ....,....,....(存在聚合函数)
-FROM ... (LEFT / RIGHT)JOIN ....ON 多表的连接条件 
+FROM ... (LEFT / RIGHT)JOIN ....ON 多表的连接条件
 (LEFT / RIGHT)JOIN ... ON ....
 WHERE 不包含聚合函数的过滤条件
 GROUP BY ...,....

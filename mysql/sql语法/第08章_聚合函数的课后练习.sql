@@ -32,20 +32,33 @@ GROUP BY manager_id
 HAVING MIN(salary) >= 6000;
 
 
-# 7.查询所有部门的名字，location_id，员工数量和平均工资，并按平均工资降序 
+# 7.查询所有部门的名字，location_id，员工数量和平均工资，并按平均工资降序
 
-SELECT d.department_name,d.location_id,COUNT(employee_id),AVG(salary)
-FROM departments d LEFT JOIN employees e
-ON d.`department_id` = e.`department_id`
-GROUP BY department_name,location_id
+SELECT
+	d.department_name,
+	d.location_id,
+	COUNT( employee_id ),
+	AVG( salary )
+FROM
+	departments d
+	LEFT JOIN employees e ON d.`department_id` = e.`department_id`
+GROUP BY
+	department_name,
+	location_id
 
 
-# 8.查询每个工种、每个部门的部门名、工种名和最低工资 
+# 8.查询每个工种、每个部门的部门名、工种名和最低工资
 
-SELECT d.department_name,e.job_id,MIN(salary)
-FROM departments d LEFT JOIN employees e
-ON d.`department_id` = e.`department_id`
-GROUP BY department_name,job_id
+SELECT
+	d.department_name,
+	e.job_id,
+	MIN( salary )
+FROM
+	departments d
+	LEFT JOIN employees e ON d.`department_id` = e.`department_id`
+GROUP BY
+	department_name,
+	job_id
 
 
 

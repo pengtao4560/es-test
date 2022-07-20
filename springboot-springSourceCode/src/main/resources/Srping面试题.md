@@ -134,8 +134,8 @@ AOP(Aspect-Oriented Programming:面向切面编程)能够将那些与业务无�
 封装起来，**便于减少系统的重复代码，降低模块间的耦合度，并有利于未来的可拓展性和可维护性**。
 
 Spring AOP 就是基于**动态代理**的，
-如果要代理的对象，实现了某个接口，那么 Spring AOP 会使用 **JDK Proxy**，去创建代理对象，
-如果要代理的对象没有实现接口，这时候 Spring AOP 会使用 **Cglib** 生成一个**被代理对象的子类来作为代理**，如下图所示：
+- 如果要代理的对象，实现了某个接口，那么 Spring AOP 会使用 **JDK Proxy**，去创建代理对象，
+- 如果要代理的对象没有实现接口，这时候 Spring AOP 会使用 **Cglib** 生成一个**被代理对象的子类来作为代理**，如下图所示：
 
 ![](SpringAOP原理图.png)
 
@@ -311,6 +311,7 @@ ApplicationContext:
 5) `BeanFactory`和`ApplicationContext`都支持`BeanPostProcessor`、`BeanFactoryPostProcessor`的使用，但两者之间的区别是：`BeanFactory`需要手动注册，
    而`ApplicationContext`则是自动注册
 
+
     post 在...之后
     Processor 处理器
 
@@ -394,5 +395,5 @@ Spring事务定义了7种传播机制：
    Spring事务传播级别一般不需要定义，默认就是 PROPAGATION_REQUIRED，除非在嵌套事务的情况下需要重点了解。
 
 # 20.Spring 事务实现方式? 编程式事务 (编码很难维护)，声明式事务(通过注解或XML配置来管理事务)
-编程式事务管理：这意味着你可以通过编程的方式管理事务，这种方式带来了很大的灵活性，但很难维护。
-声明式事务管理：这种方式意味着你可以将事务管理和业务代码分离。你只需要通过注解或者XML配置管理事务
+- 编程式事务管理：这意味着你可以通过编程的方式管理事务，这种方式带来了很大的灵活性，但很难维护。
+- 声明式事务管理：这种方式意味着你可以将事务管理和业务代码分离。你只需要通过注解`@Transational`或者XML配置管理事务
