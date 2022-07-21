@@ -39,10 +39,10 @@ public @interface Resource {
 ```
 
 # 4.依赖注入的方式有几种，各是什么? （TODO如果考到再完善）
-- 构造器注入 将被依赖对象通过构造函数的参数注入给依赖对象，并且在初始化对象的时候注入。
+- 构造器注入 将被依赖对象通过构造方法的参数注入给依赖对象，并且在初始化对象的时候注入。
 - setter方法注入
 - 接口注入
-## 构造器注入：将被依赖对象通过构造函数的参数注入给依赖对象，并且在初始化对象的时候注入。
+## 构造器注入：将被依赖对象通过构造方法的参数注入给依赖对象，并且在初始化对象的时候注入。
 - 优点： 对象初始化完成后便可获得可使用的对象。
 - 缺点： 当需要注入的对象很多时，构造器参数列表将会很长； 不够灵活。若有多种注入方式，每种方式只需注入指定几个依赖，那么就需要提供多个重载的构造函数，麻烦。
 ```java
@@ -58,7 +58,7 @@ public class TestServiceImpl {
 }
 ```
 
-## setter方法注入：IoC Service Provider通过调用成员变量提供的setter函数将被依赖对象注入给依赖类。
+## setter方法注入：IoC Service Provider通过调用成员变量提供的setter方法将被依赖对象注入给依赖类。
 - 优点： 灵活。可以选择性地注入需要的对象。
 - 缺点： 依赖对象初始化完成后由于尚未注入被依赖对象，因此还不能使用。
 
@@ -72,6 +72,7 @@ PS：什么是侵入行？ 如果类A要使用别人提供的一个功能，若�
 与问题1 重复
  
 # 6.说说你对Spring MVC的理解? MVC模型,SpringMVC是Spring子模块、SpringMVC组件
+MVC 是模型(Model)、视图(View)、控制器(Controller)的简写，其核心思想是通过将业务逻辑、数据、显示分离来组织代码
 - M-Model 模型（完成业务逻辑：有javaBean构成，service+dao+entity）
 - V-View 视图（做界面的展示 jsp，html……）
 - C-Controller 控制器（接收请求—>调用模型—>根据结果派发页面）
@@ -146,7 +147,7 @@ Spring AOP 就是基于**动态代理**的，
 - AspectJ相比于Spring AOP功能更加强大，但是Spring AOP相对来说更简单。
 - 如果我们的切面比较少，那么两者性能差异不大。但是，当切面太多的话，最好选择AspectJ，它比SpringAOP快很多。
 
-# 9.1 在Spring AOP 中，关注点和横切关注的区别是什么？
+# 9.1 在Spring AOP 中，关注点和横切关注的区别是什么？ 应用中一个模块的行为/ 几乎应用的每个模块都会使用的功能
 关注点是应用中一个模块的行为，一个关注点可能会被定义成一个我们想实现的一个功能。
 
 **横切关注点是一个关注点，此关注点是几乎应用的每个模块都会使用的功能，
@@ -186,8 +187,7 @@ Spring切面可以应用五种类型的通知：
 
 # 10. 说说你对Spring的IOC是怎么理解的？ 设计思想， 创建对象的控制权交给Spring框架管理 实例化对象的权利交给了Spring框架的IOC容器
 
-**IoC（Inverse of Control:控制反转）** 是一种设计思想，而不是一个具体的技术实现。
-IoC 的思想就是将原本在程序中手动创建对象的控制权，交由 Spring 框架来管理。
+**IoC（Inverse of Control:控制反转）** 是一种设计思想，而不是一个具体的技术实现。IoC 的思想就是将原本在程序中手动创建对象的控制权，交由 Spring 框架来管理。
 **为什么叫控制反转？**
 - **控制** ：指的是创建对象的权力，也就是实例化对象、管理对象的权利
 - **反转** ：控制权交给外部环境，在这里也就是Spring 框架、Spring的IoC 容器
@@ -255,11 +255,14 @@ Portlet 是能够生成语义代码(例如：HTML)片段的小型 Java Web 插�
 
 - **工厂设计模式** : Spring 使用工厂模式通过 `BeanFactory`、`ApplicationContext` 创建 bean 对象。
 - **代理设计模式** : Spring AOP 功能的实现。如果要代理的对象，实现了某个接口，那么 Spring AOP会使用JDK动态代理，去创建代理对象，否则使用Cglib代理生成一个被代理对象的子类来作为代理
+- **模板方法模式** : Spring 中 `JdbcTemplate`、`RestTemplate`、`RedisTemplate`、`HibernateTemplate` 等以 Template 结尾的对数据库操作的类，它们就使用到了模板模式。execute() 方法，把整个算法步骤都定义好了
 - **单例设计模式** : Spring 中的 Bean 默认都是单例的。
-- **模板方法模式** : Spring 中 `jdbcTemplate`、`hibernateTemplate` 等以 Template 结尾的对数据库操作的类，它们就使用到了模板模式。
 - **包装器设计模式** : 我们的项目需要连接多个数据库，而且不同的客户在每次访问中根据需要会去访问不同的数据库。这种模式让我们可以根据客户的需求能够动态切换不同的数据源。
 - **观察者模式:** Spring 事件驱动模型就是观察者模式很经典的一个应用。
 - **适配器模式** : Spring AOP 的增强或通知(Advice)使用到了适配器模式、spring MVC 中也是用到了适配器模式适配`Controller`。
+  Spring 中的 AOP 中 `AdvisorAdapter` 类，它有三个实现：
+  `MethodBeforAdviceAdapter`、`AfterReturnningAdviceAdapter`、`ThrowsAdviceAdapter`。Spring会根据不同的 AOP 配置来使用对应的 Advice，
+  与策略模式不同的是，一个方法可以同时拥有多个Advice。Spring 存在很多以 Adapter 结尾的，大多数都是适配器模式。
 
 不仅要回设计模式，还要知道每个设计模式在Spring中是如何使用的。
 
@@ -293,7 +296,7 @@ BeanFactory：
 `BeanFactory`是spring中最底层的接口，定义了IOC的基本功能，包含了各种Bean的定义、加载、实例化、依赖注入和生命周期管理。但无法支持spring插件，例如：AOP、Web应用等功能。
 
 ApplicationContext:
-`ApplicationContext`是`BeanFactory`的子类，因为`BeanFactory`无法满足不断更新的spring的需求，于是`ApplicationContext`就基本上代替了`BeanFactory`的工作，
+`ApplicationContext`是`BeanFactory`的间接子接口，因为`BeanFactory`无法满足不断更新的spring的需求，于是`ApplicationContext`就基本上代替了`BeanFactory`的工作，
 以一种更面向框架的工作方式以及对上下文进行分层和实现继承，并在这个基础上对功能进行扩展：
 1) MessageSource, 提供国际化的消息访问 
 2) 资源访问（如URL和文件） 
@@ -305,7 +308,7 @@ ApplicationContext:
 1) `BeanFactroy`采用的是延迟加载形式来注入Bean的，即只有在使用到某个Bean时(调用getBean())，才对该Bean进行加载实例化，
   这样，我们就不能发现一些存在的Spring的配置问题。而**`ApplicationContext`则相反，它是在容器启动时，一次性创建了所有的Bean。
   这样，在容器启动时，我们就可以发现Spring中存在的配置错误**。
-2) 如果使用`ApplicationContext`，配置的bean是singleton，那么不管你有没有或想不想用它，它都会被实例化。好处是可以预先加载，坏处是浪费内存。
+2) 如果使用`ApplicationContext`，配置的bean是singleton，在容器启动时 `bean` 都会被实例化。好处是可以预先加载，坏处是浪费内存。
 3) 当使用`BeanFactory`实例化对象时，配置的bean不会马上被实例化，而是等到你使用该bean的时候（getBean）才会被实例化。好处是节约内存，坏处是速度比较慢。
 4) 没有特殊要求的情况下，应该使用`ApplicationContext`完成。因为`BeanFactory`能完成的事情，`ApplicationContext`都能完成，并且提供了更多接近现在开发的功能。
 5) `BeanFactory`和`ApplicationContext`都支持`BeanPostProcessor`、`BeanFactoryPostProcessor`的使用，但两者之间的区别是：`BeanFactory`需要手动注册，
@@ -328,7 +331,7 @@ Spring首先从一级援存`singletonObjects`中获取对象，如果获取不�
 `singletonFactories`三级缓存中移除掉，并放入`earlySingletonObjects`中，其实也就是从三级缓存移到了二级援存中
 
 ![img.png](Spring循环依赖问题.png)
-
+循环依赖其实就是循环引用，也就是两个或两个以上的bea对象互相特有对方，最终形成闭环。比如A依赖B,B依赖C,C又依赖A,形成循环依赖
 整个流程大致如下：
 1. 首先 A 完成初始化第一步并将自己提前曝光出来（通过 `ObjectFactory` 将自己提前曝光），在初始化的时候，发现自己依赖对象 B，此时就会去尝试 get(B)，这个时候发现 B 还没有被创建出来；
 2. 然后 B 就走创建流程，在 B 初始化的时候，同样发现自己依赖 C，C 也没有被创建出来；
@@ -383,15 +386,19 @@ Spring首先从一级援存`singletonObjects`中获取对象，如果获取不�
  * @see org.springframework.transaction.annotation.Propagation 传播 枚举
  */
 ```
-Spring事务定义了7种传播机制：
-1. PROPAGATION_REQUIRED:默认的Spring事物传播级别，若当前存在事务，则加入该事务，若不存在事务，则新建一个事务。
-2. PAOPAGATION_REQUIRE_NEW:若当前没有事务，则新建一个事务。若当前存在事务，则新建
+
+事务传播行为是为了解决业务层方法之间互相调用的事务问题
+
+Spring事务定义了7种传播机制：(需要、新需要、嵌套、支持、不支持、强制、永不)
+
+1. PROPAGATION_REQUIRED: 默认的Spring事物传播级别，若当前存在事务，则加入该事务，若不存在事务，则新建一个事务。
+2. PAOPAGATION_REQUIRE_NEW: 若当前没有事务，则新建一个事务。若当前存在事务，则新建
    一个事务，新老事务相互独立。外部事务抛出异常回滚不会影响内部事务的正常提交。
-3. PROPAGATION_NESTED:如果当前存在事务，则嵌套在当前事务中执行。如果当前没有事务，则新建一个事务，类似于REQUIRE_NEW。 
-4. PROPAGATION_SUPPORTS:支持当前事务，若当前不存在事务，以非事务的方式执行。
-5. PROPAGATION_NOT_SUPPORTED:以非事务的方式执行，若当前存在事务，则把当前事务挂起。
-6. PROPAGATION_MANDATORY:强制事务执行，若当前不存在事务，则抛出异常. 
-7. PROPAGATION_NEVER:以非事务的方式执行，如果当前存在事务，则抛出异常。
+3. PROPAGATION_NESTED: 如果当前存在事务，则嵌套在当前事务中执行。如果当前没有事务，则新建一个事务，类似于REQUIRE_NEW。 
+4. PROPAGATION_SUPPORTS: 支持当前事务，若当前不存在事务，以非事务的方式执行。
+5. PROPAGATION_NOT_SUPPORTED: 以非事务的方式执行，若当前存在事务，则把当前事务挂起。
+6. PROPAGATION_MANDATORY: 强制事务执行，若当前不存在事务，则抛出异常. 
+7. PROPAGATION_NEVER: 以非事务的方式执行，如果当前存在事务，则抛出异常。
    Spring事务传播级别一般不需要定义，默认就是 PROPAGATION_REQUIRED，除非在嵌套事务的情况下需要重点了解。
 
 # 20.Spring 事务实现方式? 编程式事务 (编码很难维护)，声明式事务(通过注解或XML配置来管理事务)

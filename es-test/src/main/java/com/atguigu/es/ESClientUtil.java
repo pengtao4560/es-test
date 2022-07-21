@@ -13,13 +13,19 @@ import org.elasticsearch.client.RestClient;
  * <a href="https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/connecting.html">
  *     </a>
  */
-public class test {
+public class ESClientUtil {
 
     public static void main(String[] args) {
 
         // 创建 ES 客户端
 
         // Create the low-level client
+        ElasticsearchClient elasticsearchClient = getElasticsearchClient();
+        elasticsearchClient.shutdown();
+        System.out.println("连接成功，已关闭");
+    }
+
+    public static ElasticsearchClient getElasticsearchClient() {
         RestClient restClient = RestClient.builder(
                 new HttpHost("localhost", 9200)).build();
 
@@ -29,7 +35,6 @@ public class test {
         System.out.println("连接成功");
 // And create the API client
         ElasticsearchClient elasticsearchClient = new ElasticsearchClient(transport);
-        elasticsearchClient.shutdown();
-        System.out.println("连接成功，已关闭");
+        return elasticsearchClient;
     }
 }

@@ -281,8 +281,7 @@ TODO **设计模式的系统化复习和学习**
 
 #14、MyBatis 中比如 UserMapper.java 是接口，为什么没有实现类还能调用？
 
-MapperProxyFactory 映射代理工厂类，根据传入的DAO的接口，生成对应实现的动态代理类。
-每个接口一个动态代理实现类
+MapperProxyFactory 映射代理工厂类，根据传入的DAO的接口，生成对应实现的动态代理类。 每个接口一个动态代理实现类
 使用JDK动态代理 + MapperProxy 类 。本质上调用的是 MapperProxy 的 invoke() 方法。
 ```java
 
