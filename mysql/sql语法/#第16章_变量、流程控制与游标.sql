@@ -1,4 +1,4 @@
-#第16章_变量、流程控制与游标
+#第16章_变量、流程控制与游标（基于mysql8.0   变量比mysql5.7多一些）
 
 #1. 变量
 #1.1 变量： 系统变量（全局系统变量、会话系统变量）  vs 用户自定义变量
@@ -38,6 +38,7 @@ SELECT @@character_set_client; #先查询会话系统变量，再查询全局系
 #全局系统变量：
 #方式1：
 SET @@global.max_connections = 161;
+SELECT @@global.max_connections;
 #方式2：
 SET GLOBAL max_connections = 171;
 
