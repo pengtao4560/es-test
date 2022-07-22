@@ -1,4 +1,4 @@
-#第16章_变量、流程控制与游标
+#第16章_变量、流程控制与游标 （基于mysql8.0   变量比mysql5.7多一些）
 
 #1. 变量
 #1.1 变量： 系统变量（全局系统变量、会话系统变量）  vs 用户自定义变量
@@ -113,7 +113,7 @@ SELECT @avg_sal;
 #1.7 局部变量
 /*
 1、局部变量必须满足：
-① 使用DECLARE声明 
+① 使用DECLARE声明
 ② 声明并使用在BEGIN ... END 中 （使用在存储过程、函数中）
 ③ DECLARE的方式声明的局部变量必须声明在BEGIN中的首行的位置。
 
@@ -143,15 +143,15 @@ BEGIN
 	DECLARE b INT ;
 	#DECLARE a,b INT DEFAULT 0;
 	DECLARE emp_name VARCHAR(25);
-	
+
 	#2、赋值
 	SET a = 1;
 	SET b := 2;
-	
+
 	SELECT last_name INTO emp_name FROM employees WHERE employee_id = 101;
-	
+
 	#3、使用
-	SELECT a,b,emp_name;	
+	SELECT a,b,emp_name;
 END //
 
 DELIMITER ;
@@ -174,7 +174,7 @@ BEGIN
 	WHERE employee_id = 102;
 	#使用
 	SELECT emp_name,sal;
-	
+
 END //
 
 DELIMITER ;
@@ -203,11 +203,11 @@ CREATE PROCEDURE add_value()
 BEGIN
 	#声明
 	DECLARE value1,value2,sum_val INT;
-	
+
 	#赋值
 	SET value1 = 10;
 	SET value2 := 100;
-	
+
 	SET sum_val = value1 + value2;
 	#使用
 	SELECT sum_val;
@@ -226,20 +226,20 @@ DELIMITER //
 CREATE PROCEDURE different_salary(IN emp_id INT,OUT dif_salary DOUBLE)
 BEGIN
 	#分析：查询出emp_id员工的工资;查询出emp_id员工的管理者的id;查询管理者id的工资;计算两个工资的差值
-	
+
 	#声明变量
 	DECLARE emp_sal DOUBLE DEFAULT 0.0; #记录员工的工资
 	DECLARE mgr_sal DOUBLE DEFAULT 0.0; #记录管理者的工资
-	
+
 	DECLARE mgr_id INT DEFAULT 0; #记录管理者的id
-	
-	
+
+
 	#赋值
 	SELECT salary INTO emp_sal FROM employees WHERE employee_id = emp_id;
-	
+
 	SELECT manager_id INTO mgr_id FROM employees WHERE employee_id = emp_id;
 	SELECT salary INTO mgr_sal FROM employees WHERE employee_id = mgr_id;
-	
+
 	SET dif_salary = mgr_sal - emp_sal;
 
 END //
@@ -343,7 +343,7 @@ CREATE PROCEDURE UpdateDataNoCondition()
 		DECLARE CONTINUE HANDLER FOR 1048 SET @prc_value = -1;
 		#处理方式2：
 		#DECLARE CONTINUE HANDLER FOR sqlstate '23000' SET @prc_value = -1;
-		
+
 		SET @x = 1;
 		UPDATE employees SET email = NULL WHERE last_name = 'Abel';
 		SET @x = 2;
@@ -376,7 +376,7 @@ ADD CONSTRAINT uk_dept_name UNIQUE(department_id);
 DELIMITER //
 
 CREATE PROCEDURE InsertDataWithCondition()
-	BEGIN		
+	BEGIN
 		SET @x = 1;
 		INSERT INTO departments(department_name) VALUES('测试');
 		SET @x = 2;
@@ -399,8 +399,8 @@ DROP PROCEDURE IF EXISTS InsertDataWithCondition;
 DELIMITER //
 
 CREATE PROCEDURE InsertDataWithCondition()
-	BEGIN		
-		
+	BEGIN
+
 		#处理程序
 		#方式1：
 		#declare exit handler for 1062 set @pro_value = -1;
@@ -410,7 +410,7 @@ CREATE PROCEDURE InsertDataWithCondition()
 		#定义条件
 		DECLARE duplicate_entry CONDITION FOR 1062;
 		DECLARE EXIT HANDLER FOR duplicate_entry SET @pro_value = -1;
-		
+
 		SET @x = 1;
 		INSERT INTO departments(department_name) VALUES('测试');
 		SET @x = 2;
@@ -434,27 +434,27 @@ DELIMITER //
 
 CREATE PROCEDURE test_if()
 
-BEGIN	
+BEGIN
 	#情况1：
 	#声明局部变量
 	#declare stu_name varchar(15);
-	
-	#if stu_name is null 
+
+	#if stu_name is null
 	#	then select 'stu_name is null';
 	#end if;
-	
+
 	#情况2：二选一
 	#declare email varchar(25) default 'aaa';
-	
+
 	#if email is null
 	#	then select 'email is null';
 	#else
 	#	select 'email is not null';
 	#end if;
-	
+
 	#情况3：多选一
 	DECLARE age INT DEFAULT 20;
-	
+
 	IF age > 40
 		THEN SELECT '中老年';
 	ELSEIF age > 18
@@ -464,7 +464,7 @@ BEGIN
 	ELSE
 		SELECT '婴幼儿';
 	END IF;
-	
+
 
 END //
 
@@ -485,13 +485,13 @@ BEGIN
 	#声明局部变量
 	DECLARE emp_sal DOUBLE; #记录员工的工资
 	DECLARE hire_year DOUBLE; #记录员工入职公司的年头
-	
-	
+
+
 	#赋值
 	SELECT salary INTO emp_sal FROM employees WHERE employee_id = emp_id;
-	
+
 	SELECT DATEDIFF(CURDATE(),hire_date)/365 INTO hire_year FROM employees WHERE employee_id = emp_id;
-	
+
 	#判断
 	IF emp_sal < 8000 AND hire_year >= 5
 		THEN UPDATE employees SET salary = salary + 500 WHERE employee_id = emp_id;
@@ -520,13 +520,13 @@ BEGIN
 	#声明局部变量
 	DECLARE emp_sal DOUBLE; #记录员工的工资
 	DECLARE hire_year DOUBLE; #记录员工入职公司的年头
-	
-	
+
+
 	#赋值
 	SELECT salary INTO emp_sal FROM employees WHERE employee_id = emp_id;
-	
+
 	SELECT DATEDIFF(CURDATE(),hire_date)/365 INTO hire_year FROM employees WHERE employee_id = emp_id;
-	
+
 	#判断
 	IF emp_sal < 9000 AND hire_year >= 5
 		THEN UPDATE employees SET salary = salary + 500 WHERE employee_id = emp_id;
@@ -555,18 +555,18 @@ BEGIN
 	#声明变量
 	DECLARE emp_sal DOUBLE; #记录员工工资
 	DECLARE bonus DOUBLE; #记录员工的奖金率
-	
+
 	#赋值
 	SELECT salary INTO emp_sal FROM employees WHERE employee_id = emp_id;
 	SELECT commission_pct INTO bonus FROM employees WHERE employee_id = emp_id;
-	
-	
+
+
 	#判断
-	IF emp_sal < 9000 
+	IF emp_sal < 9000
 		THEN UPDATE employees SET salary = 9000 WHERE employee_id = emp_id;
 	ELSEIF emp_sal < 10000 AND bonus IS NULL
 		THEN UPDATE employees SET commission_pct = 0.01 WHERE employee_id = emp_id;
-	ELSE 
+	ELSE
 		UPDATE employees SET salary = salary + 100 WHERE employee_id = emp_id;
 	END IF;
 
@@ -593,7 +593,7 @@ BEGIN
 	#演示1：case ... when ...then ...
 	/*
 	declare var int default 2;
-	
+
 	case var
 		when 1 then select 'var = 1';
 		when 2 then select 'var = 2';
@@ -603,7 +603,7 @@ BEGIN
 	*/
 	#演示2：case when ... then ....
 	DECLARE var1 INT DEFAULT 10;
-	CASE 
+	CASE
 	WHEN var1 >= 100 THEN SELECT '三位数';
 	WHEN var1 >= 10 THEN SELECT '两位数';
 	ELSE SELECT '个数位';
@@ -628,18 +628,18 @@ BEGIN
 	#局部变量的声明
 	DECLARE emp_sal DOUBLE; #记录员工的工资
 	DECLARE bonus DOUBLE; #记录员工的奖金率
-	
+
 	#局部变量的赋值
 	SELECT salary INTO emp_sal FROM employees WHERE employee_id = emp_id;
 	SELECT commission_pct INTO bonus FROM employees WHERE employee_id = emp_id;
-	
+
 	CASE
 	WHEN emp_sal < 9000 THEN UPDATE employees SET salary = 9000 WHERE employee_id = emp_id;
-	WHEN emp_sal < 10000 AND bonus IS NULL THEN UPDATE employees SET commission_pct = 0.01 
+	WHEN emp_sal < 10000 AND bonus IS NULL THEN UPDATE employees SET commission_pct = 0.01
 						    WHERE employee_id = emp_id;
 	ELSE UPDATE employees SET salary = salary + 100 WHERE employee_id = emp_id;
 	END CASE;
-	
+
 
 END //
 
@@ -664,11 +664,11 @@ CREATE PROCEDURE update_salary_by_eid5(IN emp_id INT)
 BEGIN
 	#声明局部变量
 	DECLARE hire_year INT; #记录员工入职公司的总时间（单位：年）
-	
+
 	#赋值
-	SELECT ROUND(DATEDIFF(CURDATE(),hire_date) / 365) INTO hire_year 
+	SELECT ROUND(DATEDIFF(CURDATE(),hire_date) / 365) INTO hire_year
 	FROM employees WHERE employee_id = emp_id;
-	
+
 	#判断
 	CASE hire_year
 		WHEN 0 THEN UPDATE employees SET salary = salary + 50 WHERE employee_id = emp_id;
@@ -707,17 +707,17 @@ CREATE PROCEDURE test_loop()
 BEGIN
 	#声明局部变量
 	DECLARE num INT DEFAULT 1;
-	
+
 	loop_label:LOOP
 		#重新赋值
 		SET num = num + 1;
-		
+
 		#可以考虑某个代码程序反复执行。（略）
-		
+
 		IF num >= 10 THEN LEAVE loop_label;
 		END IF;
 	END LOOP loop_label;
-	
+
 	#查看num
 	SELECT num;
 
@@ -741,35 +741,35 @@ CREATE PROCEDURE update_salary_loop(OUT num INT)
 BEGIN
 	#声明变量
 	DECLARE avg_sal DOUBLE ; #记录员工的平均工资
-	
+
 	DECLARE loop_count INT DEFAULT 0;#记录循环的次数
-	
+
 	#① 初始化条件
 	#获取员工的平均工资
 	SELECT AVG(salary) INTO avg_sal FROM employees;
-	
+
 	loop_lab:LOOP
 		#② 循环条件
 		#结束循环的条件
 		IF avg_sal >= 12000
 			THEN LEAVE loop_lab;
 		END IF;
-		
+
 		#③ 循环体
 		#如果低于12000，更新员工的工资
 		UPDATE employees SET salary = salary * 1.1;
-		
+
 		#④ 迭代条件
 		#更新avg_sal变量的值
 		SELECT AVG(salary) INTO avg_sal FROM employees;
-		
+
 		#记录循环次数
 		SET loop_count = loop_count + 1;
-		
+
 	END LOOP loop_lab;
-			
+
 	#给num赋值
-	SET num = loop_count;	
+	SET num = loop_count;
 
 END //
 
@@ -793,17 +793,17 @@ END WHILE [while_label];
 DELIMITER //
 CREATE PROCEDURE test_while()
 
-BEGIN	
+BEGIN
 	#初始化条件
 	DECLARE num INT DEFAULT 1;
 	#循环条件
 	WHILE num <= 10 DO
 		#循环体（略）
-		
+
 		#迭代条件
 		SET num = num + 1;
 	END WHILE;
-	
+
 	#查询
 	SELECT num;
 
@@ -826,21 +826,21 @@ BEGIN
 	#声明变量
 	DECLARE avg_sal DOUBLE ; #记录平均工资
 	DECLARE while_count INT DEFAULT 0; #记录循环次数
-	
+
 	#赋值
 	SELECT AVG(salary) INTO avg_sal FROM employees;
-	
+
 	WHILE avg_sal > 5000 DO
 		UPDATE employees SET salary = salary * 0.9 ;
 		SET while_count = while_count + 1;
-		
+
 		SELECT AVG(salary) INTO avg_sal FROM employees;
-		
+
 	END WHILE;
-	
+
 	#给num赋值
-	SET num = while_count;		
-		
+	SET num = while_count;
+
 
 END //
 
@@ -871,12 +871,12 @@ CREATE PROCEDURE test_repeat()
 BEGIN
 	#声明变量
 	DECLARE num INT DEFAULT 1;
-	
+
 	REPEAT
 		SET num = num + 1;
 		UNTIL num >= 10
 	END REPEAT;
-	
+
 	#查看
 	SELECT num;
 
@@ -901,23 +901,23 @@ BEGIN
 	#声明变量
 	DECLARE avg_sal DOUBLE ; #记录平均工资
 	DECLARE repeat_count INT DEFAULT 0; #记录循环次数
-	
+
 	#赋值
 	SELECT AVG(salary) INTO avg_sal FROM employees;
-	
+
 	REPEAT
 		UPDATE employees SET salary = salary * 1.15;
 		SET repeat_count = repeat_count + 1;
-		
+
 		SELECT AVG(salary) INTO avg_sal FROM employees;
-		
+
 		UNTIL avg_sal >= 13000
-	
+
 	END REPEAT;
-	
+
 	#给num赋值
-	SET num = repeat_count;		
-		
+	SET num = repeat_count;
+
 
 END //
 
@@ -965,10 +965,10 @@ begin_label:BEGIN
 		THEN SELECT AVG(salary) FROM employees;
 	ELSEIF num = 2
 		THEN SELECT MIN(salary) FROM employees;
-	ELSE 
+	ELSE
 		SELECT MAX(salary) FROM employees;
 	END IF;
-	
+
 	#查询总人数
 	SELECT COUNT(*) FROM employees;
 
@@ -987,28 +987,28 @@ CALL leave_begin(1);
 DELIMITER //
 CREATE PROCEDURE leave_while(OUT num INT)
 
-BEGIN 
+BEGIN
 	#
 	DECLARE avg_sal DOUBLE;#记录平均工资
 	DECLARE while_count INT DEFAULT 0; #记录循环次数
-	
+
 	SELECT AVG(salary) INTO avg_sal FROM employees; #① 初始化条件
-	
+
 	while_label:WHILE TRUE DO  #② 循环条件
-		
+
 		#③ 循环体
 		IF avg_sal <= 10000 THEN
 			LEAVE while_label;
 		END IF;
-		
+
 		UPDATE employees SET salary  = salary * 0.9;
 		SET while_count = while_count + 1;
-		
+
 		#④ 迭代条件
 		SELECT AVG(salary) INTO avg_sal FROM employees;
-	
+
 	END WHILE;
-	
+
 	#赋值
 	SET num = while_count;
 
@@ -1038,19 +1038,19 @@ CREATE PROCEDURE test_iterate()
 
 BEGIN
 	DECLARE num INT DEFAULT 0;
-	
+
 	loop_label:LOOP
 		#赋值
 		SET num = num + 1;
-		
+
 		IF num  < 10
 			THEN ITERATE loop_label;
 		ELSEIF num > 15
 			THEN LEAVE loop_label;
 		END IF;
-		
+
 		SELECT '尚硅谷：让天下没有难学的技术';
-	
+
 	END LOOP;
 
 END //
@@ -1086,29 +1086,29 @@ BEGIN
 	DECLARE sum_sal DOUBLE DEFAULT 0.0; #记录累加的工资总额
 	DECLARE emp_sal DOUBLE; #记录每一个员工的工资
 	DECLARE emp_count INT DEFAULT 0;#记录累加的人数
-	
-	
+
+
 	#1.声明游标
 	DECLARE emp_cursor CURSOR FOR SELECT salary FROM employees ORDER BY salary DESC;
-	
+
 	#2.打开游标
 	OPEN emp_cursor;
-	
+
 	REPEAT
-		
+
 		#3.使用游标
 		FETCH emp_cursor INTO emp_sal;
-		
+
 		SET sum_sal = sum_sal + emp_sal;
 		SET emp_count = emp_count + 1;
 		UNTIL sum_sal >= limit_total_salary
 	END REPEAT;
-	
+
 	SET total_count = emp_count;
-	
+
 	#4.关闭游标
 	CLOSE emp_cursor;
-	
+
 END //
 
 
