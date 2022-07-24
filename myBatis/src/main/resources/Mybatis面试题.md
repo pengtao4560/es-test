@@ -1,12 +1,12 @@
 Mybatis面试题
 
-# 1、什么是MyBatis  orm/定制化sql/ jdcb/ xml
+### 1、什么是MyBatis  orm/定制化sql/ jdcb/ xml
 1) MyBatis是一个半自动的对象关系映射ORM(Object Relation Mapping ）框架
 2) 并且它是一个支持定制化SQL、存储过程以及高级映射的优秀的持久层框架。使程序员可以编写原生态sql，严格控制sql执行性能。并且灵活度高
 3) MyBatis 内部封装了JDBC，避免了几乎所有的JDBC代码（不需要花费精力去处理加载驱动、创建连接、创建statement）、手动设置参数、结果集检索
 4) MyBatis 使用简单的XML或注解用于配置和原始映射，将接口和Java的POJO (Plain Old JavaObjects，普通的Java对象）映射成数据库中的记录
   
-# 2、说说MyBatis的优点和缺点 基于sql编程灵活、支持与jdbc比，兼容数据库，与spring集成，提供映射标签
+### 2、说说MyBatis的优点和缺点 基于sql编程灵活、支持与jdbc比，兼容数据库，与spring集成，提供映射标签
 
 优点：
 1) 基于SQL语句编程，相当灵活，不会对应用程序或者数据库的现有设计造成任何影响， SQL 和 Java 编码分开，功能边界清晰。
@@ -23,14 +23,14 @@ Mybatis面试题
 2) SQL语句依赖于数据库，导致数据库移植性差，不能随意更换数据库。
 3) 开发效率稍逊于Hibernate，但是完全能够接受
 
-# 3、#{}和${}的区别是什么？ 预编译/替换 sql注入
+### 3、#{}和${}的区别是什么？ 预编译/替换 sql注入
 
 - 井号是预编译处理，${}是字符串替换。
 - Mybatis在处理#{}时，会将sql中的 井号大括号 替换为 问号，~~调用 PreparedStatement 的set方法来赋值；~~
 - Mybatis在处理${}时，就是把${}替换成变量的值。
 - 使用#{}可以有效的防止SQL注入，提高系统安全性。 井号和刀乐符使用的原则是，能用井号就不要使用刀乐符
 
-# 4、当实体类中的属性名和表中的字段名不一样 ，怎么办 ？ 定义别名/resultMap标签
+### 4、当实体类中的属性名和表中的字段名不一样 ，怎么办 ？ 定义别名/resultMap标签
 第1种： 通过在查询的sql语句中定义字段名的别名，让字段名的别名和实体类的属性名一致。
 
 第2种： 通过 resultMap 标签 来映射字段名和实体类属性名的一一对应的关系。reulstMap标签中 result标签的属性property、column
@@ -44,15 +44,12 @@ Mybatis面试题
         <result property="email" column="email"></result>
     </resultMap>
 ```
-# 5、Mybatis是如何进行分页的？分页插件的原理是什么？ RowBounds / Interceptor
+### 5、Mybatis是如何进行分页的？分页插件的原理是什么？ RowBounds / Interceptor
 
-Mybatis 使用 RowBounds 对象进行分页，它是针对 ResultSet 结果集执行的内存分页，而非物理分页。
-可以在sql内直接拼写带有物理分页的参数来完成物理分页功能，也可以使用分页插件来完成物理分页，
-比如：使用MySQL数据的时候，在原有SQL后面拼写limit。
-
-分页插件的基本原理是使用Mybatis提供的插件接口 Interceptor ，实现自定义插件，在插件的拦截方法内拦截待执行的sql，
-然后重写sql，~~根据dialect方言，~~添加对应的物理分页语句和物理分页参数。
-例如 com.github.pagehelper 分页插件的 PageInterceptor 类 实现了 Interceptor 接口 
+- Mybatis 使用 RowBounds 对象进行分页，它是针对 ResultSet 结果集执行的内存分页，而非物理分页。
+- 可以在sql内直接拼写带有物理分页的参数来完成物理分页功能，也可以使用分页插件来完成物理分页，比如：使用MySQL数据的时候，在原有SQL后面拼写limit。
+- 分页插件，分页插件的基本原理是使用Mybatis提供的插件接口 Interceptor ，实现自定义插件，在插件的拦截方法内拦截待执行的sql，然后重写sql，~~根据dialect方言，~~添加对应的物理分页语句和物理分页参数。
+  例如 com.github.pagehelper 分页插件的 PageInterceptor 类 实现了 Interceptor 接口 
 
 ```java
 /**
@@ -62,19 +59,20 @@ Mybatis 使用 RowBounds 对象进行分页，它是针对 ResultSet 结果集�
  */
 ```
 
-# 6、Mybatis是如何将sql执行结果封装为目标对象并返回的？都有哪些映射形式？ resultMap标签
+### 6、Mybatis是如何将sql执行结果封装为目标对象并返回的？都有哪些映射形式？ resultMap标签
 第1种： 通过在查询的sql语句中定义字段名的别名，让字段名的别名和实体类的属性名一致。
 
 第2种： 通过 resultMap 标签 来映射字段名和实体类属性名的一一对应的关系。property、column
 
 有了列名与属性名的映射关系后，Mybatis通过反射创建对象，同时使用反射给对象的属性逐一赋值并返回，那些找不到映射关系的属性，是无法完成赋值的。
 
-# 7、 如何执行批量插入？
-在 insert标签中 使用 foreach 标签。foreach 标签的 collection 可以设置需要循环的数组或集合
-item 表示数组或集合中的每一个元素
-separator 循环体之间的分隔符
-open 设置foreach 标签所循环的所有内容的开始符
-close 设置foreach 标签所循环的所有内容的结束符
+### 7、 如何执行批量插入？
+在 insert标签中 使用 `foreach` 标签。
+- foreach 标签的 `collection` 可以设置需要循环的数组或集合
+- `item` 表示数组或集合中的每一个元素
+- `separator` 循环体之间的分隔符
+- `open` 设置foreach 标签所循环的所有内容的开始符
+- `close` 设置foreach 标签所循环的所有内容的结束符
 ```xml
 <insert id="insertByList">
    insert into
@@ -97,12 +95,12 @@ close 设置foreach 标签所循环的所有内容的结束符
      */
     int insertByList(@Param("emps") List<Emp> emps);
 ```
-# 8、Xml映射文件中，除了常见的select|insert|updae|delete标签之外，还有哪些标签？
+### 8、Xml映射文件中，除了常见的select|insert|updae|delete标签之外，还有哪些标签？
 
-## resultMap标签若字段名和实体类中的属性名不一致，则可以通过resultMap设置自定义映射
+##### resultMap标签若字段名和实体类中的属性名不一致，则可以通过resultMap设置自定义映射
  resultMap标签可以使用 association 标签来配置 “多对一映射处理”
              可以使用 collection 标签来配置 “一对多映射处理”
-### association 标签使用 demo
+###### association 标签使用 demo
 ```java
 /**
  * 员工
@@ -165,11 +163,11 @@ public class Emp implements Serializable {
 
 ```
 
-### collection 标签使用 demo
+###### collection 标签使用 demo
 
 
 
-## 动态sql标签
+##### 2. 动态sql标签： if、where、trim、choose、foreach
 
 1. if 标签 ：根据标签中 test 属性所对应的表达式决定标签中的内容是否需要拼接到 SQL 中
 
@@ -192,7 +190,7 @@ public class Emp implements Serializable {
    open 设置foreach 标签所循环的所有内容的开始符
    close 设置foreach 标签所循环的所有内容的结束符
 
-6. sql标签 设置 SQL 片段
+##### 3. `sql` 标签 设置 SQL 片段，`include` 标签引用 SQL 片段
    声明、设置 SQL 片段：
 ```xml
 <sql id="empColumns">eid, emp_name, age, gender, email</sql>
@@ -202,7 +200,7 @@ include标签引用 SQL 片段：
    <include refid="empColumns"></include>
 ```
 
-# 9、MyBatis实现一对一有几种方式?具体怎么操作的？
+### 9、MyBatis实现一对一有几种方式?具体怎么操作的？
 
 有联合查询和嵌套查询：
 
@@ -211,7 +209,7 @@ include标签引用 SQL 片段：
 （2）嵌套查询是先查一个表，根据这个表里面的结果的外键id，去再另外一个表里面查询数据,也是通过association配置，
 但另外一个表的查询通过select属性配置。
 
-# 10、Mybatis是否支持延迟加载？如果支持，它的实现原理是什么？
+### 10、Mybatis是否支持延迟加载？如果支持，它的实现原理是什么？
 - Mybatis仅支持association关联对象和collection关联集合对象的延迟加载，association指的就是一对一或多对一，collection指的就是一对多查询。
 - 在Mybatis核心配置文件中，可以配置是否启用延迟加载 `lazyLoadingEnabled`=true|false。
 
@@ -222,7 +220,7 @@ a.getB().getName()方法的调用。这就是延迟加载的基本原理。
 
 TODO **需要一个延迟加载demo**
 
-# 11、说说Mybatis的缓存机制  一级缓存sqlSession级别、二级缓存 全局
+### 11、说说Mybatis的缓存机制  一级缓存sqlSession级别、二级缓存 全局
 缓存的作用是用来提高查询性能 从而达到提高项目效率的效果。mybatis的缓存机制有两级
 一级缓存和二级缓存
 一级缓存mybatis自动开启，不需要手动操作，无法关闭，可以手动清除缓存
@@ -231,7 +229,7 @@ TODO **需要一个延迟加载demo**
 Mybatis整体：
 ![Mybatis的缓存机制.png](Mybatis的缓存机制.png)
 
-## 一级缓存localCache
+##### 一级缓存localCache
 在应用运行过程中，我们有可能在一次数据库会话中，执行多次查询条件完全相同的 SQL，
 MyBatis 提供了一级缓存的方案优化这部分场景，如果是相同的 SQL 语句，会优先命中一级缓存，避免直接对数据库进行查询，提高性能。
 每个 SqlSession 中持有了 Executor，每个 Executor 中有一个 LocalCache。当用户发起查询时，
@@ -242,7 +240,7 @@ MyBatis 根据当前执行的语句生成 MappedStatement，在 Local Cache 进�
 2. MyBatis 一级缓存内部设计简单，只是一个没有容量限定的 HashMap，在缓存的功能性上有所欠缺。
 3. MyBatis 的一级缓存最大范围是 SqlSession 内部，有多个 SqlSession 或者分布式的环境下，数据库写操作会引起脏数据，建议设定缓存级别为 Statement。
 
-## 二级缓存
+##### 二级缓存
    在上文中提到的一级缓存中，其最大的共享范围就是一个 SqlSession 内部，如果多个 SqlSession 之间需要共享缓存，则需要使用到二级缓存。
    开启二级缓存后，会使用 CachingExecutor 类来装饰 Executor ，进入一级缓存的查询流程前，先在 CachingExecutor 进行二级缓存的查询，
    具体的工作 流程如下所示。
@@ -262,9 +260,12 @@ MyBatis 根据当前执行的语句生成 MappedStatement，在 Local Cache 进�
 /**
  * @see org.apache.ibatis.executor.CachingExecutor
  * @see org.apache.ibatis.executor.Executor
+ * @see org.apache.ibatis.executor.SimpleExecutor
+ * @see org.apache.ibatis.executor.BatchExecutor #批量
+ * @see org.apache.ibatis.executor.ReuseExecutor #重用
  */
 ```
-#12、JDBC 编程有哪些步骤？驱动、连接、statement、执行、处理结果、释放资源
+###12、JDBC 编程有哪些步骤？驱动、连接、statement、执行、处理结果、释放资源
 1. 加载相应的数据库的 JDBC 驱动：
 Class.forName("com.mysql.jdbc.Driver");
 2. 建立 JDBC 和数据库之间的 Connection 连接：
@@ -273,13 +274,13 @@ Connection c = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/test? ch
 4. 处理和显示结果。
 5. 释放资源。
 
-#13、MyBatis 中见过什么设计模式？
+###13、MyBatis 中见过什么设计模式？
 
 ![Mybatis设计模式.png](Mybatis设计模式.png)
 
 TODO **设计模式的系统化复习和学习**
 
-#14、MyBatis 中比如 UserMapper.java 是接口，为什么没有实现类还能调用？
+###14、MyBatis 中比如 UserMapper.java 是接口，为什么没有实现类还能调用？
 
 MapperProxyFactory 映射代理工厂类，根据传入的DAO的接口，生成对应实现的动态代理类。 每个接口一个动态代理实现类
 使用JDK动态代理 + MapperProxy 类 。本质上调用的是 MapperProxy 的 invoke() 方法。
@@ -294,7 +295,7 @@ MapperProxyFactory 映射代理工厂类，根据传入的DAO的接口，生成�
 [具体参考](https://blog.csdn.net/markerhub/article/details/108924574)
 /.
 
-# 20、MyBatis实现一对多有几种方式,怎么操作的？ 联合查询和嵌套查询，嵌套查询又称分步查询 可以实现延迟加载
+### 15、MyBatis实现一对多有几种方式,怎么操作的？ 联合查询和嵌套查询，嵌套查询又称分步查询 可以实现延迟加载
 - 有联合查询和嵌套查询。联合查询是几个表联合查询,只查询一次,通过在resultMap里面的collection节点配置一对多的类就可以完成；
 
 - 嵌套查询(分步查询)是先查一个表,根据这个表里面的 结果的外键id,去再另外一个表里面查询数据, 也是通过配置collection,但另外一个表的查询通过select节点配置。
