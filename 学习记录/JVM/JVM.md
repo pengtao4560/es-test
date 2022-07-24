@@ -13,7 +13,7 @@
 ##  JVM体系结构
 ![JVM体系结构.png](image/JVM体系结构.png)
 
-![JVM体系结构自己画的==.png](JVM体系结构自己画的==.png)
+![JVM体系结构自己画的==.png](image/JVM体系结构自己画的==.png)
 
 ## 类装载器ClassLoader
 
@@ -23,7 +23,7 @@
 
 方法区： 放类的描述信息（模板）的地方。 而不是说放java的方法
 
-![img.png](类加载器.png)
+![img.png](image/类加载器.png)
 
 car1/car2/car3来自同一个模板 Car Class.
 
@@ -36,7 +36,7 @@ car1/car2/car3来自同一个模板 Car Class.
 
 - 用户自定义加载器  继承了抽象类Java.lang.ClassLoader的子类，用户可以定制类的加载方式
 
-![类加载器分类.png](类加载器分类.png)
+![类加载器分类.png](image/类加载器分类.png)
 
         // G:\jdk1.8.0_45\jre\lib\rt.jar\java\lang\
         // 为什么Object，String ArrayList等可以直接使用： 因为 rt.jar被 bootstrap 类加载器在 启动的时候就 加载进了 JVM里面

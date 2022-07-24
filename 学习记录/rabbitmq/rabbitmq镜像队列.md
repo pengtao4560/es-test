@@ -13,13 +13,13 @@
 1.启动三台集群节点
 2.随便找一个节点添加 policy
 
-![img.png](添加镜像节点.png)
+![img.png](图片/添加镜像节点.png)
 ^mirrior 表示以 mirrior为前缀
 
 3.在 node1 上创建一个队列发送一条消息，队列存在镜像队列
 
 
-![节点宕机web页面.png](节点宕机web页面.png)
+![节点宕机web页面.png](图片/节点宕机web页面.png)
 
 使用node2 获取消息结果如下：
 
@@ -35,14 +35,14 @@ Caused by: com.rabbitmq.client.ShutdownSignalException: channel error; protocol 
 所以需要镜像队列（备份消息）
 
 
-![配置镜像队列成功.png](配置镜像队列成功.png)
+![配置镜像队列成功.png](图片/配置镜像队列成功.png)
 
 
 ###10.3.Haproxy+Keepalive 实现高可用负载均衡
 
 #### 10.3.1.整体架构图
 
-![rabbitmq整体架构图.png](rabbitmq整体架构图.png)
+![rabbitmq整体架构图.png](图片/rabbitmq整体架构图.png)
 
 #### 10.3.2.Haproxy 实现负载均衡
 
