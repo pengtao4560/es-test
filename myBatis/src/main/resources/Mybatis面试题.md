@@ -47,7 +47,10 @@ Mybatis面试题
 ### 5、Mybatis是如何进行分页的？分页插件的原理是什么？ RowBounds / Interceptor
 
 - Mybatis 使用 RowBounds 对象进行分页，它是针对 ResultSet 结果集执行的内存分页，而非物理分页。
-- 可以在sql内直接拼写带有物理分页的参数来完成物理分页功能，也可以使用分页插件来完成物理分页，比如：使用MySQL数据的时候，在原有SQL后面拼写limit。
+
+- 可以在sql内直接拼写带有物理分页的参数来完成物理分页功能，也可以使用分页插件来完成物理分页，比如：使用MySQL数据的时候，在原有SQL后面拼写limit。 有一个公式是
+  limit (当前页页码-1）, 每页数据条数
+
 - 分页插件，分页插件的基本原理是使用Mybatis提供的插件接口 Interceptor ，实现自定义插件，在插件的拦截方法内拦截待执行的sql，然后重写sql，~~根据dialect方言，~~添加对应的物理分页语句和物理分页参数。
   例如 com.github.pagehelper 分页插件的 PageInterceptor 类 实现了 Interceptor 接口 
 
@@ -221,10 +224,9 @@ a.getB().getName()方法的调用。这就是延迟加载的基本原理。
 TODO **需要一个延迟加载demo**
 
 ### 11、说说Mybatis的缓存机制  一级缓存sqlSession级别、二级缓存 全局
-缓存的作用是用来提高查询性能 从而达到提高项目效率的效果。mybatis的缓存机制有两级
-一级缓存和二级缓存
-一级缓存mybatis自动开启，不需要手动操作，无法关闭，可以手动清除缓存
-二级缓存需要手动开启，它是全局级别的缓存
+缓存的作用是用来提高查询性能 从而达到提高项目效率的效果。mybatis的缓存机制有两级： 一级缓存和二级缓存
+- 一级缓存mybatis自动开启，不需要手动操作，无法关闭，可以手动清除缓存
+- 二级缓存需要手动开启，它是全局级别的缓存
 
 Mybatis整体：
 ![Mybatis的缓存机制.png](Mybatis的缓存机制.png)
@@ -292,8 +294,7 @@ MapperProxyFactory 映射代理工厂类，根据传入的DAO的接口，生成�
  * @see org.apache.ibatis.binding.MapperProxyFactory#newInstance(org.apache.ibatis.binding.MapperProxy<T>)
  */
 ```
-[具体参考](https://blog.csdn.net/markerhub/article/details/108924574)
-/.
+参考： [mybatis的mapper为啥只有接口没有实现类，它却能工作？](https://blog.csdn.net/markerhub/article/details/108924574)
 
 ### 15、MyBatis实现一对多有几种方式,怎么操作的？ 联合查询和嵌套查询，嵌套查询又称分步查询 可以实现延迟加载
 - 有联合查询和嵌套查询。联合查询是几个表联合查询,只查询一次,通过在resultMap里面的collection节点配置一对多的类就可以完成；

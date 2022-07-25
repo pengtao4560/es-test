@@ -22,6 +22,8 @@ public class MyThreadPool {
          */
         int processors = Runtime.getRuntime().availableProcessors();
         System.out.println("java虚拟机可用的 处理器数量：" + processors);
+        System.out.println();
+
         int corePoolSize = 2;
         int maximumPoolSize = 5;
         long keepAliveTime = 2L;
@@ -30,6 +32,8 @@ public class MyThreadPool {
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
         RejectedExecutionHandler handler = new ThreadPoolExecutor.CallerRunsPolicy();
 
+        System.out.println("1 号 和 2 号窗口是核心线程,  核心线程数是" + corePoolSize +" 最大线程数是" + maximumPoolSize);
+        System.out.println();
 
         ExecutorService threadPool = new ThreadPoolExecutor(
                 corePoolSize,
@@ -40,6 +44,7 @@ public class MyThreadPool {
                 threadFactory,
                 handler
         );
+
         try {
             for (int i = 1; i <= 10; i++) {
                 final int finalI = i;

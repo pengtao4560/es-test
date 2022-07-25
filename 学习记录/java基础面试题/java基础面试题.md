@@ -15,7 +15,29 @@
 面向对象：是把构成问题的事务分解成各个对象，而建立对象的目的也不是为了完成一个个步骤，而是为了描述某个事物在解决整个问题的过程中所发生的行为。
 面向对象有封装、继承、多态的特性，所以易维护、易复用、易扩展。可以设计出低耦合的系统。 但是性能上来说，比面向过程要低。
 
+两者的主要区别在于解决问题的方式不同：
+
+- 面向过程把解决问题的过程拆成一个个方法，通过一个个方法的执行解决问题。
+- 面向对象会先抽象出对象，然后用对象执行方法的方式解决问题。
+
+另外，面向对象开发的程序一般更易维护、易复用、易扩展。
+
 ### 3 、八种基本数据类型的大小，以及他们的封装类
+Java 中有 8 种基本数据类型，分别为：
+
+1. 6 种数字类型：
+    - 4 种整数型：`byte`、`short`、`int`、`long`
+    - 2 种浮点型：`float`、`double`
+2. 1 种字符类型：`char`
+3. 1 种布尔型：`boolean`。
+
+这八种基本类型都有对应的包装类分别为：`Byte`、`Short`、`Integer`、`Long`、`Float`、`Double`、`Character`、`Boolean` 。
+
+包装类型不赋值就是 `Null` ，而基本类型有默认值且不是 `Null`。
+
+另外，这个问题建议还可以先从 JVM 层面来分析。
+
+基本数据类型直接存放在 **Java 虚拟机栈**中的 `局部变量表` 中，而包装类型属于对象类型，我们知道对象实例都存在于堆中。**相比于对象类型， 基本数据类型占用的空间非常小**。
 
 
 ### 4 、标识符的命名规则。
@@ -35,21 +57,16 @@
 ```
 boolean result = obj instanceof Class
 ```
-其中 obj 为一个对象，Class 表示一个类或者一个接口，当 obj 为 Class 的对象，或者是其直接
-或间接子类，或者是其接口的实现类，结果result 都返回 true，否则返回false。
+其中 obj 为一个对象，Class 表示一个类或者一个接口，当 obj 为 Class 的对象，或者是其直接或间接子类，或者是其接口的实现类，结果result 都返回 true，否则返回false。
 
 注意：编译器会检查 obj 是否能转换成右边的class类型，如果不能转换则直接报错，如果不能确定类型，则通过编译，具体看运行时定。
 
 
-
-
 ### 6 、Java自动装箱与拆箱
 
-装箱就是自动将基本数据类型转换为包装器类型（int-->Integer）；调用方法：Integer的
-valueOf(int) 方法
+装箱就是自动将基本数据类型转换为包装器类型（int-->Integer）；调用方法：Integer的valueOf(int) 方法
 
-拆箱就是自动将包装器类型转换为基本数据类型（Integer-->int）。调用方法：Integer的
-intValue方法
+拆箱就是自动将包装器类型转换为基本数据类型（Integer-->int）。调用方法：Integer的 intValue方法
 
 在Java SE5之前，如果要生成一个数值为 10 的Integer对象，必须这样进行：
 
@@ -58,11 +75,19 @@ intValue方法
 
 
 ### 7 、 重载和重写的区别
-```
 
-> 重载就是同样的一个方法能够根据输入数据的不同，做出不同的处理
->
-> 重写就是当子类继承自父类的相同方法，输入数据一样，但要做出有别于父类的响应时，你就要覆盖父类方法
+| 区别点     | 重载方法 | 重写方法                                                         |
+| :--------- | :------- | :--------------------------------------------------------------- |
+| 发生范围   | 同一个类 | 子类                                                             |
+| 参数列表   | 必须修改 | 一定不能修改                                                     |
+| 返回类型   | 可修改   | 子类方法返回值类型应比父类方法返回值类型更小或相等               |
+| 异常       | 可修改   | 子类方法声明抛出的异常类应比父类方法声明抛出的异常类更小或相等； |
+| 访问修饰符 | 可修改   | 一定不能做更严格的限制（可以降低限制）                           |
+| 发生阶段   | 编译期   | 运行期                                                           |
+
+
+重载就是 **同一个类中多个同名方法根据不同的传参来执行不同的逻辑处理。**
+重写就是 当子类继承自父类的相同方法，**子类对父类方法的重新改造**，外部样子不能改变，内部逻辑可以改变
 
 **重载**
 
@@ -70,16 +95,17 @@ intValue方法
 
 《Java 核心技术》这本书是这样介绍重载的：
 
-> 如果多个方法(比如 `StringBuilder` 的构造方法)有相同的名字、不同的参数， 便产生了重载。
->
-> ```java
-> StringBuilder sb = new StringBuilder();
-> StringBuilder sb2 = new StringBuilder("HelloWorld");
-> ```
->
-> 编译器必须挑选出具体执行哪个方法，它通过用各个方法给出的参数类型与特定方法调用所使用的值类型进行匹配来挑选出相应的方法。 如果编译器找不到匹配的参数， 就会产生编译时错误， 因为根本不存在匹配， 或者没有一个比其他的更好(这个过程被称为重载解析(overloading resolution))。
->
-> Java 允许重载任何方法， 而不只是构造器方法。
+ 如果多个方法(比如 `StringBuilder` 的构造方法)有相同的名字、不同的参数， 便产生了重载。
+
+ ```
+ StringBuilder sb = new StringBuilder();
+ StringBuilder sb2 = new StringBuilder("HelloWorld");
+```
+
+ 编译器必须挑选出具体执行哪个方法，它通过用各个方法给出的参数类型与特定方法调用所使用的值类型进行匹配来挑选出相应的方法。 如果编译器找不到匹配的参数， 就会产生编译时错误， 因为根本不存在匹配， 
+ 或者没有一个比其他的更好(这个过程被称为重载解析(overloading resolution))。
+
+ Java 允许重载任何方法， 而不只是构造器方法。
 
 综上：重载就是同一个类中多个同名方法根据不同的传参来执行不同的逻辑处理。
 
@@ -93,14 +119,6 @@ intValue方法
 
 综上：**重写就是子类对父类方法的重新改造，外部样子不能改变，内部逻辑可以改变。**
 
-| 区别点     | 重载方法 | 重写方法                                                         |
-| :--------- | :------- | :--------------------------------------------------------------- |
-| 发生范围   | 同一个类 | 子类                                                             |
-| 参数列表   | 必须修改 | 一定不能修改                                                     |
-| 返回类型   | 可修改   | 子类方法返回值类型应比父类方法返回值类型更小或相等               |
-| 异常       | 可修改   | 子类方法声明抛出的异常类应比父类方法声明抛出的异常类更小或相等； |
-| 访问修饰符 | 可修改   | 一定不能做更严格的限制（可以降低限制）                           |
-| 发生阶段   | 编译期   | 运行期                                                           |
 
 **方法的重写要遵循“两同两小一大”**（以下内容摘录自《疯狂 Java 讲义》，[issue#892](https://github.com/Snailclimb/JavaGuide/issues/892) ）：
 
@@ -267,9 +285,7 @@ hashCode方法可以这样理解：它返回的就是根据对象的内存地址
 果这个位置上已经有元素了，就调用它的equals方法与新元素进行比较，相同的话就不存了，不相
 同就散列其它的地址。这样一来实际调用equals方法的次数就大大降低了，几乎只需要一两次。
 
-### 10 、String、String StringBuffer 和 StringBuilder 的区别是什
-
-### 么?
+### 10 、String、String StringBuffer 和 StringBuilder 的区别是什么?
 
 
 String是只读字符串，它并不是基本数据类型，而是一个对象。从底层源码来看是一个final类型的
@@ -509,25 +525,17 @@ final也是很多面试喜欢问的地方,但我觉得这个问题很无聊,通�
 之间不能重排序 初次读一个包含final域的对象的引用,与随后初次读这个final域,这两个操作之间不
 能重排序.
 
-### 20 、static都有哪些用法?
+### 20 、static 都有哪些用法?
+**`static` 关键字主要有以下四种使用场景：**
 
-所有的人都知道static关键字这两个基本的用法:静态变量和静态方法.也就是被static所修饰的变量/
-方法都属于类的静态资源,类实例所共享.
+1. **修饰成员变量和成员方法:** 被 static 修饰的成员属于类，不属于单个这个类的某个对象，被类中所有对象共享，可以并且建议通过类名调用。被 static 声明的成员变量属于静态成员变量，静态变量 存放在 Java 内存区域的方法区。
+  调用格式：`类名.静态变量名` `类名.静态方法名()`
+2. **静态代码块:** 静态代码块定义在类中方法外, 静态代码块在非静态代码块之前执行(静态代码块—>非静态代码块—>构造方法)。 该类不管创建多少对象，静态代码块只执行一次.
+3. **静态内部类（static 修饰类的话只能修饰内部类）：** 静态内部类与非静态内部类之间存在一个最大的区别: 非静态内部类在编译完成之后会隐含地保存着一个引用，该引用是指向创建它的外围类，
+  但是静态内部类却没有。没有这个引用就意味着：1. 它的创建是不需要依赖外围类的创建。2. 它不能使用任何外围类的非 static 成员变量和方法。
+4. **静态导包(用来导入类中的静态资源，1.5 之后的新特性):** 格式为：`import static` 这两个关键字连用可以指定导入某个类中的指定静态资源，并且不需要使用类名调用类中静态成员，可以直接使用类中静态成员变量和成员方法。
 
-除了静态变量和静态方法之外,static也用于静态块,多用于初始化操作:
 
-此外static也多用于修饰内部类,此时称之为静态内部类.
-
-最后一种用法就是静态导包,即import static.import static是在JDK 1.5之后引入的新特性,可以用
-来指定导入某个类中的静态资源,并且不需要使用类名,可以直接使用资源名,比如:
-
-```
-public calss PreCache{
-static{
-//执行相关操作
-}
-}
-```
 
 ### 21 、3*0.1==0.3返回值是什么
 
@@ -535,8 +543,7 @@ false,因为有些浮点数不能完全精确的表示出来.
 
 ### 22 、a=a+b与a+=b有什么区别吗?
 
-+=操作符会进行隐式自动类型转换,此处a+=b隐式的将加操作的结果类型强制转换为持有结果的类
-型,而a=a+b则不会自动进行类型转换.如：
+`+= `操作符会进行隐式自动类型转换,此处a+=b隐式的将加操作的结果类型强制转换为持有结果的类型,而a=a+b则不会自动进行类型转换.如：
 
 以下代码是否有错,有的话怎么改？
 
@@ -549,117 +556,35 @@ short类型,此时编译器会报错.
 
 ### 23 、try catch finally，try里有return，finally还执行么？
 
-执行，并且finally的执行早于try里面的return
+执行，并且finally的执行早于try 里面的 return
 
-```
-import static java.lang.Math.*;
-```
-```
-public class Test{
-```
-```
-public static void main(String[] args){
-//System.out.println(Math.sin(20));传统做法
-System.out.println(sin( 20 ));
-}
-}
-```
-```
-byte a = 127 ;
-byte b = 127 ;
-b = a + b; // 报编译错误:cannot convert from int to byte
-b += a;
-```
-```
-short s1= 1 ;
-s1 = s1 + 1 ;
-```
-```
-short s1= 1 ;
-s1 += 1 ;
-```
 
 结论：
 
-1 、不管有木有出现异常，finally块中代码都会执行；
+1. 不管有木有出现异常，finally块中代码都会执行；
+2. 当try和catch中有return时，finally仍然会执行；
+3. finally是在return后面的表达式运算后执行的（此时并没有返回运算后的值，而是先把要返回的值保存起来，管finally中的代码怎么样，返回的值都不会改变，任然是之前保存的值），
+  所以函数返回值是在finally执行前确定的；
+4. finally 中最好不要包含 return，否则程序会提前退出，返回值不是try或catch中保存的返回值。
 
-2 、当try和catch中有return时，finally仍然会执行；
-
-3 、finally是在return后面的表达式运算后执行的（此时并没有返回运算后的值，而是先把要返回的
-值保存起来，管finally中的代码怎么样，返回的值都不会改变，任然是之前保存的值），所以函数
-返回值是在finally执行前确定的；
-
-4 、finally中最好不要包含return，否则程序会提前退出，返回值不是try或catch中保存的返回值。
-
-### 24 、 Excption与Error包结构
-
-Java可抛出(Throwable)的结构分为三种类型：被检查的异常(CheckedException)，运行时异常
-(RuntimeException)，错误(Error)。
-
-1 、运行时异常
-
-定义:RuntimeException及其子类都被称为运行时异常。
-
-特点:Java编译器不会检查它。也就是说，当程序中可能出现这类异常时，倘若既"没有通过throws
-声明抛出它"，也"没有用try-catch语句捕获它"，还是会编译通过。例如，除数为零时产生的
-ArithmeticException异常，数组越界时产生的IndexOutOfBoundsException异常，fail-fast机制产
-生的ConcurrentModificationException异常（java.util包下面的所有的集合类都是快速失败
-的，“快速失败”也就是fail-fast，它是Java集合的一种错误检测机制。当多个线程对集合进行结构上
-的改变的操作时，有可能会产生fail-fast机制。记住是有可能，而不是一定。例如：假设存在两个线
-程（线程 1 、线程 2 ），线程 1 通过Iterator在遍历集合A中的元素，在某个时候线程 2 修改了集合A的
-结构（是结构上面的修改，而不是简单的修改集合元素的内容），那么这个时候程序就会抛出
-ConcurrentModificationException 异常，从而产生fail-fast机制，这个错叫并发修改异常。Fail-
-safe，java.util.concurrent包下面的所有的类都是安全失败的，在遍历过程中，如果已经遍历的数
-组上的内容变化了，迭代器不会抛出ConcurrentModificationException异常。如果未遍历的数组
-上的内容发生了变化，则有可能反映到迭代过程中。这就是ConcurrentHashMap迭代器弱一致的
-表现。ConcurrentHashMap的弱一致性主要是为了提升效率，是一致性与效率之间的一种权衡。
-要成为强一致性，就得到处使用锁，甚至是全局锁，这就与Hashtable和同步的HashMap一样
-了。）等，都属于运行时异常。
-
-常见的五种运行时异常：
-
-ClassCastException（类转换异常）
-
-IndexOutOfBoundsException（数组越界）
-
-NullPointerException（空指针异常）
-
-ArrayStoreException（数据存储异常，操作数组是类型不一致）
+### 24 、 Excption与 Error 包结构
 
 
-BufferOverflowException
+在 Java 中，所有的异常都有一个共同的祖先 `java.lang` 包中的 `Throwable` 类。`Throwable` 类有两个重要的子类:
 
-2 、被检查异常
+- **`Exception`** :程序本身可以处理的异常，可以通过 `catch` 来进行捕获。`Exception` 又可以分为 Checked Exception (受检查异常，必须处理) 和 Unchecked Exception (不受检查异常，可以不处理)。
+- **`Error`** ：`Error` 属于程序无法处理的错误 ，我们没办法通过 `catch` 来进行捕获 。例如Java 虚拟机运行错误（`Virtual MachineError`）、虚拟机内存不够错误(`OutOfMemoryError`)、类定义错误（`NoClassDefFoundError`）等 。这些异常发生时，Java 虚拟机（JVM）一般会选择线程终止。
 
-定义:Exception类本身，以及Exception的子类中除了"运行时异常"之外的其它子类都属于被检查异
-常。
+### Checked Exception 和 Unchecked Exception 有什么区别？
 
-特点 : Java编译器会检查它。 此类异常，要么通过throws进行声明抛出，要么通过try-catch进行捕
-获处理，否则不能通过编译。例如，CloneNotSupportedException就属于被检查异常。当通过
-clone()接口去克隆一个对象，而该对象对应的类没有实现Cloneable接口，就会抛出
-CloneNotSupportedException异常。被检查异常通常都是可以恢复的。 如：
+**Checked Exception** 即受检查异常，Java 代码在编译过程中，如果受检查异常没有被 捕获或抛出 （`catch` 或 `throw`) 处理的话，就没办法通过编译 。
 
-IOException
+除了`RuntimeException`及其子类以外，其他的`Exception`类及其子类都属于受检查异常 。常见的受检查异常有： IO 相关的异常、`ClassNotFoundException` 、`SQLException`...。
 
-FileNotFoundException
+**Unchecked Exception** 即 **不受检查异常** ，Java 代码在编译过程中 ，我们即使不处理不受检查异常也可以正常通过编译。
 
-SQLException
+`RuntimeException` 及其子类都统称为非受检查异常，例如：`NullPointerException`、`NumberFormatException`（字符串转换为数字）、`ArrayIndexOutOfBoundsException`（数组越界）、`ClassCastException`（类型转换错误）、`ArithmeticException`（算术错误）等。
 
-被检查的异常适用于那些不是因程序引起的错误情况，比如：读取文件时文件不存在引发的
-FileNotFoundException。然而，不被检查的异常通常都是由于糟糕的编程引起的，比如：在对象
-引用时没有确保对象非空而引起的NullPointerException。
-
-3 、错误
-
-定义 : Error类及其子类。
-
-特点 : 和运行时异常一样，编译器也不会对错误进行检查。
-
-当资源不足、约束失败、或是其它程序无法继续运行的条件发生时，就产生错误。程序本身无法修
-复这些错误的。例如，VirtualMachineError就属于错误。出现这种错误会导致程序终止运行。
-OutOfMemoryError、ThreadDeath。
-
-Java虚拟机规范规定JVM的内存分为了好几块，比如堆，栈，程序计数器，方法区等
 
 ### 25 、OOM你遇到过哪些情况，SOF你遇到过哪些情况
 
@@ -667,8 +592,7 @@ OOM：
 
 1 ，OutOfMemoryError异常
 
-除了程序计数器外，虚拟机内存的其他几个运行时区域都有发生OutOfMemoryError(OOM)异常的
-可能。
+除了程序计数器外，虚拟机内存的其他几个运行时区域都有发生OutOfMemoryError(OOM)异常的可能。
 
 Java Heap 溢出：
 
@@ -1112,69 +1036,144 @@ ConcurrentHashMap 数据结构以及底层原理等。
 
 下面是回答的重点哟：
 
-```
-取余（%）操作中如果除数是 2 的幂次，则等价于与其除数减一的与（&）操作（也就是说
-hash % length == hash &(length - 1) 的前提是 length 是 2 的 n 次方）。并且，采用二进
-制位操作 &，相对于 % 能够提高运算效率。
-```
+`取余（%）`操作中如果除数是 2 的幂次，则等价于与其除数减一的与（&）操作（也就是说 hash % length == hash &(length - 1) 的前提是 length 是 2 的 n 次方）。并且，采用二进制位操作 &，相对于 % 能够提高运算效率。
 这就是为什么 HashMap 的长度需要 2 的 N 次方了。
 
 ### 42 、HashMap 与 ConcurrentHashMap 的异同
 
-```
 1. 都是 key-value 形式的存储数据；
 2. HashMap 是线程不安全的，ConcurrentHashMap 是 JUC 下的线程安全的；
-```
 
-```
-3. HashMap 底层数据结构是数组 + 链表（JDK 1.8 之前）。JDK 1.8 之后是数组 + 链表 + 红黑
-树。当链表中元素个数达到 8 的时候，链表的查询速度不如红黑树快，链表会转为红黑树，红
-黑树查询速度快；
-4. HashMap 初始数组大小为 16 （默认），当出现扩容的时候，以 0.75 * 数组大小的方式进行扩
-容；
-5. ConcurrentHashMap 在 JDK 1.8 之前是采用分段锁来现实的 Segment + HashEntry，
-Segment 数组大小默认是 16 ， 2 的 n 次方；JDK 1.8 之后，采用 Node + CAS + Synchronized
-来保证并发安全进行实现。
-```
-### 43 、红黑树有哪几个特征？
+3. HashMap 底层数据结构是数组 + 链表（JDK 1.8 之前）。JDK 1.8 之后是数组 + 链表 + 红黑树。当链表中元素个数达到 8 的时候，链表的查询速度不如红黑树快，链表会转为红黑树，红黑树查询速度快；
+4. HashMap 初始数组大小为 16 （默认），当出现扩容的时候，以 0.75 * 数组大小的方式进行扩容；
+5. **ConcurrentHashMap 在 JDK 1.8 之前是采用分段锁来现实的 Segment + HashEntry**， Segment 数组大小默认是 16 ， 2 的 n 次方；JDK 1.8 之后，采用 `Node` + `CAS` + `Synchronized` 来保证并发安全进行实现。
 
-紧接上个问题，面试官很有可能会问红黑树，下面把红黑树的几个特征列出来：
+###43 、红黑树有哪几个特征？
 
-### 44 、说说你平时是怎么处理 Java 异常的
+**红黑树特点** :
+
+1. 每个节点非红即黑；
+2. 根节点总是黑色的；
+3. 每个叶子节点都是黑色的空节点（NIL节点）；
+4. 如果节点是红色的，则它的子节点必须是黑色的（反之不一定）；
+5. 从根节点到叶节点或空子节点的每条路径，必须包含相同数目的黑色节点（即相同的黑色高度）。
+
+**红黑树的应用** ：TreeMap、TreeSet以及JDK1.8的HashMap底层都用到了红黑树。
+
+**为什么要用红黑树？** 简单来说红黑树就是为了解决二叉查找树的缺陷，因为二叉查找树在某些情况下会退化成一个线性结构。详细了解可以查看 
+[漫画：什么是红黑树？(也介绍到了二叉查找树，非常推荐)](https://juejin.im/post/5a27c6946fb9a04509096248#comment)
+
+**相关阅读** ：[《红黑树深入剖析及Java实现》-美团点评技术团队](https://zhuanlan.zhihu.com/p/24367771)
+
+
+### 44 、说说你平时是怎么处理 Java 异常的 ?
+
 
 try-catch-finally
 
-```
-try 块负责监控可能出现异常的代码
-catch 块负责捕获可能出现的异常，并进行处理
-finally 块负责清理各种资源，不管是否出现异常都会执行
-其中 try 块是必须的，catch 和 finally 至少存在一个标准异常处理流程
-```
+##### try-catch-finally 如何使用？
 
-```
+- **`try`块：** 用于捕获异常。其后可接零个或多个 `catch` 块，如果没有 `catch` 块，则必须跟一个 `finally` 块。
+- **`catch`块：** 用于处理 try 捕获到的异常。
+- **`finally` 块：** 无论是否捕获或处理异常，`finally` 块里的语句都会被执行。当在 `try` 块或 `catch` 块中遇到 `return` 语句时，`finally` 语句块将在方法返回之前被执行。
+
+
 抛出异常→捕获异常→捕获成功（当 catch 的异常类型与抛出的异常类型匹配时，捕获成功）
 →异常被处理，程序继续运行 抛出异常→捕获异常→捕获失败（当 catch 的异常类型与抛出异
 常类型不匹配时，捕获失败）→异常未被处理，程序中断运行
-```
-在开发过程中会使用到自定义异常，在通常情况下，程序很少会自己抛出异常，因为异常的类名通
-常也包含了该异常的有用信息，所以在选择抛出异常的时候，应该选择合适的异常类，从而可以明
-确地描述该异常情况，所以这时候往往都是自定义异常。
 
-自定义异常通常是通过继承 java.lang.Exception 类，如果想自定义 Runtime 异常的话，可以继承
-java.lang.RuntimeException 类，实现一个无参构造和一个带字符串参数的有参构造方法。
+在开发过程中会使用到`自定义异常`，在通常情况下，程序很少会自己抛出异常，因为异常的类名通常也包含了该异常的有用信息，所以在选择抛出异常的时候，
+应该选择合适的异常类，从而可以明确地描述该异常情况，所以这时候往往都是自定义异常。
 
-在业务代码里，可以针对性的使用自定义异常。比如说：该用户不具备某某权限、余额不足等。
+自定义异常通常是通过继承 java.lang.Exception 类，如果想自定义 Runtime 异常的话，可以继承java.lang.RuntimeException 类，实现一个无参构造和一个带字符串参数的有参构造方法。
+
+在业务代码里，可以 `针对性的使用自定义异常`。 比如说：该用户不具备某某权限、余额不足等。
 
 ### 45 、说说深拷贝和浅拷贝？
 
-浅拷贝（shallowCopy）只是增加了一个指针指向已存在的内存地址，
+关于深拷贝和浅拷贝区别，我这里先给结论：
 
-深拷贝（deepCopy）是增加了一个指针并且申请了一个新的内存，使这个增加的指针指向这个新
-的内存，
+- **浅拷贝**：浅拷贝会在堆上创建一个新的对象（区别于引用拷贝的一点），
+  不过，如果**原对象内部的属性是引用类型的话，浅拷贝会直接复制内部对象的引用地址，也就是说拷贝对象和原对象共用同一个内部对象**。
+- **深拷贝** ：**深拷贝会完全复制整个对象，包括这个对象所包含的内部对象**。
 
-使用深拷贝的情况下，释放内存的时候不会因为出现浅拷贝时释放同一个内存的错误。
+具体的案例！
 
-最好是结合克隆已经原型模式联系在一起哈，记得复习的时候，把这几个联系起来的。
+**浅拷贝**
+
+浅拷贝的示例代码如下，我们这里实现了 `Cloneable` 接口，并重写了 `clone()` 方法。
+
+`clone()` 方法的实现很简单，直接调用的是父类 `Object` 的 `clone()` 方法。
+
+```java
+public class Address implements Cloneable{
+    private String name;
+    // 省略构造函数、Getter&Setter方法
+    @Override
+    public Address clone() {
+        try {
+            return (Address) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+}
+
+public class Person implements Cloneable {
+    private Address address;
+    // 省略构造函数、Getter&Setter方法
+    @Override
+    public Person clone() {
+        try {
+            Person person = (Person) super.clone();
+            return person;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+}
+```
+
+测试 ：
 
 ```
-欢迎关注微信公众号：Java后端技术全栈
+Person person1 = new Person(new Address("武汉"));
+Person person1Copy = person1.clone();
+// true
+System.out.println(person1.getAddress() == person1Copy.getAddress());
+```
+
+从输出结构就可以看出， `person1` 的克隆对象和 `person1` 使用的仍然是同一个 `Address` 对象。
+
+**深拷贝**
+
+这里我们简单对 `Person` 类的 `clone()` 方法进行修改，连带着要把 `Person` 对象内部的 `Address` 对象一起复制。
+
+```
+@Override
+public Person clone() {
+    try {
+        Person person = (Person) super.clone();
+        person.setAddress(person.getAddress().clone());
+        return person;
+    } catch (CloneNotSupportedException e) {
+        throw new AssertionError();
+    }
+}
+```
+
+测试 ：
+
+```
+Person person1 = new Person(new Address("武汉"));
+Person person1Copy = person1.clone();
+// false
+System.out.println(person1.getAddress() == person1Copy.getAddress());
+```
+
+从输出结构就可以看出，虽然 `person1` 的克隆对象和 `person1` 包含的 `Address` 对象已经是不同的了。
+
+**那什么是引用拷贝呢？** 简单来说，引用拷贝就是两个不同的引用指向同一个对象。
+
+描述浅拷贝、深拷贝、引用拷贝：
+![](./images/shallow&deep-copy.png)
