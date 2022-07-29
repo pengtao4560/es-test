@@ -93,6 +93,7 @@ public class JedisDemo0 {
         jedis.sadd("names","mary");
 
         Set<String> names = jedis.smembers("names");
+        jedis.eval()
         System.out.println(names);
         System.out.println("操作类型：" + jedis.type("names"));
         jedis.close();

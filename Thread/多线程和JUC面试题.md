@@ -1,6 +1,6 @@
 多线程&并发篇
 
-# 1 、说说Java中实现多线程有几种方法
+### 1 、说说Java中实现多线程有几种方法
 
 1. 继承 `Thread` 类
 2. 实现 `Runnable` 接口
@@ -75,7 +75,6 @@ class InterruptThreadDemo3 {
 唤醒任一个都能正确处理接下来的事项，如果唤醒的线程无法正确处理，务必确保继续notify()下一个线程，并且自身需要重新回到 WaitSet中.
 
 ### 4 、sleep()和wait() 有什么区别？ sleep没有释放锁， sleep属于线程
-答案一：javaGuide
 
 - 两者最主要的区别在于：**`sleep()` 方法没有释放锁，而 `wait()` 方法释放了锁** 。sllep()完成后线程会自动苏醒
 - 两者都可以暂停线程的执行。
@@ -93,6 +92,8 @@ class InterruptThreadDemo3 {
 ```
 
 ```
+以上 答案一：javaGuide
+
 答案二： 面试题.pdf
 
 sleep()方法是属于`Thread`类中的。而wait()方法则是属于`Object`类 中的。
@@ -265,6 +266,10 @@ public class JoinTest2 {
 ### 12 、SynchronizedMap 和 ConcurrentHashMap 有什么区别？
 
 TODO ： 理解 ConcurrentHashMap
+
+**ConcurrentHashMap 在 JDK 1.8 之前是采用分段锁来现实的 Segment + HashEntry**， Segment 数组大小默认是 16 ，
+2 的 n 次方；JDK 1.8 之后，采用 `Node` + `CAS` + `Synchronized` 来保证并发安全进行实现。
+
 ```java
 /**
  * @see java.util.concurrent.ConcurrentHashMap
@@ -282,6 +287,8 @@ ConcurrentHashMap 中则是一次锁住一个桶。ConcurrentHashMap 默认将ha
 另外 ConcurrentHashMap 使用了一种不同的迭代方式。在这种迭代方式中，当iterator 被创建后集合再发生改变就不再是抛出 ConcurrentModificationException，
 
 取而代之的是在改变时 new 新的数据从而不影响原有的数据 ，iterator 完成后再将头指针替换为新的数据 ，这样 iterator线程可以使用原来老的数据，而写线程也可以并发的完成改变。
+
+
 
 ~~SynchronizedMap 和Hashtable 一样，实现上在调用map所有方法时，都对整个map进行同步。
 而ConcurrentHashMap的实现却更加精细，它对map中的所有桶加了锁。所以，只要有一个线程问map，其他线程就无法进入map，
@@ -322,8 +329,10 @@ yield 单词是 让步
 
 ### 15 、Java线程池中submit() 和 execute()方法有什么区别？
 
-两个方法都可以向线程池提交任务，execute()方法的返回类型是void，它定义在Executor接口中, 而submit()方法可以返回持有 `异步计算结果` 的 `Future` 对象，
-它定义在 `ExecutorService` 接口中，它扩展了Executor接口，其它线程池类像 `ThreadPoolExecutor` 和 `ScheduledThreadPoolExecutor` 都有这些方法。
+两个方法都可以向线程池提交任务，execute()方法的返回类型是void，它定义在Executor接口中, 
+而submit()方法可以返回持有 `异步计算结果` 的 `Future` 对象，
+它定义在 `ExecutorService` 接口中，它扩展了Executor接口，
+其它线程池类像 `ThreadPoolExecutor` 和 `ScheduledThreadPoolExecutor` 都有这些方法。
 
 ```java
 /**
@@ -531,6 +540,11 @@ Java 源代码 -> 词法分析器 -> 语法分析器 -> 语义分析器 -> 字�
 ### 27 ，线程池核心线程数怎么设置呢？ CPU 核心数 + 1 / IO密集型：CPU核心数量*2
 
  分为CPU密集型和IO密集型
+ CPU 核数 + 1
+ IO密集型corePoolSize主流的配置方案有两种：
+- 第一种： 核心线程数 = CPU核心数量 * 2。
+- 第二种：CPU核数 / (1 - 阻塞系数)      阻塞系数在0.8 ~ 0.9左右**
+  例如：8核CPU：8/ (1 - 0.9) = 80个线程数
 
 ##### CPU密集型
  这种任务消耗的主要是 CPU 资源，可以将线程数设置为 N（CPU 核心数）+1，比 CPU 核心数多出来的一个线程是为了防止线程偶发的缺页中断，
@@ -584,17 +598,19 @@ BlockingQueue阻塞队列是属于一个接口，底下有七个实现类
 
 ##### 共享内存
 
-在共享内存的并发模型里，线程之间共享程序的公共状态，线程之间通过写-读内存中的公共状态来隐式进行通信。典型的共享内存通信方式，就是通过共享对象进行通信。
+在共享内存的并发模型里，线程之间共享程序的公共状态，线程之间通过写-读内存中的公共状态来隐式进行通信。
+典型的共享内存通信方式，就是通过共享对象进行通信。
 
  例如上图线程 A 与 线程 B 之间如果要通信的话，那么就必须经历下面两个步骤：
 
- 1. 线程 A 把本地内存 A 更新过得共享变量刷新到主内存中去。
+ 1. 线程 A 把本地内存 A 更新过之后的 `共享变量` 刷新到 `主内存` 中。
 
- 2. 线程 B 到主内存中去读取线程 A 之前更新过的共享变量。
+ 2. 线程 B 到 `主内存` 中去读取线程 A 之前更新过的 `共享变量`。
 
 ##### 消息传递
 
- 在消息传递的并发模型里，线程之间没有公共状态，线程之间必须通过明确的发送消息来显式进行通信。在 Java 中典型的消息传递方式，就是 wait() 和 notify() ，或者 BlockingQueue 。
+ 在消息传递的并发模型里，线程之间没有公共状态，线程之间必须通过明确的发送消息来显式进行通信。
+ 在 Java 中典型的消息传递方式，就是 wait() 和 notify() ，或者 BlockingQueue 。
 
 ### 31 、CAS的原理呢？
 
@@ -703,7 +719,7 @@ public ThreadPoolExecutor(int corePoolSize,
 - **handler**：拒绝策略，表示 **当队列满了并且工作线程大于线程池的最大线程数**（maximumPoolSize3）时，如何来拒绝请求执行的Runnable的策略
 当提交一个新任务到线程池时，具体的执行流程如下：
 
-线程池的工作原理：
+**线程池的工作原理**：
 
 1. 在创建了线程池后，等待提交过来的任务请求
 

@@ -7,9 +7,6 @@
 ```
 /**
  * SingletonDemo（单例模式）
- *
- * @author: 陌溪
- * @create: 2020-03-10-16:40
  */
 public class SingletonDemo {
 

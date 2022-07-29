@@ -6,9 +6,7 @@
 
 Spring Cloud为开发人员提供了一些工具 来快速构建分布式系统中的一些常见模式
 (**例如，配置管理、服务发现、降级和熔断、断路器、智能路由、微代理、控制总线、一次性令牌、全局锁、领导选举、分布式会话、集群状态**)。
-e.g. configuration management, service discovery, circuit breakers, intelligent routing, micro-proxy,
-control bus, one-time tokens, global locks, leadership election, distributed sessions, cluster state
-分布式系统的协调导致了锅炉板模式（boiler plate patterns），使用Spring Cloud开发人员可以快速地支持实现这些模式的服务和应用程序。
+使用Spring Cloud开发人员可以快速地支持实现这些模式的服务和应用程序。
 
 ```
 Spring Cloud provides tools for developers to quickly build some of the common patterns in distributed systems
@@ -39,7 +37,8 @@ Spring Cloud 专注于**为典型用例提供良好的开箱即用体验**，并
 - 领导选举和集群状态 Leadership election and cluster state
 - 分布式消息传递 Distributed messaging
 
-使用 Spring Boot 开发分布式微服务时，我们面临以下问题
+
+使用SpringCloud 帮我们解决了 使用 Spring Boot 开发分布式微服务时，面临的一些问题比如：
 
 1. 与分布式系统相关的复杂性-这种开销包括网络问题，延迟开销，带宽问题，安全问题。
 2. 服务发现-服务发现工具管理群集中的流程和服务如何查找和互相交谈。它涉及一个服务目录，在该目录中注册服务，然后能够查找并连接到该目录中的服务。

@@ -121,8 +121,7 @@ Spring Loaded
 Spring-boot-devtools
 ```
 ### 12 、 如何理解  Springboot 配置加载顺序？
-
-在  里面，可以使用以下几种方式来加载配置。
+Springboot 可以使用以下几种方式来加载配置。
 1. properties 文件
 2. YAML文件
 3. 系统环境变量
