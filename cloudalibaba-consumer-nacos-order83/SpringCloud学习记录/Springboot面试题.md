@@ -139,3 +139,59 @@ bootstrap 配置文件有以下几个应用场景。
 使用 Spring Cloud Config 配置中心时，这时需要在 bootstrap 配置文件中添加连接到配置中心的配置属性来加载外部配置中心的配置信息；
 一些固定的不能被覆盖的属性；
 一些加密/解密的场景；
+
+
+### 14. springBoot自动装配原理？
+
+Springboot 自动装配原理
+1）通过注解@SpringBootApplication=>@EnableAutoConfiguration=>@Import({AutoConfigurationImportSelector.class})实现自动装配
+
+2）AutoConfigurationImportSelector类中重写了 ImportSelector 中 selectImports 方法，批量返回需要装配的配置类
+
+3）通过Spring提供的SpringFactoriesLoader机制，扫描classpath下的META-INF/spring.factories文件，读取需要自动装配的配置类
+
+4）依据条件筛选的方式，把不符合的配置类移除掉，最终完成自动装配
+————————————————
+版权声明：本文为CSDN博主「lichongxyz」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/lichongxyz/article/details/124726859
+
+
+Spring Boot 项目，我们只需要添加相关依赖，无需配置，通过启动下面的 `main` 方法即可。
+并且，我们通过 Spring Boot 的全局配置文件 `application.properties`或`application.yml`即可对项目进行设置比如更换端口号，配置 JPA 属性等等。
+
+**为什么 Spring Boot 使用起来非常的方便？** 这得益于其自动装配。**自动装配可以说是 Spring Boot 的核心，那究竟什么是自动装配呢？**
+
+```java
+
+/**
+ * @see org.springframework.boot.autoconfigure.SpringBootApplication
+ * @see org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+ * @see org.springframework.boot.autoconfigure.AutoConfigurationImportSelector; #自动配置导入选择器
+ * @see org.springframework.boot.autoconfigure.AutoConfigurationImportSelector#selectImports(org.springframework.core.type.AnnotationMetadata) 
+ * @see org.springframework.boot.autoconfigure.AutoConfigurationImportSelector#getAutoConfigurationEntry(org.springframework.boot.autoconfigure.AutoConfigurationMetadata, org.springframework.core.type.AnnotationMetadata) getAutoConfigurationEntry;
+ */
+```
+
+大概可以把 `@SpringBootApplication`看作是 `@Configuration`、`@EnableAutoConfiguration`、`@ComponentScan` 注解的集合。
+这三个注解的作用分别是：
+
+- `@EnableAutoConfiguration`：启用 SpringBoot 的自动配置机制
+- `@Configuration`：允许在上下文中注册额外的 bean 或导入其他配置类
+- `@ComponentScan`： 扫描被`@Component` (`@Service`,`@Controller`)注解的 bean，注解默认会扫描启动类所在的包下所有的类 ，
+- 可以自定义不扫描某些 bean。如下图所示，容器中将排除`TypeExcludeFilter`和`AutoConfigurationExcludeFilter`。
+
+`@EnableAutoConfiguration` 是实现自动装配的重要注解，通过查看 `EnableAutoConfiguration` 注解入手：
+- 这个注解里的 @AutoConfigurationPackage 是将main包下的所有组件注册到容器中
+- 这个注解里 导入了一个 自动配置导入选择器。它的作用是加载 自动装配类 xxxAutoconfiguration。`AutoConfigurationImportSelector` 类
+  实现了 `ImportSelector` 接口，也就实现了这个接口中的 `selectImports`方法，
+  该方法主要用于**获取所有符合条件的类的全限定类名，这些类需要被加载到 IoC 容器中**。
+
+getAutoConfigurationEntry()
+
+第一步：
+判断自动装配开关是否打开。默认`spring.boot.enableautoconfiguration=true`，可在 `application.properties` 或 `application.yml` 中设置
+
+第二步：
+用于获取`EnableAutoConfiguration`注解中的 `exclude` 和 `excludeName`。
+
+

@@ -51,7 +51,9 @@ Mybatis面试题
 - 可以在sql内直接拼写带有物理分页的参数来完成物理分页功能，也可以使用分页插件来完成物理分页，比如：使用MySQL数据的时候，在原有SQL后面拼写limit。 有一个公式是
   limit (当前页页码-1）, 每页数据条数
 
-- 分页插件，分页插件的基本原理是使用Mybatis提供的插件接口 Interceptor ，实现自定义插件，在插件的拦截方法内拦截待执行的sql，然后重写sql，~~根据dialect方言，~~添加对应的物理分页语句和物理分页参数。
+- 分页插件，分页插件的基本原理是使用Mybatis提供的插件接口 Interceptor ，
+实现自定义插件，**在插件的拦截方法内拦截待执行的sql，然后重写sql，**~~根据dialect方言，~~
+**添加对应的物理分页语句和物理分页参数**。
   例如 com.github.pagehelper 分页插件的 PageInterceptor 类 实现了 Interceptor 接口 
 
 ```java

@@ -14,7 +14,7 @@ CREATE TABLE `class` (
  `monitor` INT NULL ,
  PRIMARY KEY (`id`)
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
- 
+
 CREATE TABLE `student` (
  `id` INT(11) NOT NULL AUTO_INCREMENT,
  `stuno` INT NOT NULL ,
@@ -26,17 +26,17 @@ CREATE TABLE `student` (
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
-SET GLOBAL log_bin_trust_function_creators=1; 
+SET GLOBAL log_bin_trust_function_creators=1;
 
  #随机产生字符串
 DELIMITER //
 CREATE FUNCTION rand_string(n INT) RETURNS VARCHAR(255)
-BEGIN    
+BEGIN
 DECLARE chars_str VARCHAR(100) DEFAULT 'abcdefghijklmnopqrstuvwxyzABCDEFJHIJKLMNOPQRSTUVWXYZ';
 DECLARE return_str VARCHAR(255) DEFAULT '';
 DECLARE i INT DEFAULT 0;
-WHILE i < n DO  
-SET return_str =CONCAT(return_str,SUBSTRING(chars_str,FLOOR(1+RAND()*52),1));  
+WHILE i < n DO
+SET return_str =CONCAT(return_str,SUBSTRING(chars_str,FLOOR(1+RAND()*52),1));
 SET i = i + 1;
 END WHILE;
 RETURN return_str;
@@ -46,24 +46,24 @@ DELIMITER ;
 #用于随机产生多少到多少的编号
 DELIMITER //
 CREATE FUNCTION  rand_num (from_num INT ,to_num INT) RETURNS INT(11)
-BEGIN   
-DECLARE i INT DEFAULT 0;  
+BEGIN
+DECLARE i INT DEFAULT 0;
 SET i = FLOOR(from_num +RAND()*(to_num - from_num+1))   ;
-RETURN i;  
+RETURN i;
 END //
 DELIMITER ;
 
 #创建往stu表中插入数据的存储过程
 DELIMITER //
 CREATE PROCEDURE  insert_stu(  START INT ,  max_num INT )
-BEGIN  
-DECLARE i INT DEFAULT 0;   
+BEGIN
+DECLARE i INT DEFAULT 0;
  SET autocommit = 0;    #设置手动提交事务
  REPEAT  #循环
  SET i = i + 1;  #赋值
- INSERT INTO student (stuno, NAME ,age ,classId ) VALUES ((START+i),rand_string(6),rand_num(1,50),rand_num(1,1000));  
- UNTIL i = max_num  
- END REPEAT;  
+ INSERT INTO student (stuno, NAME ,age ,classId ) VALUES ((START+i),rand_string(6),rand_num(1,50),rand_num(1,1000));
+ UNTIL i = max_num
+ END REPEAT;
  COMMIT;  #提交事务
 END //
 DELIMITER ;
@@ -72,23 +72,23 @@ DELIMITER ;
 #执行存储过程，往class表添加随机数据
 DELIMITER //
 CREATE PROCEDURE `insert_class`(  max_num INT )
-BEGIN  
-DECLARE i INT DEFAULT 0;   
- SET autocommit = 0;    
- REPEAT  
- SET i = i + 1;  
- INSERT INTO class ( classname,address,monitor ) VALUES (rand_string(8),rand_string(10),rand_num(1,100000));  
- UNTIL i = max_num  
- END REPEAT;  
- COMMIT; 
+BEGIN
+DECLARE i INT DEFAULT 0;
+ SET autocommit = 0;
+ REPEAT
+ SET i = i + 1;
+ INSERT INTO class ( classname,address,monitor ) VALUES (rand_string(8),rand_string(10),rand_num(1,100000));
+ UNTIL i = max_num
+ END REPEAT;
+ COMMIT;
 END //
 DELIMITER ;
 
 
-#执行存储过程，往class表添加1万条数据  
+#执行存储过程，往class表添加1万条数据
 CALL insert_class(10000);
 
-#执行存储过程，往stu表添加50万条数据  
+#执行存储过程，往stu表添加50万条数据
 CALL insert_stu(100000,500000);
 
 SELECT COUNT(*) FROM class;
@@ -105,17 +105,17 @@ BEGIN
        DECLARE _index VARCHAR(200) DEFAULT '';
        DECLARE _cur CURSOR FOR  SELECT   index_name   FROM information_schema.STATISTICS   WHERE table_schema=dbname AND table_name=tablename AND seq_in_index=1 AND    index_name <>'PRIMARY'  ;
 #每个游标必须使用不同的declare continue handler for not found set done=1来控制游标的结束
-       DECLARE  CONTINUE HANDLER FOR NOT FOUND SET done=2 ;      
+       DECLARE  CONTINUE HANDLER FOR NOT FOUND SET done=2 ;
 #若没有数据返回,程序继续,并将变量done设为2
         OPEN _cur;
         FETCH _cur INTO _index;
-        WHILE  _index<>'' DO 
-               SET @str = CONCAT("drop index " , _index , " on " , tablename ); 
+        WHILE  _index<>'' DO
+               SET @str = CONCAT("drop index " , _index , " on " , tablename );
                PREPARE sql_str FROM @str ;
                EXECUTE  sql_str;
                DEALLOCATE PREPARE sql_str;
-               SET _index=''; 
-               FETCH _cur INTO _index; 
+               SET _index='';
+               FETCH _cur INTO _index;
         END WHILE;
    CLOSE _cur;
 END //
@@ -141,15 +141,15 @@ CREATE INDEX idx_age_classid_name ON student(age,classId,NAME);
 EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE student.age=30 AND student.name = 'abcd' ;
 
 EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE student.classid=1 AND student.name = 'abcd';
- 
-EXPLAIN SELECT SQL_NO_CACHE * FROM student 
-WHERE classid=4 AND student.age=30 AND student.name = 'abcd'; 
+
+EXPLAIN SELECT SQL_NO_CACHE * FROM student
+WHERE classid=4 AND student.age=30 AND student.name = 'abcd';
 
 DROP INDEX idx_age ON student;
 DROP INDEX idx_age_classid ON student;
 
-EXPLAIN SELECT SQL_NO_CACHE * FROM student 
-WHERE student.age=30 AND student.name = 'abcd'; 
+EXPLAIN SELECT SQL_NO_CACHE * FROM student
+WHERE student.age=30 AND student.name = 'abcd';
 
 #3)主键插入顺序
 
@@ -158,7 +158,7 @@ WHERE student.age=30 AND student.name = 'abcd';
 #此语句比下一条要好！（能够使用上索引）
 EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE student.name LIKE 'abc%';
 
-EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE LEFT(student.name,3) = 'abc'; 
+EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE LEFT(student.name,3) = 'abc';
 
 CREATE INDEX idx_name ON student(NAME);
 
@@ -176,9 +176,9 @@ EXPLAIN SELECT id, stuno, NAME FROM student WHERE SUBSTRING(NAME, 1,3)='abc';
 
 #5)类型转换导致索引失效
 
-EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE NAME = 123; 
+EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE NAME = 123;
 
-EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE NAME = '123'; 
+EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE NAME = '123';
 
 
 #6)范围条件右边的列索引失效
@@ -189,12 +189,13 @@ CALL proc_drop_index('atguigudb2','student');
 
 CREATE INDEX idx_age_classId_name ON student(age,classId,NAME);
 
-EXPLAIN SELECT SQL_NO_CACHE * FROM student 
-WHERE student.age=30 AND student.classId>20 AND student.name = 'abc' ; 
+EXPLAIN SELECT SQL_NO_CACHE * FROM student
+WHERE student.age=30 AND student.classId>20 AND student.name = 'abc' ;
 
+# 和sql书写顺序无关，和索引的创建顺序 CREATE INDEX idx_age_classId_name ON student(age,classId,NAME) 有关
 
-EXPLAIN SELECT SQL_NO_CACHE * FROM student 
-WHERE student.age=30 AND student.name = 'abc' AND student.classId>20; 
+EXPLAIN SELECT SQL_NO_CACHE * FROM student
+WHERE student.age=30 AND student.name = 'abc' AND student.classId>20;
 
 
 CREATE INDEX idx_age_name_cid ON student(age,NAME,classId);
@@ -208,13 +209,13 @@ EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE student.name != 'abc' ;
 
 
 #8）is null可以使用索引，is not null无法使用索引
-EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE age IS NULL; 
+EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE age IS NULL;
 
-EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE age IS NOT NULL; 
+EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE age IS NOT NULL;
 
 #9)like以通配符%开头索引失效
 
-EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE NAME LIKE 'ab%'; 
+EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE NAME LIKE 'ab%';
 
 EXPLAIN SELECT SQL_NO_CACHE * FROM student WHERE NAME LIKE '%ab%';
 
@@ -398,20 +399,20 @@ FROM class c
 WHERE monitor IS NOT NULL
 );
 
-EXPLAIN SELECT stu1.* FROM student stu1 JOIN class c 
+EXPLAIN SELECT stu1.* FROM student stu1 JOIN class c
 ON stu1.`stuno` = c.`monitor`
 WHERE c.`monitor` IS NOT NULL;
 
 #查询不为班长的学生信息
-EXPLAIN SELECT SQL_NO_CACHE a.* 
-FROM student a 
+EXPLAIN SELECT SQL_NO_CACHE a.*
+FROM student a
 WHERE  a.stuno  NOT  IN (
-			SELECT monitor FROM class b 
-			WHERE monitor IS NOT NULL) 
+			SELECT monitor FROM class b
+			WHERE monitor IS NOT NULL)
 
 
 EXPLAIN SELECT SQL_NO_CACHE a.*
-FROM  student a LEFT OUTER JOIN class b 
+FROM  student a LEFT OUTER JOIN class b
 ON a.stuno =b.monitor
 WHERE b.monitor IS NULL;
 
@@ -424,35 +425,35 @@ CALL proc_drop_index('atguigudb2','class');
 SHOW INDEX FROM student;
 SHOW INDEX FROM class;
 #过程一：
-EXPLAIN SELECT SQL_NO_CACHE * FROM student ORDER BY age,classid; 
+EXPLAIN SELECT SQL_NO_CACHE * FROM student ORDER BY age,classid;
 
-EXPLAIN SELECT SQL_NO_CACHE * FROM student ORDER BY age,classid LIMIT 10; 
+EXPLAIN SELECT SQL_NO_CACHE * FROM student ORDER BY age,classid LIMIT 10;
 
 #过程二：order by时不limit，索引失效
-#创建索引  
+#创建索引
 CREATE  INDEX idx_age_classid_name ON student (age,classid,NAME);
 
 
 #不限制,索引失效
-EXPLAIN  SELECT SQL_NO_CACHE * FROM student ORDER BY age,classid; 
+EXPLAIN  SELECT SQL_NO_CACHE * FROM student ORDER BY age,classid;
 
-#EXPLAIN  SELECT SQL_NO_CACHE age,classid,name,id FROM student ORDER BY age,classid; 
+#EXPLAIN  SELECT SQL_NO_CACHE age,classid,name,id FROM student ORDER BY age,classid;
 
 #增加limit过滤条件，使用上索引了。
-EXPLAIN  SELECT SQL_NO_CACHE * FROM student ORDER BY age,classid LIMIT 10;  
+EXPLAIN  SELECT SQL_NO_CACHE * FROM student ORDER BY age,classid LIMIT 10;
 
 
 #过程三：order by时顺序错误，索引失效
 
 #创建索引age,classid,stuno
-CREATE  INDEX idx_age_classid_stuno ON student (age,classid,stuno); 
+CREATE  INDEX idx_age_classid_stuno ON student (age,classid,stuno);
 
 #以下哪些索引失效?
 EXPLAIN  SELECT * FROM student ORDER BY classid LIMIT 10;
 
-EXPLAIN  SELECT * FROM student ORDER BY classid,NAME LIMIT 10;  
+EXPLAIN  SELECT * FROM student ORDER BY classid,NAME LIMIT 10;
 
-EXPLAIN  SELECT * FROM student ORDER BY age,classid,stuno LIMIT 10; 
+EXPLAIN  SELECT * FROM student ORDER BY age,classid,stuno LIMIT 10;
 
 EXPLAIN  SELECT * FROM student ORDER BY age,classid LIMIT 10;
 
@@ -464,7 +465,7 @@ EXPLAIN  SELECT * FROM student ORDER BY age DESC, classid ASC LIMIT 10;
 
 EXPLAIN  SELECT * FROM student ORDER BY classid DESC, NAME DESC LIMIT 10;
 
-EXPLAIN  SELECT * FROM student ORDER BY age ASC,classid DESC LIMIT 10; 
+EXPLAIN  SELECT * FROM student ORDER BY age ASC,classid DESC LIMIT 10;
 
 EXPLAIN  SELECT * FROM student ORDER BY age DESC, classid DESC LIMIT 10;
 
@@ -472,7 +473,7 @@ EXPLAIN  SELECT * FROM student ORDER BY age DESC, classid DESC LIMIT 10;
 
 EXPLAIN  SELECT * FROM student WHERE age=45 ORDER BY classid;
 
-EXPLAIN  SELECT * FROM student WHERE  age=45 ORDER BY classid,NAME; 
+EXPLAIN  SELECT * FROM student WHERE  age=45 ORDER BY classid,NAME;
 
 EXPLAIN  SELECT * FROM student WHERE  classid=45 ORDER BY age;
 
@@ -543,10 +544,10 @@ CREATE TABLE `people` (
 ) ENGINE=INNODB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
 
 
-INSERT INTO `people` VALUES 
-('1', '000001', '三', '张', '北京市'), 
-('2', '000002', '四', '李', '南京市'), 
-('3', '000003', '五', '王', '上海市'), 
+INSERT INTO `people` VALUES
+('1', '000001', '三', '张', '北京市'),
+('2', '000002', '四', '李', '南京市'),
+('3', '000003', '五', '王', '上海市'),
 ('4', '000001', '六', '赵', '天津市');
 
 
@@ -566,15 +567,15 @@ SET optimizer_switch = 'index_condition_pushdown=on';
 #创建存储过程，向people表中添加1000000条数据，测试ICP开启和关闭状态下的性能
 DELIMITER //
 CREATE PROCEDURE  insert_people( max_num INT )
-BEGIN  
-DECLARE i INT DEFAULT 0;   
- SET autocommit = 0;    
- REPEAT  
- SET i = i + 1;  
- INSERT INTO people ( zipcode,firstname,lastname,address ) VALUES ('000001', '六', '赵', '天津市');  
- UNTIL i = max_num  
- END REPEAT;  
- COMMIT; 
+BEGIN
+DECLARE i INT DEFAULT 0;
+ SET autocommit = 0;
+ REPEAT
+ SET i = i + 1;
+ INSERT INTO people ( zipcode,firstname,lastname,address ) VALUES ('000001', '六', '赵', '天津市');
+ UNTIL i = max_num
+ END REPEAT;
+ COMMIT;
 END //
 
 DELIMITER ;

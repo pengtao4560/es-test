@@ -1,0 +1,25 @@
+{
+  "query_block": {
+    "select_id": 1,
+    "table": {
+      "table_name": "s1",
+      "access_type": "ALL",
+      "possible_keys": ["idx_key1"],
+      "rows": 9895,
+      "filtered": 100,
+      "attached_condition": "s1.common_field = 'a' and s1.key1 is not null"
+    },
+    "table": {
+      "table_name": "s2",
+      "access_type": "ref",
+      "possible_keys": ["idx_key2"],
+      "key": "idx_key2",
+      "key_length": "5",
+      "used_key_parts": ["key2"],
+      "ref": ["atguigudb1.s1.key1"],
+      "rows": 1,
+      "filtered": 100,
+      "index_condition": "s1.key1 = s2.key2"
+    }
+  }
+}
