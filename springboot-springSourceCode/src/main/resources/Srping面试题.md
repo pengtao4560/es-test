@@ -263,7 +263,9 @@ Portlet 是能够生成语义代码(例如：HTML)片段的小型 Java Web 插�
 ### 14.Spring框架中都用到了哪些设计模式？
 
 - **工厂设计模式** : Spring 使用工厂模式通过 `BeanFactory`、`ApplicationContext` 创建 bean 对象。
-- **代理设计模式** : Spring AOP 功能的实现。如果要代理的对象，实现了某个接口，那么 Spring AOP会使用JDK动态代理，去创建代理对象，否则使用Cglib代理生成一个被代理对象的子类来作为代理
+- **代理设计模式** : Spring AOP 功能的实现。如果要代理的对象，实现了某个接口，那么 Spring AOP会使用JDK动态代理，去创建代理对象，
+                    
+     否则使用Cglib代理生成一个被代理对象的子类来作为代理
 - **模板方法模式** : Spring 中 `JdbcTemplate`、`RestTemplate`、`RedisTemplate`、`HibernateTemplate` 等以 Template 结尾的对数据库操作的类，它们就使用到了模板模式。execute() 方法，把整个算法步骤都定义好了
 - **单例设计模式** : Spring 中的 Bean 默认都是单例的。
 - **包装器设计模式** : 我们的项目需要连接多个数据库，而且不同的客户在每次访问中根据需要会去访问不同的数据库。这种模式让我们可以根据客户的需求能够动态切换不同的数据源。

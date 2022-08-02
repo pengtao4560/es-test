@@ -142,13 +142,19 @@ bootstrap 配置文件有以下几个应用场景。
 
 
 ### 14. springBoot自动装配原理？
+**为什么 Spring Boot 使用起来非常的方便？** 这得益于其自动装配。
+**自动装配可以说是 Spring Boot 的核心，那究竟什么是自动装配呢？**
+
 
 Springboot 自动装配原理
-1）通过注解@SpringBootApplication=>@EnableAutoConfiguration=>@Import({AutoConfigurationImportSelector.class})实现自动装配
+1）通过注解 `@SpringBootApplication` =>` @EnableAutoConfiguration` =>
+`@Import({AutoConfigurationImportSelector.class})` 实现自动装配
 
-2）AutoConfigurationImportSelector类中重写了 ImportSelector 中 selectImports 方法，批量返回需要装配的配置类
+2）`AutoConfigurationImportSelector` 类中重写了 `ImportSelector` 中 `selectImports` 方法，
+批量返回需要装配的配置类
 
-3）通过Spring提供的SpringFactoriesLoader机制，扫描classpath下的META-INF/spring.factories文件，读取需要自动装配的配置类
+3）通过Spring提供的 `SpringFactoriesLoader` 机制，扫描 `classpath` 下的 META-INF/spring.factories 文件，
+读取需要自动装配的配置类
 
 4）依据条件筛选的方式，把不符合的配置类移除掉，最终完成自动装配
 ————————————————

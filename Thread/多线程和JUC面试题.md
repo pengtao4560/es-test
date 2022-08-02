@@ -524,12 +524,13 @@ Java 源代码 -> 词法分析器 -> 语法分析器 -> 语义分析器 -> 字�
 ### **如何预防死锁？** 破坏死锁的产生的必要条件即可：
 
 1. **破坏请求与保持条件** ：一次性申请所有的资源。
-2. **破坏不剥夺条件** ：占用部分资源的线程进一步申请其他资源时，如果申请不到，可以主动释放它占有的资源。
-3. **破坏循环等待条件** ：靠按序申请资源来预防。按某一顺序申请资源，释放资源则反序释放。破坏循环等待条件。
+2. **破坏不剥夺条件** ：**占用部分资源的线程进一步申请其他资源时，如果申请不到，可以主动释放它占有的资源**。
+3. **破坏循环等待条件** ：靠**按顺序**申请资源来预防。按某一顺序申请资源，释放资源则反序释放。破坏循环等待条件。
 
 ### 26 、如何避免死锁？ 指定获取锁的顺序
 
-**线程死锁描述的是这样一种情况：多个线程同时被阻塞，它们中的一个或者全部都在等待某个资源被释放。由于线程被无限期地阻塞，因此程序不可能正常终止。**
+**线程死锁描述的是这样一种情况：多个线程同时被阻塞，它们中的一个或者全部都在等待某个资源被释放。
+由于线程被无限期地阻塞，因此程序不可能正常终止。**
 
  指定获取锁的顺序，举例如下：
 
@@ -650,25 +651,33 @@ CAS的缺点主要有 3 点：
 - 强引用 :java中绝大部分都是强引用，就算报OOM，GC时也不回收
 - 软引用 SoftReference：为了降低OOM发生概率。GC时，内存够就不回收，内存不够就回收
 - 弱引用 WeakReference：只要发生GC就回收
-- 虚引用：如果一个对象持有虚引用，那么它就和没有任何引用一样，在任何时候都可能被垃圾回收器回收，它不能单独使用也不能通过它访问对象，虚引用必须和引用队列 ReferenceQueue 联合使用
+- 虚引用：如果一个对象持有虚引用，那么它就和没有任何引用一样，在任何时候都可能被垃圾回收器回收，
+  它不能单独使用也不能通过它访问对象，虚引用必须和引用队列 ReferenceQueue 联合使用
 
 ### 34 、说说 ThreadLocal 原理？
 
-ThreadLocal 可以理解为 **线程本地变量**，他会在每个线程都创建一个副本，那么在线程之间访问内部副本变量就行了，做到了线程之间互相隔离，相比于 synchronized 的做法是**用空间来换时间**。
+ThreadLocal 可以理解为 **线程本地变量**，他会在每个线程都创建一个副本，那么在线程之间访问内部副本变量就行了，
+做到了线程之间互相隔离，相比于 synchronized 的做法是**用空间来换时间**。
 
-ThreadLocal 有一个静态内部类 `ThreadLocalMap` ，ThreadLocalMap 又包含了一个 Entry 数组，Entry本身是一个弱引用，他的key是指向ThreadLocal的弱引用，
+ThreadLocal 有一个静态内部类 `ThreadLocalMap` ，ThreadLocalMap 又包含了一个 Entry 数组，
+Entry本身是一个弱引用，他的key是指向ThreadLocal的弱引用，
 Entry具备了保存key value键值对的能力。
 
-**每个线程（`Thread`）中都具备一个自己的`ThreadLocalMap`对象，而`ThreadLocalMap`可以存储以`ThreadLocal`为 key ，Object 对象为 value 的键值对。**
-比如我们在同一个线程中声明了两个 `ThreadLocal` 对象的话， `Thread`内部都是使用仅有的那个`ThreadLocalMap` 存放数据的，
-简而言之，存进ThreadLocal的数据，相当于存进了线程自己的变量中。因此 如果要**保证共享变量的隔离性**，就把他放进ThreadLocal（相当于在线程中拷贝了一份），要用时，从ThreadLocal中拿出来即可（拿出当前线程的副本）
+**每个线程（`Thread`）中都具备一个自己的`ThreadLocalMap`对象，而`ThreadLocalMap`可以存储
+以`ThreadLocal`为 key ，Object 对象为 value 的键值对。**
+比如我们在同一个线程中声明了两个 `ThreadLocal` 对象的话， `Thread`内部都是使用仅有的
+那个`ThreadLocalMap` 存放数据的，
+简而言之，存进ThreadLocal的数据，相当于存进了线程自己的变量中。因此 如果要**保证共享变量的隔离性**，
+就把他放进ThreadLocal（相当于在线程中拷贝了一份），要用时，从ThreadLocal中拿出来即可（拿出当前线程的副本）
 注意：保证的是隔离性
 
 `ThreadLocalMap`的 key 就是 `ThreadLocal`对象，value 就是 `ThreadLocal` 对象调用`set`方法设置的值。
 
-弱引用的目的是为了防止内存泄露，如果是强引用那么ThreadLocal对象除非线程结束否则始终无法被回收，弱引用则会在下一次GC的时候被回收。
+弱引用的目的是为了防止内存泄露，如果是强引用那么ThreadLocal对象除非线程结束否则始终无法被回收，
+弱引用则会在下一次GC的时候被回收。
 
-但是这样还是会存在内存泄露的问题，假如key和ThreadLocal对象被回收之后，entry中就存在key为null，但是value有值的entry对象，但是永远没办法被访问到，同样除非线程结束运行。
+但是这样还是会存在内存泄露的问题，假如key和ThreadLocal对象被回收之后，entry中就存在key为null，
+但是value有值的entry对象，但是永远没办法被访问到，同样除非线程结束运行。
 
 但是只要ThreadLocal使用恰当，在使用完之后调用remove方法删除Entry对象，实际上是不会出现这个问题的。
 
@@ -851,13 +860,15 @@ AQS定义了对双向队列所有的操作，而只开放了 tryLock 和 tryRele
 
 ##### AQS 简单介绍
 
-AQS 的全称为 `AbstractQueuedSynchronizer` ，翻译过来的意思就是抽象队列同步器。这个类在 `java.util.concurrent.locks` 包下面。
+AQS 的全称为 `AbstractQueuedSynchronizer` ，翻译过来的意思就是抽象队列同步器。
+这个类在 `java.util.concurrent.locks` 包下面。
 
 
 AQS 就是一个抽象类，主要用来构建锁和同步器。
 
 ```java
-public abstract class AbstractQueuedSynchronizer extends AbstractOwnableSynchronizer implements java.io.Serializable {
+public abstract class AbstractQueuedSynchronizer extends AbstractOwnableSynchronizer
+        implements java.io.Serializable {
 }
 ```
 

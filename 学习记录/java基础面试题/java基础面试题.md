@@ -12,6 +12,7 @@ i++ 先赋值在运算
  * @see 
  */
 ```
+
 ### 1 、 Java语言有哪些特点
 
 1. 简单易学、有丰富的类库
@@ -399,7 +400,9 @@ ArrayList.当然,这些对比都是指数据量很大或者操作很频繁。
 
 ### 12 .HashMap 和 Hashtable 的区别
 
-1. **线程是否安全：** `HashMap` 是非线程安全的，`Hashtable` 是线程安全的,因为 `Hashtable` 内部的方法基本都经过`synchronized` 修饰。（如果你要保证线程安全的话,更推荐使用 `ConcurrentHashMap` ）；
+1. **线程是否安全：** `HashMap` 是非线程安全的，`Hashtable` 是线程安全的,
+因为 `Hashtable` 内部的方法基本都经过`synchronized` 修饰。
+（如果你要保证线程安全的话,更推荐使用 `ConcurrentHashMap` ）；
 2. **效率：** 因为线程安全的问题，`HashMap` 要比 `Hashtable` 效率高一点。另外，`Hashtable` 基本被淘汰，不要在代码中使用它；
 3. **对 Null key 和 Null value 的支持：** `HashMap` 可以存储 null 的 key 和 value，但 null 作为键只能有一个，null 作为值可以有多个；Hashtable 不允许有 null 键和 null 值，否则会抛出 `NullPointerException`。
 4. **初始容量大小和每次扩充容量大小的不同 ：
