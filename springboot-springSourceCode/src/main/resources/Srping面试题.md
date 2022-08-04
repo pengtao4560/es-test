@@ -441,7 +441,6 @@ Spring本身是没有事务的，只有数据库才会回有事务，而**Spring
 
 把这两个方法分开到不同的类中；
 把注解加到类名上面；
-结论:
 
 
 
@@ -478,6 +477,33 @@ public PlatformTransactionManager transactionManager(DataSource dataSource) {
 
 7. 在业务代码中如果抛出RuntimeException异常，事务回滚；但是抛出Exception，事务不回滚；
 
-如果在加有事务的方法内，使用了try…catch…语句块对异常进行了捕获，而catch语句块没有throw new RuntimeExecption异常，事务也不会回滚。
+如果在加有事务的方法内，使用了try…catch…语句块对异常进行了捕获，而catch语句块没有throw new RuntimeExecption异常，
+事务也不会回滚。
 
-8. 在类A里面有方法a 和方法b， 然后方法b上面用 @Transactional加了方法级别的事务，在方法a里面 调用了方法b， 方法b里面的事务不会生效。原因是在同一个类之中，方法互相调用，切面无效 ，而不仅仅是事务。这里事务之所以无效，是因为spring的事务是通过aop实现的。
+8. **在类A里面有方法a 和方法b， 然后方法b上面用 @Transactional加了方法级别的事务，在
+方法a里面 调用了方法b， 方法b里面的事务不会生效。原因是在同一个类之中，方法互相调用，切面无效 ，
+而不仅仅是事务。这里事务之所以无效，是因为spring的事务是通过aop实现的。**
+
+
+另外可参考：
+[spring事务传播特性](https://www.bilibili.com/video/BV1EE411p7dD?p=6&vd_source=bbcfa9c97b678f7863791a62aa7d0eb3)
+
+举例子
+```java
+
+@service
+public class Personservice {
+    @Transactional
+    public void laoda() {
+        System.out.println("老大的方法");
+        xiaodi();
+        //出现异常
+    }
+
+    @Transactional
+    public void xiaodi() {
+        System.out.println("小弟方法");
+        //出现异常
+    }
+}
+```
