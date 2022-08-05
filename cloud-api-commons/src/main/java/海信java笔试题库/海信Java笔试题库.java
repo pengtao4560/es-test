@@ -163,7 +163,7 @@ public  class 海信Java笔试题库 {
      D. MongoDB
      */
     /**
-     26.List、Set、Map 哪个继承自 Collection 接口，一下说法正确的是（）多选题3.0分
+     26.List、Set、Map 哪个继承自 Collection 接口，一下说法正确的是（C）多选题3.0分
      A. List
      B. Set Map
      C. List Set
