@@ -47,6 +47,7 @@
         <module>mysql</module>
         <module>es-test</module>
         <module>Thread</module>
+        <module>算法和数据结构</module>
     </modules>
 
     <!-- 统一管理jar包版本 -->

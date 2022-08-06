@@ -22,23 +22,25 @@ public class SwitchDemo {
     }
     /** 获取水果单词的字母数量*/
     private static int getNumberOfLetters(Fruit fruit){
-        int numberOfLetters = switch (fruit) {
+     /*   int numberOfLetters = switch (fruit) {
             case PEAR -> 4;
             case APPLE,MANGO,GRAPE -> 5;
             case ORANGE,PAPAYA -> 6;
             default -> throw new IllegalStateException("No Such Fruit:" + fruit);
         };
-        return numberOfLetters;
+        return numberOfLetters;*/
+        return 1;
     }
 
     private static int getNumberOfLetters(Week day) {
-        int numberOfLetters = switch (day) {
+/*        int numberOfLetters = switch (day) {
             case MONDAY, FRIDAY, SUNDAY -> 6;
             case TUESDAY -> 7;
             case THURSDAY, SATURDAY -> 8;
             case WEDNESDAY -> 9;
             default -> throw new IllegalStateException("What day is today?" + day);
         };
-        return numberOfLetters;
+        return numberOfLetters;*/
+        return 1;
     }
 }

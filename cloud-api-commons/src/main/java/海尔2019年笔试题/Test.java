@@ -291,5 +291,6 @@ abstract class AbstractClass {
 interface TestInterface extends Cloneable, Serializable {
     String s = null;
     default void test(){
+        //
     }
 }
