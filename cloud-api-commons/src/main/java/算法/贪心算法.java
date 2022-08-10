@@ -3,6 +3,7 @@ package 算法;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -26,18 +27,21 @@ import java.util.Scanner;
  * k6     青岛
  * [k1, k2, k3, k5, k6]
  */
-public class TanxinSF {
+public class 贪心算法 {
     static HashSet<String>  addToHashSet(String input) {
         HashSet<String> set = new HashSet<>();
         String[] s = input.split(" ");
         for (String s1 : s) {
-            set.add(s1);
+            if (s1.trim().length() > 0) {
+
+                set.add(s1.trim());
+            }
         }
         return set;
     }
     public static void main(String[] args) {
         //创建广播电台,放入到Map
-        HashMap<String, HashSet<String>> broadcasts = new HashMap<String, HashSet<String>>();
+        HashMap<String, HashSet<String>> broadcastsSet = new HashMap<String, HashSet<String>>();
         //将各个电台放入到broadcasts
         HashSet<String> hashSet1 = new HashSet<String>();
         Scanner scanner = new Scanner(System.in);
@@ -47,7 +51,7 @@ public class TanxinSF {
         String k = "k";
         int i = 1;
         while (true) {
-            System.out.printf("构建 %s 的城市，以空格分隔", k+i);
+            System.out.printf("构建 %s 的城市，以空格分隔，输入exit结束", k+i);
             System.out.println();
 
             HashSet<String> hashSet = null;
@@ -56,19 +60,19 @@ public class TanxinSF {
                 break;
             }
             hashSet = addToHashSet(result);
-            broadcasts.put(k+i, hashSet);
+            broadcastsSet.put(k+i, hashSet);
             i++;
 
         }
-        for (String s : broadcasts.keySet()) {
-            allAreas.addAll(broadcasts.get(s));
+        for (String s : broadcastsSet.keySet()) {
+            allAreas.addAll(broadcastsSet.get(s));
         }
 
         System.out.println(" allAreas " + allAreas.toString());
 
 
         //创建ArrayList, 存放选择的电台集合
-        ArrayList<String> selects = new ArrayList<String>();
+        List<String> selects = new ArrayList<String>();
 
         //定义一个临时的集合， 在遍历的过程中，存放遍历过程中的电台覆盖的地区和当前还没有覆盖的地区的交集
         HashSet<String> tempSet = new HashSet<String>();
@@ -81,20 +85,20 @@ public class TanxinSF {
             bestKey = null;
 
             int bestSize = 0; // 最好的比较到的交集的长度（贪心算法的核心思想）
-            //遍历 broadcasts, 取出对应key
-            for(String key : broadcasts.keySet()) {
+            //遍历 broadcastsSet, 取出对应key
+            for(String key : broadcastsSet.keySet()) {
                 //每进行一次for
                 tempSet.clear();
                 //areas 就是当前这个key能够覆盖的地区
                 // areas 就是 广播覆盖图例的：k1 或 k2 或 k3 或 k4 或K5
-                HashSet<String> areas = broadcasts.get(key);
+                HashSet<String> areas = broadcastsSet.get(key);
                 tempSet.addAll(areas);
                 //求出 tempSet 和   allAreas 集合的交集, 交集会赋给 tempSet
                 //
                 tempSet.retainAll(allAreas);
                 //如果当前这个集合包含的未覆盖地区的数量，比maxKey指向的集合地区还多
                 //就需要重置maxKey
-                // tempSet.size() >broadcasts.get(bestKey).size()) 体现出贪心算法的特点,每次都选择最优的
+                // tempSet.size() >broadcastsSet.get(bestKey).size()) 体现出贪心算法的特点,每次都选择最优的
                 if (tempSet.size() > 0 &&
                         (bestKey == null || tempSet.size() > bestSize)) {
                     bestKey = key; // 从k1-k4中挑选 最好的
@@ -105,7 +109,7 @@ public class TanxinSF {
             if(bestKey != null) {
                 selects.add(bestKey);
                 //将maxKey指向的广播电台覆盖的地区，从 allAreas 去掉
-                allAreas.removeAll(broadcasts.get(bestKey));
+                allAreas.removeAll(broadcastsSet.get(bestKey));
             }
 
         }

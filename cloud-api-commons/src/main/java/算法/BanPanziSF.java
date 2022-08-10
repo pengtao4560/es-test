@@ -18,7 +18,7 @@ public class BanPanziSF {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("输出汉诺塔盘子的数量");
+        System.out.println("输出汉诺塔盘子的数量，范围建议  1-64");
         int num = scanner.nextInt();
         System.out.println("输入汉诺塔盘子的3个柱子的名字,原柱子，中间柱子，目标柱子。以逗号分隔。例如 A,B,C");
         Scanner scanner2 = new Scanner(System.in);

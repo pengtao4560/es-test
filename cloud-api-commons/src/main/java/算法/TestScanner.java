@@ -1,6 +1,9 @@
 package 算法;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -20,7 +23,10 @@ public class TestScanner {
 
         HashSet<Object> set = new HashSet<>();
         for (String s : sArr) {
-            set.add(s);
+            if (StringUtils.isNotBlank(s)) {
+                set.add(s.trim());
+            }
+
         }
         System.out.println(set);
 
